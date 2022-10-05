@@ -12,9 +12,22 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
   ) {}
   async getBlogs(): Promise<BlogItemDBType[]> {
     // return await BlogsModelClass.find(filter).skip(skip).limit(limit).lean();
-    return await this.blogModel.find().lean();
+    const blogs = await this.blogModel.find().lean();
+    return blogs.map((blog) => ({
+      name: blog.name,
+      youtubeUrl: blog.youtubeUrl,
+      id: blog._id,
+    }));
   }
   async getBlogById(id: ObjectId): Promise<BlogItemDBType | null> {
-    return await this.blogModel.findById(id);
+    const blog = await this.blogModel.findById(id).lean();
+    if (blog) {
+      return {
+        name: blog.name,
+        youtubeUrl: blog.youtubeUrl,
+        id: blog._id,
+      };
+    }
+    return null;
   }
 }

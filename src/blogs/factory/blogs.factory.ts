@@ -1,5 +1,5 @@
-import { PostsStateRepository } from 'src/posts/application/posts.interface';
-import { PostsRepository } from 'src/posts/infrastructure/repository/posts.repository';
+import { PostsQueryStateRepository } from 'src/posts/application/posts.query.interface';
+import { PostsQueryRepository } from 'src/posts/infrastructure/repository/posts.query.repository';
 import { BlogsStateRepository } from '../application/blogs.interface';
 import { BlogsQueryStateRepository } from '../application/blogs.query.interface';
 import { BlogsService } from '../application/blogs.services';
@@ -12,14 +12,14 @@ export const factoryBlogsService = () => {
     useFactory: (
       blogStateRepository: BlogsStateRepository,
       blogsQueryStateRepository: BlogsQueryStateRepository,
-      postsStateRepository: PostsStateRepository,
+      postsQueryStateRepository: PostsQueryStateRepository,
     ) => {
       return new BlogsService(
         blogStateRepository,
         blogsQueryStateRepository,
-        postsStateRepository,
+        postsQueryStateRepository,
       );
     },
-    inject: [BlogsRepository, BlogsQueryRepository, PostsRepository],
+    inject: [BlogsRepository, BlogsQueryRepository, PostsQueryRepository],
   };
 };

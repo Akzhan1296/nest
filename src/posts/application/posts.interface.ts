@@ -1,8 +1,12 @@
 import { ObjectId } from 'mongoose';
+import {
+  PostItemDBType,
+  PostItemType,
+  PostType,
+} from '../infrastructure/posts.type';
 
 export abstract class PostsStateRepository {
-  abstract getPostByBlogId(blogId: ObjectId): Promise<string[]>;
-  //   abstract createBlog(dto: BlogType): Promise<BlogItemDBType>;
-  //   abstract updateBlog(id: ObjectId, dto: BlogType): Promise<boolean>;
-  //   abstract deleteBlog(id: ObjectId): Promise<boolean>;
+  abstract createPost(postItem: PostItemType): Promise<PostItemDBType>;
+  abstract updatePost(id: ObjectId, postItem: PostType): Promise<boolean>;
+  abstract deletePost(id: ObjectId): Promise<boolean>;
 }

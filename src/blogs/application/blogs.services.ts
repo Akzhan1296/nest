@@ -1,14 +1,14 @@
 import { BlogItemDBType, BlogType } from '../infrastructure/blogs.type';
 import { ObjectId } from 'mongoose';
 import { BlogsStateRepository } from './blogs.interface';
-import { PostsStateRepository } from 'src/posts/application/posts.interface';
+import { PostsQueryStateRepository } from 'src/posts/application/posts.query.interface';
 import { BlogsQueryStateRepository } from './blogs.query.interface';
 
 export class BlogsService {
   constructor(
     protected blogRepository: BlogsStateRepository,
     protected blogQueryRepository: BlogsQueryStateRepository,
-    protected postsRepository: PostsStateRepository,
+    protected postQuerysRepository: PostsQueryStateRepository,
   ) {}
   createBlog(dto: BlogType): Promise<BlogItemDBType> {
     return this.blogRepository.createBlog(dto);
