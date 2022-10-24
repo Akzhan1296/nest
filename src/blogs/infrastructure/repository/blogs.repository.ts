@@ -1,5 +1,6 @@
-import { BlogItemDBType, BlogType } from '../blogs.type';
-import { ObjectId, Model } from 'mongoose';
+import { BlogItemDBType, BlogItemType } from '../blogs.type';
+import { Model } from 'mongoose';
+import { ObjectId } from 'mongodb';
 import { Injectable } from '@nestjs/common';
 import { BlogsStateRepository } from 'src/blogs/application/blogs.interface';
 import { InjectModel } from '@nestjs/mongoose';
@@ -7,14 +8,18 @@ import { InjectModel } from '@nestjs/mongoose';
 @Injectable()
 export class BlogsRepository implements BlogsStateRepository {
   constructor(
-    @InjectModel(BlogType.name)
-    private blogModel: Model<BlogType>,
+    @InjectModel(BlogItemType.name)
+    private blogModel: Model<BlogItemType>,
   ) {}
-  async createBlog(newBlog: BlogType): Promise<BlogItemDBType> {
-    const result = await this.blogModel.insertMany(newBlog);
-    return { ...newBlog, id: result[0]['_id'] };
+  async getBlogById(id: ObjectId): Promise<BlogItemDBType | null> {
+    const blog = await this.blogModel.findOne({ _id: id });
+    return blog;
   }
-  async updateBlog(id: ObjectId, dto: BlogType): Promise<boolean> {
+  async createBlog(newBlog: BlogItemType): Promise<BlogItemDBType> {
+    const result = await this.blogModel.create(newBlog);
+    return result;
+  }
+  async updateBlog(id: ObjectId, dto: BlogItemType): Promise<boolean> {
     const blog = await this.blogModel.findOne({ _id: id });
     blog.name = dto.name;
     blog.youtubeUrl = dto.youtubeUrl;
@@ -31,7 +36,7 @@ export class BlogsRepository implements BlogsStateRepository {
   }
   async deleteBlog(id: ObjectId): Promise<boolean> {
     const blog = await this.blogModel.findOne({ _id: id });
-    const isBlogDeleted = blog
+    const isBlogDeleted: boolean = blog
       .delete()
       .then((deletedDoc) => {
         return deletedDoc === blog;

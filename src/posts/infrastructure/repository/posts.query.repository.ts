@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PostsQueryStateRepository } from 'src/posts/application/posts.query.interface';
-import { ObjectId, Model } from 'mongoose';
-import { PostItemDBType, PostItemType } from '../posts.type';
+import { Model } from 'mongoose';
+import { ObjectId } from 'mongodb';
+import { PostItemType, PostViewModel } from '../posts.type';
 import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
@@ -14,26 +15,26 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
     console.log(blogId);
     return [];
   }
-  async getPosts(): Promise<PostItemDBType[]> {
-    const posts = await this.postModel.find().lean();
+  async getPosts(): Promise<PostViewModel[]> {
+    const posts = await this.postModel.find();
     return posts.map((post) => ({
-      blogId: post.blogId,
+      blogId: post.blogId.toString(),
       blogName: post.blogName,
-      id: post._id,
+      id: post._id.toString(),
       content: post.content,
       createdAt: post.createdAt,
       shortDescription: post.shortDescription,
       title: post.title,
     }));
   }
-  async getPostById(id: ObjectId) {
+  async getPostById(id: ObjectId): Promise<PostViewModel | null> {
     const post = await this.postModel.findById(id).lean();
 
     if (post) {
       return {
-        blogId: post.blogId,
+        blogId: post.blogId.toString(),
         blogName: post.blogName,
-        id: post._id,
+        id: post._id.toString(),
         content: post.content,
         createdAt: post.createdAt,
         shortDescription: post.shortDescription,

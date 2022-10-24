@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongoose';
+import { ObjectId } from 'mongodb';
 import {
   PostItemDBType,
   PostItemType,

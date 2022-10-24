@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PostsStateRepository } from 'src/posts/application/posts.interface';
-import { ObjectId, Model } from 'mongoose';
+import { Model } from 'mongoose';
+import { ObjectId } from 'mongodb';
 import { PostItemDBType, PostItemType, PostType } from '../posts.type';
 import { InjectModel } from '@nestjs/mongoose';
 
@@ -11,8 +12,8 @@ export class PostsRepository implements PostsStateRepository {
     private postModel: Model<PostItemType>,
   ) {}
   async createPost(postItem: PostItemType): Promise<PostItemDBType> {
-    const result = await this.postModel.insertMany(postItem);
-    return { ...postItem, id: result[0]['_id'] };
+    const result = await this.postModel.create(postItem);
+    return result;
   }
   async updatePost(id: ObjectId, postItem: PostType): Promise<boolean> {
     const post = await this.postModel.findOne({ _id: id });

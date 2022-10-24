@@ -1,7 +1,7 @@
-import { BlogItemDBType } from '../infrastructure/blogs.type';
-import { ObjectId } from 'mongoose';
+import { BlogViewModel } from '../infrastructure/blogs.type';
+import { ObjectId } from 'mongodb';
 
 export abstract class BlogsQueryStateRepository {
-  abstract getBlogById(id: ObjectId): Promise<BlogItemDBType | null>;
-  abstract getBlogs(): Promise<BlogItemDBType[]>;
+  abstract getBlogById(id: ObjectId): Promise<BlogViewModel | null>;
+  abstract getBlogs(): Promise<BlogViewModel[]>;
 }

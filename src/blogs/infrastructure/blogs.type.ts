@@ -12,14 +12,31 @@ export class BlogInputModelType {
 }
 
 // application type
-export class BlogType {
-  public name: string;
-  public youtubeUrl: string;
+export type BlogType = {
+  name: string;
+  youtubeUrl: string;
+};
+
+//to create Blog
+export class BlogItemType {
+  constructor(
+    public name: string,
+    public youtubeUrl: string,
+    public createdAt: Date,
+  ) {}
 }
 
 // db type
 export class BlogItemDBType {
   name: string;
   youtubeUrl: string;
-  id: ObjectId;
+  _id: ObjectId;
+  createdAt: Date;
 }
+// which will be returned in controllers
+export type BlogViewModel = {
+  name: string;
+  id: string;
+  youtubeUrl: string;
+  createdAt: Date;
+};

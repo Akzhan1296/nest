@@ -15,7 +15,7 @@ import { BlogsQueryController } from './blogs/api/query.controller';
 import { factoryBlogsService } from './blogs/factory/blogs.factory';
 import { BlogsRepository } from './blogs/infrastructure/repository/blogs.repository';
 import { BlogsQueryRepository } from './blogs/infrastructure/repository/blogs.query.repository';
-import { BlogType } from './blogs/infrastructure/blogs.type';
+import { BlogItemType } from './blogs/infrastructure/blogs.type';
 import { BlogsSchema } from './blogs/schema/blogs.schema';
 
 //posts
@@ -36,7 +36,7 @@ import { postsSchema } from './posts/schema/posts.schema';
       {},
     ),
     MongooseModule.forFeature([
-      { name: BlogType.name, schema: BlogsSchema },
+      { name: BlogItemType.name, schema: BlogsSchema },
       { name: PostItemType.name, schema: postsSchema },
     ]),
   ],

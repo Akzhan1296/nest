@@ -7,29 +7,38 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { ObjectId } from 'mongoose';
+import { ObjectId } from 'mongodb';
 import { BlogsService } from '../application/blogs.services';
-import { BlogInputModelType } from '../infrastructure/blogs.type';
+import {
+  BlogInputModelType,
+  BlogViewModel,
+} from '../infrastructure/blogs.type';
+import { BlogsQueryRepository } from '../infrastructure/repository/blogs.query.repository';
 
 @Controller('blogs')
 export class BlogsController {
   constructor(
     @Inject(BlogsService.name)
     protected blogsService: BlogsService,
+    protected blogsQueryRepository: BlogsQueryRepository,
   ) {}
   @Post()
-  createBlog(@Body() blogInputModel: BlogInputModelType) {
-    return this.blogsService.createBlog(blogInputModel);
+  async createBlog(
+    @Body() blogInputModel: BlogInputModelType,
+  ): Promise<BlogViewModel> {
+    const blog = await this.blogsService.createBlog(blogInputModel);
+    const viewModel = await this.blogsQueryRepository.getBlogById(blog._id);
+    return viewModel;
   }
   @Put(':id')
-  updateBlog(
+  async updateBlog(
     @Param() params: { id: ObjectId },
     @Body() blogInputModel: BlogInputModelType,
-  ) {
-    return this.blogsService.updateBlog(params.id, blogInputModel);
+  ): Promise<boolean> {
+    return await this.blogsService.updateBlog(params.id, blogInputModel);
   }
   @Delete(':id')
-  deleteBlog(@Param() params: { id: ObjectId }) {
-    return this.blogsService.deleteBlog(params.id);
+  async deleteBlog(@Param() params: { id: ObjectId }): Promise<boolean> {
+    return await this.blogsService.deleteBlog(params.id);
   }
 }

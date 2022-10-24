@@ -1,10 +1,11 @@
 import { Schema } from 'mongoose';
-import { BlogType } from '../infrastructure/blogs.type';
+import { BlogItemType } from '../infrastructure/blogs.type';
 
-export const BlogsSchema = new Schema<BlogType>(
+export const BlogsSchema = new Schema<BlogItemType>(
   {
     name: String,
     youtubeUrl: String,
+    createdAt: Date,
   },
   { versionKey: false },
 );

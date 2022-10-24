@@ -1,5 +1,5 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { ObjectId } from 'mongoose';
+import { ObjectId } from 'mongodb';
 import { PostsQueryRepository } from '../infrastructure/repository/posts.query.repository';
 
 @Controller('posts')

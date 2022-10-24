@@ -7,19 +7,25 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { ObjectId } from 'mongoose';
+import { ObjectId } from 'mongodb';
 import { PostsService } from '../application/posts.service';
-import { PostInputModel } from '../infrastructure/posts.type';
+import { PostInputModel, PostViewModel } from '../infrastructure/posts.type';
+import { PostsQueryRepository } from '../infrastructure/repository/posts.query.repository';
 
 @Controller('posts')
 export class PostsController {
   constructor(
     @Inject(PostsService.name)
     protected postService: PostsService,
+    protected postQuerysRepository: PostsQueryRepository,
   ) {}
   @Post()
-  createPost(@Body() postsInputModel: PostInputModel) {
-    return this.postService.createPost(postsInputModel);
+  async createPost(
+    @Body() postsInputModel: PostInputModel,
+  ): Promise<PostViewModel> {
+    const post = await this.postService.createPost(postsInputModel);
+    const viewModel = this.postQuerysRepository.getPostById(post._id);
+    return viewModel;
   }
   @Put(':id')
   updatePost(

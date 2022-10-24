@@ -1,7 +1,9 @@
 import { ObjectId } from 'mongodb';
 
 export class PostInputModel {
+  //swagger
   public title: string;
+  // swagger
   public shortDescription: string;
   public content: string;
   public blogId: ObjectId;
@@ -30,6 +32,16 @@ export class PostItemDBType {
   public content: string;
   public blogId: ObjectId;
   public blogName: string;
-  public id: ObjectId;
+  public _id: ObjectId;
   public createdAt: Date;
 }
+
+export type PostViewModel = {
+  id: string;
+  title: string;
+  shortDescription: string;
+  content: string;
+  blogId: string;
+  blogName: string;
+  createdAt: Date;
+};
