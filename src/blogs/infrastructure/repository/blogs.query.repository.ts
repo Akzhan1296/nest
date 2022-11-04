@@ -1,10 +1,11 @@
-import { BlogItemType, BlogViewModel } from '../blogs.type';
+import { BlogItemType } from '../blogs.type';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
 
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { BlogsQueryStateRepository } from 'src/blogs/application/blogs.query.interface';
+import { BlogViewModel } from './models/view.models';
 
 @Injectable()
 export class BlogsQueryRepository implements BlogsQueryStateRepository {

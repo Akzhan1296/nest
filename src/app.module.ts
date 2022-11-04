@@ -3,10 +3,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-
-import { UsersController } from './users/users.controller';
-import { UsersRepository } from './users/users.repository';
-import { UsersService } from './users/users.service';
 import { settings } from './settings';
 
 //blogs
@@ -26,6 +22,11 @@ import { PostsRepository } from './posts/infrastructure/repository/posts.reposit
 import { PostsQueryRepository } from './posts/infrastructure/repository/posts.query.repository';
 import { PostItemType } from './posts/infrastructure/posts.type';
 import { postsSchema } from './posts/schema/posts.schema';
+
+//users
+import { UsersController } from './users/api/users.controller';
+import { UsersService } from './users/application/users.service';
+import { UsersRepository } from './users/infrastructure/repository/users.repository';
 
 @Module({
   imports: [

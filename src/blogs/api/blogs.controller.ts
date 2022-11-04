@@ -9,11 +9,10 @@ import {
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { BlogsService } from '../application/blogs.services';
-import {
-  BlogInputModelType,
-  BlogViewModel,
-} from '../infrastructure/blogs.type';
+
 import { BlogsQueryRepository } from '../infrastructure/repository/blogs.query.repository';
+import { BlogViewModel } from '../infrastructure/repository/models/view.models';
+import { BlogInputModelType } from './models/input.models';
 
 @Controller('blogs')
 export class BlogsController {

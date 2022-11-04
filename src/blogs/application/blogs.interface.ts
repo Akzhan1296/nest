@@ -1,9 +1,6 @@
-import {
-  BlogItemDBType,
-  BlogItemType,
-  BlogType,
-} from '../infrastructure/blogs.type';
+import { BlogItemDBType, BlogItemType } from '../infrastructure/blogs.type';
 import { ObjectId } from 'mongodb';
+import { BlogType } from './dto/blogs.dto';
 
 export abstract class BlogsStateRepository {
   abstract getBlogById(id: ObjectId): Promise<BlogItemDBType | null>;

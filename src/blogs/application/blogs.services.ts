@@ -1,10 +1,7 @@
-import {
-  BlogItemDBType,
-  BlogItemType,
-  BlogType,
-} from '../infrastructure/blogs.type';
+import { BlogItemDBType, BlogItemType } from '../infrastructure/blogs.type';
 import { ObjectId } from 'mongodb';
 import { BlogsStateRepository } from './blogs.interface';
+import { BlogType } from './dto/blogs.dto';
 export class BlogsService {
   constructor(protected blogRepository: BlogsStateRepository) {}
   createBlog(dto: BlogType): Promise<BlogItemDBType> {

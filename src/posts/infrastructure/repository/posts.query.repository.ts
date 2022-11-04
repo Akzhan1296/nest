@@ -11,9 +11,21 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
     @InjectModel(PostItemType.name)
     private postModel: Model<PostItemType>,
   ) {}
-  async getPostByBlogId(blogId: ObjectId): Promise<string[]> {
+  async getPostsByBlogId(blogId: string): Promise<PostViewModel[]> {
     console.log(blogId);
-    return [];
+    const filter = { blogId: new ObjectId(blogId) };
+    console.log(filter);
+    const postsByBlogId = await this.postModel.find(filter);
+    console.log(postsByBlogId);
+    return postsByBlogId.map((post) => ({
+      blogId: post.blogId.toString(),
+      blogName: post.blogName,
+      id: post._id.toString(),
+      content: post.content,
+      createdAt: post.createdAt,
+      shortDescription: post.shortDescription,
+      title: post.title,
+    }));
   }
   async getPosts(): Promise<PostViewModel[]> {
     const posts = await this.postModel.find();
