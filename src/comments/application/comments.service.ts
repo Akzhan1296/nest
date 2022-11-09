@@ -1,20 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Comment } from '../domain/entity/comments.schema';
+import { Comment, CommentDocument } from '../domain/entity/comments.schema';
 import { CreateCommentDTO, UpdateCommentDTO } from './dto/comments.dto';
 import { ObjectId } from 'mongodb';
 import { CommentsRepository } from '../infrastructure/repository/comments.repository';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class CommentsService {
   constructor(
     @InjectModel(Comment.name)
+    private CommentModel: Model<CommentDocument>,
     protected commentsRepository: CommentsRepository,
   ) {}
   async createCommentForSelectedPost(
     createCommentDTO: CreateCommentDTO,
   ): Promise<Comment> {
-    const newComment = this.commentsRepository.createComment(createCommentDTO);
+    const newComment = new this.CommentModel(createCommentDTO);
     await this.commentsRepository.save(newComment);
     return newComment;
   }
@@ -29,9 +31,7 @@ export class CommentsService {
   }
   async deleteComment(id: ObjectId): Promise<boolean> {
     const comment = await this.commentsRepository.findCommentById(id);
-    const isCommentDeleted = this.commentsRepository.deleteComment(comment);
+    const isCommentDeleted = this.commentsRepository.delete(comment);
     return isCommentDeleted;
   }
 }
-
-//TODO add controllers to comments

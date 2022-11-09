@@ -21,7 +21,17 @@ import { factoryPostService } from './posts/factory/posts.factory';
 import { PostsRepository } from './posts/infrastructure/repository/posts.repository';
 import { PostsQueryRepository } from './posts/infrastructure/repository/posts.query.repository';
 import { PostItemType } from './posts/infrastructure/posts.type';
-import { postsSchema } from './posts/schema/posts.schema';
+import { PostsSchema } from './posts/schema/posts.schema';
+
+// comments
+import { CommentsController } from './comments/api/comments.controller';
+import { CommentsService } from './comments/application/comments.service';
+import { CommentsRepository } from './comments/infrastructure/repository/comments.repository';
+import { CommentsQueryRepository } from './comments/infrastructure/repository/comments.query.repository';
+import {
+  CommentSchema,
+  Comment,
+} from './comments/domain/entity/comments.schema';
 
 //users
 import { UsersController } from './users/api/users.controller';
@@ -38,7 +48,8 @@ import { UsersRepository } from './users/infrastructure/repository/users.reposit
     ),
     MongooseModule.forFeature([
       { name: BlogItemType.name, schema: BlogsSchema },
-      { name: PostItemType.name, schema: postsSchema },
+      { name: PostItemType.name, schema: PostsSchema },
+      { name: Comment.name, schema: CommentSchema },
     ]),
   ],
   controllers: [
@@ -48,17 +59,25 @@ import { UsersRepository } from './users/infrastructure/repository/users.reposit
     BlogsQueryController,
     PostsController,
     PostsQueryController,
+    CommentsController,
   ],
   providers: [
     AppService,
+    //users
     UsersService,
     UsersRepository,
+    //blogs
     factoryBlogsService(),
     BlogsRepository,
     BlogsQueryRepository,
+    //posts
     factoryPostService(),
     PostsRepository,
     PostsQueryRepository,
+    //comments
+    CommentsService,
+    CommentsRepository,
+    CommentsQueryRepository,
   ],
 })
 export class AppModule {}

@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { PostsStateRepository } from 'src/posts/application/posts.interface';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
-import { PostItemDBType, PostItemType, PostType } from '../posts.type';
+import { PostItemDBType, PostItemType } from '../posts.type';
 import { InjectModel } from '@nestjs/mongoose';
+import { CreatePostDTO } from 'src/posts/application/dto/posts.dto';
 
 @Injectable()
 export class PostsRepository implements PostsStateRepository {
@@ -15,7 +16,7 @@ export class PostsRepository implements PostsStateRepository {
     const result = await this.postModel.create(postItem);
     return result;
   }
-  async updatePost(id: ObjectId, postItem: PostType): Promise<boolean> {
+  async updatePost(id: ObjectId, postItem: CreatePostDTO): Promise<boolean> {
     const post = await this.postModel.findOne({ _id: id });
 
     post.title = postItem.title;

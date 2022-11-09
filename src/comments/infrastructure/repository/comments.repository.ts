@@ -6,7 +6,6 @@ import {
   Comment,
   CommentDocument,
 } from 'src/comments/domain/entity/comments.schema';
-import { CreateCommentDTO } from 'src/comments/application/dto/comments.dto';
 
 @Injectable()
 export class CommentsRepository {
@@ -14,9 +13,6 @@ export class CommentsRepository {
     @InjectModel(Comment.name)
     private CommentModel: Model<CommentDocument>,
   ) {}
-  createComment(createCommentDTO: CreateCommentDTO) {
-    return new this.CommentModel(createCommentDTO);
-  }
   async findCommentById(id: ObjectId): Promise<CommentDocument> {
     return await this.CommentModel.findOne({ _id: id });
   }
@@ -31,7 +27,7 @@ export class CommentsRepository {
         return false;
       });
   }
-  async deleteComment(comment: CommentDocument): Promise<boolean> {
+  async delete(comment: CommentDocument): Promise<boolean> {
     return comment
       .delete()
       .then((deletedDoc) => {

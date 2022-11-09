@@ -17,7 +17,7 @@ export class BlogsQueryController {
   @Get(':id')
   async getBlogsById(
     @Param() params: { id: ObjectId },
-  ): Promise<BlogViewModel> {
+  ): Promise<BlogViewModel | null> {
     return this.blogsQueryRepository.getBlogById(params.id);
   }
   @Get(':blogId/posts')

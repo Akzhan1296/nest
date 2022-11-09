@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { PostsQueryStateRepository } from 'src/posts/application/posts.query.interface';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
-import { PostItemType, PostViewModel } from '../posts.type';
+import { PostItemType } from '../posts.type';
 import { InjectModel } from '@nestjs/mongoose';
+import { PostViewModel } from './models/view.models';
 
 @Injectable()
 export class PostsQueryRepository implements PostsQueryStateRepository {

@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { PostViewModel } from '../infrastructure/posts.type';
+import { PostViewModel } from '../infrastructure/repository/models/view.models';
 
 export abstract class PostsQueryStateRepository {
   abstract getPostsByBlogId(blogId: string): Promise<PostViewModel[]>;

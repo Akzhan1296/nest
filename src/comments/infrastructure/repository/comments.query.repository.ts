@@ -18,7 +18,7 @@ export class CommentsQueryRepository {
     const comments = await this.CommentModel.find();
 
     return comments.map((comment) => ({
-      id: comment._id,
+      id: comment._id.toString(),
       content: comment.content,
       userId: comment.userId.toString(),
       userLogin: comment.userLogin,
@@ -29,7 +29,7 @@ export class CommentsQueryRepository {
     const comment = await this.CommentModel.findById({ _id: id });
     if (comment) {
       return {
-        id: comment._id,
+        id: comment._id.toString(),
         content: comment.content,
         userId: comment.userId.toString(),
         userLogin: comment.userLogin,

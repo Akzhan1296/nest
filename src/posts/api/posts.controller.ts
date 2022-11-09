@@ -9,8 +9,12 @@ import {
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { PostsService } from '../application/posts.service';
-import { PostInputModel, PostViewModel } from '../infrastructure/posts.type';
+import {
+  CommentViewModel,
+  PostViewModel,
+} from '../infrastructure/repository/models/view.models';
 import { PostsQueryRepository } from '../infrastructure/repository/posts.query.repository';
+import { CreateCommentInputModel, PostInputModel } from './models/input.models';
 
 @Controller('posts')
 export class PostsController {
@@ -26,6 +30,13 @@ export class PostsController {
     const post = await this.postService.createPost(postsInputModel);
     const viewModel = this.postQuerysRepository.getPostById(post._id);
     return viewModel;
+  }
+  @Post(':postId/comments')
+  async createCommentForSelectedpost(
+    @Param() params: { id: ObjectId },
+    @Body() commentInputModel: CreateCommentInputModel,
+  ): Promise<CommentViewModel> {
+    return null;
   }
   @Put(':id')
   updatePost(
