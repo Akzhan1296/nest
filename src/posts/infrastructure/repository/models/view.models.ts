@@ -7,11 +7,3 @@ export type PostViewModel = {
   blogName: string;
   createdAt: Date;
 };
-
-export type CommentViewModel = {
-  id: string;
-  content: string;
-  userId: string;
-  userLogin: string;
-  createdAt: Date;
-};

@@ -13,11 +13,8 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
     private postModel: Model<PostItemType>,
   ) {}
   async getPostsByBlogId(blogId: string): Promise<PostViewModel[]> {
-    console.log(blogId);
     const filter = { blogId: new ObjectId(blogId) };
-    console.log(filter);
     const postsByBlogId = await this.postModel.find(filter);
-    console.log(postsByBlogId);
     return postsByBlogId.map((post) => ({
       blogId: post.blogId.toString(),
       blogName: post.blogName,

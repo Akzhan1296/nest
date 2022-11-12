@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { BlogsStateRepository } from 'src/blogs/application/blogs.interface';
-import { CommentsService } from 'src/comments/application/comments.service';
 import { PostItemType } from '../infrastructure/posts.type';
-import { CreateCommentDTO, CreatePostDTO } from './dto/posts.dto';
+import { CreatePostDTO } from './dto/posts.dto';
 import { PostsStateRepository } from './posts.interface';
 
 @Injectable()
@@ -11,7 +10,6 @@ export class PostsService {
   constructor(
     protected postsRepository: PostsStateRepository,
     protected blogsRepository: BlogsStateRepository,
-    protected commentsService: CommentsService,
   ) {}
   async createPost(dto: CreatePostDTO) {
     const blog = await this.blogsRepository.getBlogById(dto.blogId);
@@ -33,12 +31,5 @@ export class PostsService {
   }
   async deletePost(id: ObjectId) {
     this.postsRepository.deletePost(id);
-  }
-  async createCommentForSelectedPost(
-    postId: ObjectId,
-    commentDto: CreateCommentDTO,
-  ) {
-    //domain level
-    this.commentsService.createCommentForSelectedPost();
   }
 }

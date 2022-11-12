@@ -1,10 +1,8 @@
 import { ObjectId } from 'mongodb';
 
 export type CreateCommentDTO = {
-  userId: ObjectId;
-  userLogin: string;
+  userId: string;
   content: string;
-  addedAt: Date;
   postId: ObjectId;
 };
 

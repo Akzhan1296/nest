@@ -8,11 +8,11 @@ import {
   Put,
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
+import { CommentsService } from 'src/comments/application/comments.service';
+import { CommentsQueryRepository } from 'src/comments/infrastructure/repository/comments.query.repository';
+import { CommentViewModel } from 'src/comments/infrastructure/repository/models/view.models';
 import { PostsService } from '../application/posts.service';
-import {
-  CommentViewModel,
-  PostViewModel,
-} from '../infrastructure/repository/models/view.models';
+import { PostViewModel } from '../infrastructure/repository/models/view.models';
 import { PostsQueryRepository } from '../infrastructure/repository/posts.query.repository';
 import { CreateCommentInputModel, PostInputModel } from './models/input.models';
 
@@ -22,6 +22,8 @@ export class PostsController {
     @Inject(PostsService.name)
     protected postService: PostsService,
     protected postQuerysRepository: PostsQueryRepository,
+    protected commentsService: CommentsService,
+    protected commentsQueryRepository: CommentsQueryRepository,
   ) {}
   @Post()
   async createPost(
@@ -33,10 +35,17 @@ export class PostsController {
   }
   @Post(':postId/comments')
   async createCommentForSelectedpost(
-    @Param() params: { id: ObjectId },
+    @Param() params: { postId: ObjectId },
     @Body() commentInputModel: CreateCommentInputModel,
   ): Promise<CommentViewModel> {
-    return null;
+    const userId = 'userId'; // from JWT
+
+    const comment = await this.commentsService.createCommentForSelectedPost({
+      postId: params.postId,
+      userId,
+      content: commentInputModel.content,
+    });
+    return await this.commentsQueryRepository.getCommentById(comment._id);
   }
   @Put(':id')
   updatePost(

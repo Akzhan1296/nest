@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Inject,
-  Param,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { CommentsService } from '../application/comments.service';
 import { CommentsQueryRepository } from '../infrastructure/repository/comments.query.repository';
@@ -20,11 +12,11 @@ export class CommentsController {
     protected commentsQueryRepository: CommentsQueryRepository,
   ) {}
 
-  @Get(':id')
+  @Get(':commentId')
   async getBlogsById(
-    @Param() params: { id: ObjectId },
+    @Param() params: { commentId: ObjectId },
   ): Promise<CommentViewModel> {
-    return this.commentsQueryRepository.getCommentById(params.id);
+    return this.commentsQueryRepository.getCommentById(params.commentId);
   }
 
   @Put(':commentId')

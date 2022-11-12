@@ -19,10 +19,10 @@ export class CommentsQueryRepository {
 
     return comments.map((comment) => ({
       id: comment._id.toString(),
-      content: comment.content,
+      content: comment.getContent(),
       userId: comment.userId.toString(),
       userLogin: comment.userLogin,
-      createdAt: comment.createdAt.toString(),
+      createdAt: comment.createdAt,
     }));
   }
   async getCommentById(id: ObjectId): Promise<CommentViewModel | null> {
@@ -30,10 +30,10 @@ export class CommentsQueryRepository {
     if (comment) {
       return {
         id: comment._id.toString(),
-        content: comment.content,
+        content: comment.getContent(),
         userId: comment.userId.toString(),
         userLogin: comment.userLogin,
-        createdAt: comment.createdAt.toString(),
+        createdAt: comment.createdAt,
       };
     }
     return null;
