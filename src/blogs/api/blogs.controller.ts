@@ -8,11 +8,16 @@ import {
   Put,
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
+import { PostsService } from 'src/posts/application/posts.service';
+import { PostsQueryRepository } from 'src/posts/infrastructure/repository/posts.query.repository';
 import { BlogsService } from '../application/blogs.services';
 
 import { BlogsQueryRepository } from '../infrastructure/repository/blogs.query.repository';
 import { BlogViewModel } from '../infrastructure/repository/models/view.models';
-import { BlogInputModelType } from './models/input.models';
+import {
+  BlogInputModelType,
+  CreatePostByBlogIdInputType,
+} from './models/input.models';
 
 @Controller('blogs')
 export class BlogsController {
@@ -20,6 +25,9 @@ export class BlogsController {
     @Inject(BlogsService.name)
     protected blogsService: BlogsService,
     protected blogsQueryRepository: BlogsQueryRepository,
+    @Inject(PostsService.name)
+    protected postService: PostsService,
+    protected postQuerysRepository: PostsQueryRepository,
   ) {}
   @Post()
   async createBlog(
@@ -39,5 +47,19 @@ export class BlogsController {
   @Delete(':id')
   async deleteBlog(@Param() params: { id: ObjectId }): Promise<boolean> {
     return await this.blogsService.deleteBlog(params.id);
+  }
+  @Post(':blogId/posts')
+  async createPostByBlogId(
+    @Param() params: { blogId: ObjectId },
+    @Body() postInputModel: CreatePostByBlogIdInputType,
+  ) {
+    const postByBlogId = await this.postService.createPost({
+      ...postInputModel,
+      blogId: params.blogId,
+    });
+    const postsViewModel = await this.postQuerysRepository.getPostsByBlogId(
+      postByBlogId.blogId.toString(),
+    );
+    return postsViewModel;
   }
 }

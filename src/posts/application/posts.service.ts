@@ -13,6 +13,7 @@ export class PostsService {
   ) {}
   async createPost(dto: CreatePostDTO) {
     const blog = await this.blogsRepository.getBlogById(dto.blogId);
+    
 
     const newPost = new PostItemType(
       dto.title,

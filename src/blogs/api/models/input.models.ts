@@ -8,3 +8,9 @@ export class BlogInputModelType {
   @MaxLength(100)
   youtubeUrl: string;
 }
+
+export class CreatePostByBlogIdInputType {
+  title: string;
+  shortDescription: string;
+  content: string;
+}
