@@ -26,10 +26,10 @@ export class PostsService {
 
     return post;
   }
-  async updatePost(id: ObjectId, dto: CreatePostDTO) {
+  async updatePost(id: string, dto: CreatePostDTO) {
     this.postsRepository.updatePost(id, dto);
   }
-  async deletePost(id: ObjectId) {
+  async deletePost(id: string) {
     this.postsRepository.deletePost(id);
   }
 }

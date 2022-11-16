@@ -16,7 +16,7 @@ export class PostsRepository implements PostsStateRepository {
     const result = await this.postModel.create(postItem);
     return result;
   }
-  async updatePost(id: ObjectId, postItem: CreatePostDTO): Promise<boolean> {
+  async updatePost(id: string, postItem: CreatePostDTO): Promise<boolean> {
     const post = await this.postModel.findOne({ _id: id });
 
     post.title = postItem.title;
@@ -34,7 +34,7 @@ export class PostsRepository implements PostsStateRepository {
       });
     return isPostUpdated;
   }
-  async deletePost(id: ObjectId): Promise<boolean> {
+  async deletePost(id: string): Promise<boolean> {
     const post = await this.postModel.findOne({ _id: id });
     const isPostDeleted = post
       .delete()

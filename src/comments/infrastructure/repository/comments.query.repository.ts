@@ -38,7 +38,6 @@ export class CommentsQueryRepository {
     return null;
   }
   async getCommentsByPostId(postId: string) {
-    console.log(postId);
     const comments = await this.CommentModel.find({ postId });
 
     return comments.map((comment) => ({

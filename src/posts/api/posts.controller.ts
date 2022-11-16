@@ -2,7 +2,9 @@ import {
   Body,
   Controller,
   Delete,
+  HttpCode,
   Inject,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -26,6 +28,7 @@ export class PostsController {
     protected commentsQueryRepository: CommentsQueryRepository,
   ) {}
   @Post()
+  @HttpCode(201)
   async createPost(
     @Body() postsInputModel: PostInputModel,
   ): Promise<PostViewModel> {
@@ -36,22 +39,42 @@ export class PostsController {
     return viewModel;
   }
   @Put(':id')
-  updatePost(
-    @Param() params: { id: ObjectId },
+  @HttpCode(204)
+  async updatePost(
+    @Param() params: { id: string },
     @Body() postsInputModel: PostInputModel,
   ) {
-    return this.postService.updatePost(params.id, postsInputModel);
+    const post = await this.postQuerysRepository.getPostById(params.id);
+    if (!post) {
+      throw new NotFoundException('post not found');
+    }
+    this.postService.updatePost(params.id, postsInputModel);
+    return;
   }
+
   @Delete(':id')
-  deletePost(@Param() params: { id: ObjectId }) {
-    return this.postService.deletePost(params.id);
+  @HttpCode(204)
+  async deletePost(@Param() params: { id: string }) {
+    const post = await this.postQuerysRepository.getPostById(params.id);
+    if (!post) {
+      throw new NotFoundException('post not found');
+    }
+    this.postService.deletePost(params.id);
+    return;
   }
+
   @Post(':postId/comments')
+  @HttpCode(201)
   async createCommentForSelectedpost(
     @Param() params: { postId: string },
     @Body() commentInputModel: CreateCommentInputModel,
   ): Promise<CommentViewModel> {
     const userId = 'userId'; // from JWT
+
+    const post = await this.postQuerysRepository.getPostById(params.postId);
+    if (!post) {
+      throw new NotFoundException('post not found');
+    }
 
     const comment = await this.commentsService.createCommentForSelectedPost({
       postId: params.postId,
