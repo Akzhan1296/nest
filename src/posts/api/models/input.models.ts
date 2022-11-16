@@ -1,14 +1,17 @@
-import { ObjectId } from 'mongodb';
+import { MaxLength, MinLength } from 'class-validator';
 
 export class PostInputModel {
-  //swagger
+  @MaxLength(30)
   public title: string;
-  // swagger
+  @MaxLength(100)
   public shortDescription: string;
+  @MaxLength(1000)
   public content: string;
-  public blogId: ObjectId;
+  public blogId: string;
 }
 
 export class CreateCommentInputModel {
+  @MinLength(20)
+  @MaxLength(300)
   public content: string;
 }

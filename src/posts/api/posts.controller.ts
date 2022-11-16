@@ -33,6 +33,17 @@ export class PostsController {
     const viewModel = this.postQuerysRepository.getPostById(post._id);
     return viewModel;
   }
+  @Put(':id')
+  updatePost(
+    @Param() params: { id: ObjectId },
+    @Body() postsInputModel: PostInputModel,
+  ) {
+    return this.postService.updatePost(params.id, postsInputModel);
+  }
+  @Delete(':id')
+  deletePost(@Param() params: { id: ObjectId }) {
+    return this.postService.deletePost(params.id);
+  }
   @Post(':postId/comments')
   async createCommentForSelectedpost(
     @Param() params: { postId: ObjectId },
@@ -46,16 +57,5 @@ export class PostsController {
       content: commentInputModel.content,
     });
     return await this.commentsQueryRepository.getCommentById(comment._id);
-  }
-  @Put(':id')
-  updatePost(
-    @Param() params: { id: ObjectId },
-    @Body() postsInputModel: PostInputModel,
-  ) {
-    return this.postService.updatePost(params.id, postsInputModel);
-  }
-  @Delete(':id')
-  deletePost(@Param() params: { id: ObjectId }) {
-    return this.postService.deletePost(params.id);
   }
 }

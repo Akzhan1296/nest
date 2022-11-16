@@ -1,5 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
-import { ObjectId } from 'mongodb';
+import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
 import { PostsQueryRepository } from 'src/posts/infrastructure/repository/posts.query.repository';
 import { BlogsQueryRepository } from '../infrastructure/repository/blogs.query.repository';
 import { BlogViewModel } from '../infrastructure/repository/models/view.models';
@@ -16,12 +15,20 @@ export class BlogsQueryController {
   }
   @Get(':id')
   async getBlogsById(
-    @Param() params: { id: ObjectId },
+    @Param() params: { id: string },
   ): Promise<BlogViewModel | null> {
-    return this.blogsQueryRepository.getBlogById(params.id);
+    const blog = await this.blogsQueryRepository.getBlogById(params.id);
+    if (!blog) {
+      throw new NotFoundException('blog not found');
+    }
+    return blog;
   }
   @Get(':blogId/posts')
   async getBlogPosts(@Param() params: { blogId: string }) {
+    const blog = await this.blogsQueryRepository.getBlogById(params.blogId);
+    if (!blog) {
+      throw new NotFoundException('posts by blogid not found');
+    }
     return await this.postsQueryRepository.getPostsByBlogId(params.blogId);
   }
 }

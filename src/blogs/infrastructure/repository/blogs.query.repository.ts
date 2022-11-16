@@ -1,7 +1,5 @@
 import { BlogItemType } from '../blogs.type';
 import { Model } from 'mongoose';
-import { ObjectId } from 'mongodb';
-
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { BlogsQueryStateRepository } from 'src/blogs/application/blogs.query.interface';
@@ -23,7 +21,7 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
       createdAt: blog.createdAt,
     }));
   }
-  async getBlogById(id: ObjectId): Promise<BlogViewModel | null> {
+  async getBlogById(id: string): Promise<BlogViewModel | null> {
     const blog = await this.blogModel.findById(id);
     if (blog) {
       return {

@@ -2,16 +2,17 @@ import {
   Body,
   Controller,
   Delete,
+  HttpCode,
   Inject,
+  NotFoundException,
   Param,
   Post,
   Put,
 } from '@nestjs/common';
-import { ObjectId } from 'mongodb';
 import { PostsService } from 'src/posts/application/posts.service';
+import { PostViewModel } from 'src/posts/infrastructure/repository/models/view.models';
 import { PostsQueryRepository } from 'src/posts/infrastructure/repository/posts.query.repository';
 import { BlogsService } from '../application/blogs.services';
-
 import { BlogsQueryRepository } from '../infrastructure/repository/blogs.query.repository';
 import { BlogViewModel } from '../infrastructure/repository/models/view.models';
 import {
@@ -30,36 +31,53 @@ export class BlogsController {
     protected postQuerysRepository: PostsQueryRepository,
   ) {}
   @Post()
+  @HttpCode(201)
   async createBlog(
     @Body() blogInputModel: BlogInputModelType,
   ): Promise<BlogViewModel> {
     const blog = await this.blogsService.createBlog(blogInputModel);
-    const viewModel = await this.blogsQueryRepository.getBlogById(blog._id);
+    const viewModel = await this.blogsQueryRepository.getBlogById(
+      blog._id.toString(),
+    );
     return viewModel;
   }
   @Put(':id')
+  @HttpCode(204)
   async updateBlog(
-    @Param() params: { id: ObjectId },
+    @Param() params: { id: string },
     @Body() blogInputModel: BlogInputModelType,
-  ): Promise<boolean> {
-    return await this.blogsService.updateBlog(params.id, blogInputModel);
+  ): Promise<undefined> {
+    const blog = await this.blogsQueryRepository.getBlogById(params.id);
+    if (!blog) {
+      throw new NotFoundException('blog not found');
+    }
+    await this.blogsService.updateBlog(params.id, blogInputModel);
+    return;
   }
   @Delete(':id')
-  async deleteBlog(@Param() params: { id: ObjectId }): Promise<boolean> {
-    return await this.blogsService.deleteBlog(params.id);
+  @HttpCode(204)
+  async deleteBlog(@Param() params: { id: string }): Promise<undefined> {
+    const blog = await this.blogsQueryRepository.getBlogById(params.id);
+    if (!blog) {
+      throw new NotFoundException('blog not found');
+    }
+    await this.blogsService.deleteBlog(params.id);
+    return;
   }
   @Post(':blogId/posts')
+  @HttpCode(201)
   async createPostByBlogId(
-    @Param() params: { blogId: ObjectId },
+    @Param() params: { blogId: string },
     @Body() postInputModel: CreatePostByBlogIdInputType,
-  ) {
+  ): Promise<PostViewModel> {
+    const blog = await this.blogsQueryRepository.getBlogById(params.blogId);
+    if (!blog) {
+      throw new NotFoundException('blog not found');
+    }
     const postByBlogId = await this.postService.createPost({
       ...postInputModel,
       blogId: params.blogId,
     });
-    const postsViewModel = await this.postQuerysRepository.getPostsByBlogId(
-      postByBlogId.blogId.toString(),
-    );
-    return postsViewModel;
+    return await this.postQuerysRepository.getPostById(postByBlogId._id);
   }
 }

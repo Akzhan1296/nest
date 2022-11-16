@@ -21,7 +21,7 @@ export class CommentsService {
   createComment(createCommentDTO: CreateCommentDTO) {
     const contentLength = createCommentDTO.content.length;
     if (contentLength < 3 || contentLength > 100) {
-      // throw new BadRequestException('length error');
+      throw new BadRequestException('length error');
     }
 
     const newCommentModel = new this.CommentModel(createCommentDTO);
@@ -41,7 +41,12 @@ export class CommentsService {
     updateCommentDTO: UpdateCommentDTO,
   ): Promise<boolean> {
     const comment = await this.commentsRepository.findCommentById(id);
-    comment.setContent(updateCommentDTO.content);
+    try {
+      comment.setContent(updateCommentDTO.content);
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
+
     const isCommentUpdated = this.commentsRepository.save(comment);
     return isCommentUpdated;
   }

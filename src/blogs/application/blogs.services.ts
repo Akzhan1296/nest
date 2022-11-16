@@ -1,5 +1,4 @@
 import { BlogItemDBType, BlogItemType } from '../infrastructure/blogs.type';
-import { ObjectId } from 'mongodb';
 import { BlogsStateRepository } from './blogs.interface';
 import { BlogType } from './dto/blogs.dto';
 export class BlogsService {
@@ -8,7 +7,7 @@ export class BlogsService {
     const newBlog = new BlogItemType(dto.name, dto.youtubeUrl, new Date());
     return this.blogRepository.createBlog(newBlog);
   }
-  async updateBlog(id: ObjectId, dto: BlogType): Promise<boolean> {
+  async updateBlog(id: string, dto: BlogType): Promise<boolean> {
     let isBlogUpdated = false;
     const blog = await this.blogRepository.getBlogById(id);
     if (blog) {
@@ -16,7 +15,7 @@ export class BlogsService {
     }
     return isBlogUpdated;
   }
-  async deleteBlog(id: ObjectId): Promise<boolean> {
+  async deleteBlog(id: string): Promise<boolean> {
     let isBlogDeleted = false;
     const blog = await this.blogRepository.getBlogById(id);
     if (blog) {

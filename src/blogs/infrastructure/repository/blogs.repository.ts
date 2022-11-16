@@ -1,6 +1,5 @@
 import { BlogItemDBType, BlogItemType } from '../blogs.type';
 import { Model } from 'mongoose';
-import { ObjectId } from 'mongodb';
 import { Injectable } from '@nestjs/common';
 import { BlogsStateRepository } from 'src/blogs/application/blogs.interface';
 import { InjectModel } from '@nestjs/mongoose';
@@ -11,7 +10,7 @@ export class BlogsRepository implements BlogsStateRepository {
     @InjectModel(BlogItemType.name)
     private blogModel: Model<BlogItemType>,
   ) {}
-  async getBlogById(id: ObjectId): Promise<BlogItemDBType | null> {
+  async getBlogById(id: string): Promise<BlogItemDBType | null> {
     const blog = await this.blogModel.findOne({ _id: id });
     return blog;
   }
@@ -19,7 +18,7 @@ export class BlogsRepository implements BlogsStateRepository {
     const result = await this.blogModel.create(newBlog);
     return result;
   }
-  async updateBlog(id: ObjectId, dto: BlogItemType): Promise<boolean> {
+  async updateBlog(id: string, dto: BlogItemType): Promise<boolean> {
     const blog = await this.blogModel.findOne({ _id: id });
     blog.name = dto.name;
     blog.youtubeUrl = dto.youtubeUrl;
@@ -34,7 +33,7 @@ export class BlogsRepository implements BlogsStateRepository {
       });
     return isBlogUpdated;
   }
-  async deleteBlog(id: ObjectId): Promise<boolean> {
+  async deleteBlog(id: string): Promise<boolean> {
     const blog = await this.blogModel.findOne({ _id: id });
     const isBlogDeleted: boolean = blog
       .delete()

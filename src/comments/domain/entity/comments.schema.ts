@@ -24,8 +24,8 @@ export class Comment {
   setContent(content: string) {
     // run antimat checking - domain business logic/  check rules/invariants
     // if bad then trow new Error();
-    if (content.length < 20 || content.length > 100) {
-      throw new Error();
+    if (content.length < 3 || content.length > 100) {
+      throw new Error('error length');
     }
     this.content = content;
   }
