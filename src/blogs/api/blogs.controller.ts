@@ -78,6 +78,8 @@ export class BlogsController {
       ...postInputModel,
       blogId: params.blogId,
     });
-    return await this.postQuerysRepository.getPostById(postByBlogId._id);
+    return await this.postQuerysRepository.getPostById(
+      postByBlogId._id.toString(),
+    );
   }
 }

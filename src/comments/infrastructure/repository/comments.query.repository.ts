@@ -1,12 +1,11 @@
 import { Model } from 'mongoose';
-import { ObjectId } from 'mongodb';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {
   Comment,
   CommentDocument,
 } from 'src/comments/domain/entity/comments.schema';
-import { CommentViewModel } from './models/view.models';
+import { CommentViewModel } from '../models/view.models';
 
 @Injectable()
 export class CommentsQueryRepository {
@@ -25,7 +24,7 @@ export class CommentsQueryRepository {
       createdAt: comment.createdAt,
     }));
   }
-  async getCommentById(id: ObjectId): Promise<CommentViewModel | null> {
+  async getCommentById(id: string): Promise<CommentViewModel | null> {
     const comment = await this.CommentModel.findById({ _id: id });
     if (comment) {
       return {
@@ -37,5 +36,17 @@ export class CommentsQueryRepository {
       };
     }
     return null;
+  }
+  async getCommentsByPostId(postId: string) {
+    console.log(postId);
+    const comments = await this.CommentModel.find({ postId });
+
+    return comments.map((comment) => ({
+      id: comment._id.toString(),
+      content: comment.getContent(),
+      userId: comment.userId.toString(),
+      userLogin: comment.userLogin,
+      createdAt: comment.createdAt,
+    }));
   }
 }

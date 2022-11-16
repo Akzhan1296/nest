@@ -6,7 +6,6 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Comment, CommentDocument } from '../domain/entity/comments.schema';
 import { CreateCommentDTO, UpdateCommentDTO } from './dto/comments.dto';
-import { ObjectId } from 'mongodb';
 import { CommentsRepository } from '../infrastructure/repository/comments.repository';
 import { Model } from 'mongoose';
 
@@ -37,7 +36,7 @@ export class CommentsService {
   }
 
   async updateComment(
-    id: ObjectId,
+    id: string,
     updateCommentDTO: UpdateCommentDTO,
   ): Promise<boolean> {
     const comment = await this.commentsRepository.findCommentById(id);
@@ -50,7 +49,7 @@ export class CommentsService {
     const isCommentUpdated = this.commentsRepository.save(comment);
     return isCommentUpdated;
   }
-  async deleteComment(id: ObjectId): Promise<boolean> {
+  async deleteComment(id: string): Promise<boolean> {
     const comment = await this.commentsRepository.findCommentById(id);
     if (!comment) throw new NotFoundException('not found');
     const isCommentDeleted = this.commentsRepository.delete(comment);

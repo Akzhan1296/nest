@@ -13,7 +13,7 @@ export class CommentsRepository {
     @InjectModel(Comment.name)
     private CommentModel: Model<CommentDocument>,
   ) {}
-  async findCommentById(id: ObjectId): Promise<CommentDocument> {
+  async findCommentById(id: string): Promise<CommentDocument> {
     return await this.CommentModel.findOne({ _id: id });
   }
   async save(comment: CommentDocument): Promise<boolean> {

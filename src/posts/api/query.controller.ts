@@ -1,20 +1,25 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { ObjectId } from 'mongodb';
+import { CommentsQueryRepository } from 'src/comments/infrastructure/repository/comments.query.repository';
 import { PostsQueryRepository } from '../infrastructure/repository/posts.query.repository';
 
 @Controller('posts')
 export class PostsQueryController {
-  constructor(protected postsQueryRepository: PostsQueryRepository) {}
+  constructor(
+    protected postsQueryRepository: PostsQueryRepository,
+    protected commentsQueryRepository: CommentsQueryRepository,
+  ) {}
   @Get()
   async getPosts() {
     return await this.postsQueryRepository.getPosts();
   }
   @Get(':id')
-  async getPostById(@Param() params: { id: ObjectId }) {
+  async getPostById(@Param() params: { id: string }) {
     return await this.postsQueryRepository.getPostById(params.id);
   }
-  @Get(':id')
-  async getCommentsByPostId(@Param() params: { id: ObjectId }) {
-    return await [];
+  @Get(':postId/comments')
+  async getCommentsByPostId(@Param() params: { postId: string }) {
+    return await this.commentsQueryRepository.getCommentsByPostId(
+      params.postId,
+    );
   }
 }

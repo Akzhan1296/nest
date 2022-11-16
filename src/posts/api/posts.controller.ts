@@ -10,7 +10,7 @@ import {
 import { ObjectId } from 'mongodb';
 import { CommentsService } from 'src/comments/application/comments.service';
 import { CommentsQueryRepository } from 'src/comments/infrastructure/repository/comments.query.repository';
-import { CommentViewModel } from 'src/comments/infrastructure/repository/models/view.models';
+import { CommentViewModel } from 'src/comments/infrastructure/models/view.models';
 import { PostsService } from '../application/posts.service';
 import { PostViewModel } from '../infrastructure/repository/models/view.models';
 import { PostsQueryRepository } from '../infrastructure/repository/posts.query.repository';
@@ -30,7 +30,9 @@ export class PostsController {
     @Body() postsInputModel: PostInputModel,
   ): Promise<PostViewModel> {
     const post = await this.postService.createPost(postsInputModel);
-    const viewModel = this.postQuerysRepository.getPostById(post._id);
+    const viewModel = this.postQuerysRepository.getPostById(
+      post._id.toString(),
+    );
     return viewModel;
   }
   @Put(':id')
@@ -46,7 +48,7 @@ export class PostsController {
   }
   @Post(':postId/comments')
   async createCommentForSelectedpost(
-    @Param() params: { postId: ObjectId },
+    @Param() params: { postId: string },
     @Body() commentInputModel: CreateCommentInputModel,
   ): Promise<CommentViewModel> {
     const userId = 'userId'; // from JWT
@@ -56,6 +58,8 @@ export class PostsController {
       userId,
       content: commentInputModel.content,
     });
-    return await this.commentsQueryRepository.getCommentById(comment._id);
+    return await this.commentsQueryRepository.getCommentById(
+      comment._id.toString(),
+    );
   }
 }

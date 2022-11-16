@@ -37,7 +37,7 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
       title: post.title,
     }));
   }
-  async getPostById(id: ObjectId): Promise<PostViewModel | null> {
+  async getPostById(id: string): Promise<PostViewModel | null> {
     const post = await this.postModel.findById(id).lean();
 
     if (post) {

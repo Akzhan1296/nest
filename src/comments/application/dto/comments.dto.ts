@@ -1,9 +1,7 @@
-import { ObjectId } from 'mongodb';
-
 export type CreateCommentDTO = {
   userId: string;
   content: string;
-  postId: ObjectId;
+  postId: string;
 };
 
 export type UpdateCommentDTO = {
