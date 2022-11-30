@@ -12,6 +12,9 @@ export class PostsRepository implements PostsStateRepository {
     @InjectModel(PostItemType.name)
     private postModel: Model<PostItemType>,
   ) {}
+  async getPostById(id: string): Promise<PostItemDBType | null> {
+    return await this.postModel.findOne({ _id: id });
+  }
   async createPost(postItem: PostItemType): Promise<PostItemDBType> {
     const result = await this.postModel.create(postItem);
     return result;

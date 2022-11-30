@@ -4,7 +4,6 @@ import {
   Delete,
   HttpCode,
   Inject,
-  NotFoundException,
   Param,
   Post,
   Put,
@@ -30,6 +29,7 @@ export class BlogsController {
     protected postService: PostsService,
     protected postQuerysRepository: PostsQueryRepository,
   ) {}
+
   @Post()
   @HttpCode(201)
   async createBlog(
@@ -41,39 +41,30 @@ export class BlogsController {
     );
     return viewModel;
   }
+
   @Put(':id')
   @HttpCode(204)
   async updateBlog(
     @Param() params: { id: string },
     @Body() blogInputModel: BlogInputModelType,
   ): Promise<undefined> {
-    const blog = await this.blogsQueryRepository.getBlogById(params.id);
-    if (!blog) {
-      throw new NotFoundException('blog not found');
-    }
     await this.blogsService.updateBlog(params.id, blogInputModel);
     return;
   }
+
   @Delete(':id')
   @HttpCode(204)
   async deleteBlog(@Param() params: { id: string }): Promise<undefined> {
-    const blog = await this.blogsQueryRepository.getBlogById(params.id);
-    if (!blog) {
-      throw new NotFoundException('blog not found');
-    }
     await this.blogsService.deleteBlog(params.id);
     return;
   }
+
   @Post(':blogId/posts')
   @HttpCode(201)
   async createPostByBlogId(
     @Param() params: { blogId: string },
     @Body() postInputModel: CreatePostByBlogIdInputType,
   ): Promise<PostViewModel> {
-    const blog = await this.blogsQueryRepository.getBlogById(params.blogId);
-    if (!blog) {
-      throw new NotFoundException('blog not found');
-    }
     const postByBlogId = await this.postService.createPost({
       ...postInputModel,
       blogId: params.blogId,

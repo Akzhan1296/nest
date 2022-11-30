@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  NotFoundException,
+  Param,
+  Put,
+} from '@nestjs/common';
 import { CommentsService } from '../application/comments.service';
 import { CommentsQueryRepository } from '../infrastructure/repository/comments.query.repository';
 import { CommentViewModel } from '../infrastructure/models/view.models';
@@ -12,27 +21,36 @@ export class CommentsController {
   ) {}
 
   @Get(':commentId')
-  async getBlogsById(
+  async getCommentById(
     @Param() params: { commentId: string },
   ): Promise<CommentViewModel> {
+    const comment = await this.commentsQueryRepository.getCommentById(
+      params.commentId,
+    );
+    if (!comment) {
+      throw new NotFoundException('comment not found');
+    }
     return this.commentsQueryRepository.getCommentById(params.commentId);
   }
 
   @Put(':commentId')
+  @HttpCode(204)
   async updateComment(
     @Param() params: { commentId: string },
     @Body() commentInputModel: CommentInputModelType,
-  ): Promise<boolean> {
-    return await this.commentsService.updateComment(
+  ): Promise<undefined> {
+    await this.commentsService.updateComment(
       params.commentId,
       commentInputModel,
     );
+    return;
   }
   @Delete(':commentId')
+  @HttpCode(204)
   async deleteComment(
     @Param() params: { commentId: string },
-  ): Promise<boolean> {
-    console.log(params.commentId);
-    return await this.commentsService.deleteComment(params.commentId);
+  ): Promise<undefined> {
+    await this.commentsService.deleteComment(params.commentId);
+    return;
   }
 }

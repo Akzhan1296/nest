@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { BlogsStateRepository } from 'src/blogs/application/blogs.interface';
 import { PostItemType } from '../infrastructure/posts.type';
@@ -13,7 +13,9 @@ export class PostsService {
   ) {}
   async createPost(dto: CreatePostDTO) {
     const blog = await this.blogsRepository.getBlogById(dto.blogId);
-
+    if (!blog) {
+      throw new NotFoundException('blog not found');
+    }
     const newPost = new PostItemType(
       dto.title,
       dto.shortDescription,
@@ -22,14 +24,20 @@ export class PostsService {
       blog.name,
       new Date(),
     );
-    const post = this.postsRepository.createPost(newPost);
-
-    return post;
+    return this.postsRepository.createPost(newPost);
   }
   async updatePost(id: string, dto: CreatePostDTO) {
+    const post = await this.postsRepository.getPostById(id);
+    if (!post) {
+      throw new NotFoundException('post not found');
+    }
     this.postsRepository.updatePost(id, dto);
   }
   async deletePost(id: string) {
+    const post = await this.postsRepository.getPostById(id);
+    if (!post) {
+      throw new NotFoundException('post not found');
+    }
     this.postsRepository.deletePost(id);
   }
 }

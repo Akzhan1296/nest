@@ -8,6 +8,7 @@ import { Comment, CommentDocument } from '../domain/entity/comments.schema';
 import { CreateCommentDTO, UpdateCommentDTO } from './dto/comments.dto';
 import { CommentsRepository } from '../infrastructure/repository/comments.repository';
 import { Model } from 'mongoose';
+import { PostsRepository } from 'src/posts/infrastructure/repository/posts.repository';
 
 @Injectable()
 export class CommentsService {
@@ -15,11 +16,12 @@ export class CommentsService {
     @InjectModel(Comment.name)
     private CommentModel: Model<CommentDocument>,
     protected commentsRepository: CommentsRepository,
+    protected postsRepository: PostsRepository,
   ) {}
   // domain factory
   createComment(createCommentDTO: CreateCommentDTO) {
     const contentLength = createCommentDTO.content.length;
-    if (contentLength < 3 || contentLength > 100) {
+    if (contentLength < 20 || contentLength > 300) {
       throw new BadRequestException('length error');
     }
 
@@ -30,6 +32,12 @@ export class CommentsService {
   async createCommentForSelectedPost(
     createCommentDTO: CreateCommentDTO,
   ): Promise<CommentDocument> {
+    const post = await this.postsRepository.getPostById(
+      createCommentDTO.postId,
+    );
+    if (!post) {
+      throw new NotFoundException('post not found');
+    }
     const newComment = this.createComment(createCommentDTO);
     await this.commentsRepository.save(newComment);
     return newComment;
@@ -40,19 +48,13 @@ export class CommentsService {
     updateCommentDTO: UpdateCommentDTO,
   ): Promise<boolean> {
     const comment = await this.commentsRepository.findCommentById(id);
-    try {
-      comment.setContent(updateCommentDTO.content);
-    } catch (err) {
-      throw new BadRequestException(err);
-    }
-
-    const isCommentUpdated = this.commentsRepository.save(comment);
-    return isCommentUpdated;
+    if (!comment) throw new NotFoundException('comment not found');
+    comment.setContent(updateCommentDTO.content);
+    return this.commentsRepository.save(comment);
   }
   async deleteComment(id: string): Promise<boolean> {
     const comment = await this.commentsRepository.findCommentById(id);
-    if (!comment) throw new NotFoundException('not found');
-    const isCommentDeleted = this.commentsRepository.delete(comment);
-    return isCommentDeleted;
+    if (!comment) throw new NotFoundException('comment not found');
+    return this.commentsRepository.delete(comment);
   }
 }

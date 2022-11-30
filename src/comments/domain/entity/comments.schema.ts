@@ -6,10 +6,8 @@ import { HydratedDocument } from 'mongoose';
 
 export type CommentDocument = HydratedDocument<Comment>;
 
-@Schema()
+@Schema({ optimisticConcurrency: true })
 export class Comment {
-  @Prop()
-  id: ObjectId;
   @Prop()
   userId: ObjectId;
   @Prop()
@@ -24,14 +22,12 @@ export class Comment {
   setContent(content: string) {
     // run antimat checking - domain business logic/  check rules/invariants
     // if bad then trow new Error();
-    if (content.length < 3 || content.length > 100) {
+    if (content.length < 20 || content.length > 300) {
       throw new Error('error length');
     }
     this.content = content;
   }
   getContent() {
-    // run antimat checking - domain business logic/  check rules/invariants
-    // if bad then trow new Error();
     return this.content;
   }
 }

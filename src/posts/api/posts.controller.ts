@@ -4,12 +4,10 @@ import {
   Delete,
   HttpCode,
   Inject,
-  NotFoundException,
   Param,
   Post,
   Put,
 } from '@nestjs/common';
-import { ObjectId } from 'mongodb';
 import { CommentsService } from 'src/comments/application/comments.service';
 import { CommentsQueryRepository } from 'src/comments/infrastructure/repository/comments.query.repository';
 import { CommentViewModel } from 'src/comments/infrastructure/models/view.models';
@@ -27,6 +25,7 @@ export class PostsController {
     protected commentsService: CommentsService,
     protected commentsQueryRepository: CommentsQueryRepository,
   ) {}
+
   @Post()
   @HttpCode(201)
   async createPost(
@@ -38,16 +37,13 @@ export class PostsController {
     );
     return viewModel;
   }
+
   @Put(':id')
   @HttpCode(204)
   async updatePost(
     @Param() params: { id: string },
     @Body() postsInputModel: PostInputModel,
   ) {
-    const post = await this.postQuerysRepository.getPostById(params.id);
-    if (!post) {
-      throw new NotFoundException('post not found');
-    }
     this.postService.updatePost(params.id, postsInputModel);
     return;
   }
@@ -55,26 +51,17 @@ export class PostsController {
   @Delete(':id')
   @HttpCode(204)
   async deletePost(@Param() params: { id: string }) {
-    const post = await this.postQuerysRepository.getPostById(params.id);
-    if (!post) {
-      throw new NotFoundException('post not found');
-    }
     this.postService.deletePost(params.id);
     return;
   }
 
   @Post(':postId/comments')
   @HttpCode(201)
-  async createCommentForSelectedpost(
+  async createCommentForSelectedPost(
     @Param() params: { postId: string },
     @Body() commentInputModel: CreateCommentInputModel,
   ): Promise<CommentViewModel> {
     const userId = 'userId'; // from JWT
-
-    const post = await this.postQuerysRepository.getPostById(params.postId);
-    if (!post) {
-      throw new NotFoundException('post not found');
-    }
 
     const comment = await this.commentsService.createCommentForSelectedPost({
       postId: params.postId,

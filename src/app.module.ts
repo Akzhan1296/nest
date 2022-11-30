@@ -37,6 +37,7 @@ import {
 import { UsersController } from './users/api/users.controller';
 import { UsersService } from './users/application/users.service';
 import { UsersRepository } from './users/infrastructure/repository/users.repository';
+import { Users, UsersSchema } from './users/domain/entity/users.schema';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { UsersRepository } from './users/infrastructure/repository/users.reposit
       { name: BlogItemType.name, schema: BlogsSchema },
       { name: PostItemType.name, schema: PostsSchema },
       { name: Comment.name, schema: CommentSchema },
+      { name: Users.name, schema: UsersSchema },
     ]),
   ],
   controllers: [

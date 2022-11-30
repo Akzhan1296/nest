@@ -1,4 +1,15 @@
-import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  NotFoundException,
+  Query,
+} from '@nestjs/common';
+import {
+  PageSizeQueryModel,
+  PaginationViewModel,
+} from 'src/common/common-types';
+import { QueryParamsPipe } from 'src/common/query-param-pipes';
 import { PostsQueryRepository } from 'src/posts/infrastructure/repository/posts.query.repository';
 import { BlogsQueryRepository } from '../infrastructure/repository/blogs.query.repository';
 import { BlogViewModel } from '../infrastructure/repository/models/view.models';
@@ -10,8 +21,10 @@ export class BlogsQueryController {
     protected postsQueryRepository: PostsQueryRepository,
   ) {}
   @Get()
-  async getBlogs(): Promise<BlogViewModel[]> {
-    return await this.blogsQueryRepository.getBlogs();
+  async getBlogs(
+    @Query(new QueryParamsPipe()) pageSize: PageSizeQueryModel,
+  ): Promise<PaginationViewModel<BlogViewModel>> {
+    return await this.blogsQueryRepository.getBlogs(pageSize);
   }
   @Get(':id')
   async getBlogsById(
@@ -24,11 +37,17 @@ export class BlogsQueryController {
     return blog;
   }
   @Get(':blogId/posts')
-  async getBlogPosts(@Param() params: { blogId: string }) {
+  async getBlogPosts(
+    @Query(new QueryParamsPipe()) pageSize: PageSizeQueryModel,
+    @Param() params: { blogId: string },
+  ) {
     const blog = await this.blogsQueryRepository.getBlogById(params.blogId);
     if (!blog) {
       throw new NotFoundException('posts by blogid not found');
     }
-    return await this.postsQueryRepository.getPostsByBlogId(params.blogId);
+    return await this.postsQueryRepository.getPostsByBlogId(
+      pageSize,
+      params.blogId,
+    );
   }
 }

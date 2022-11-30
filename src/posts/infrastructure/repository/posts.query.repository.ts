@@ -2,9 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { PostsQueryStateRepository } from 'src/posts/application/posts.query.interface';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
-import { PostItemType } from '../posts.type';
+import { PostItemDBType, PostItemType } from '../posts.type';
 import { InjectModel } from '@nestjs/mongoose';
 import { PostViewModel } from './models/view.models';
+import {
+  PageSizeQueryModel,
+  PaginationViewModel,
+} from 'src/common/common-types';
+import { Paginated } from 'src/common/utils';
 
 @Injectable()
 export class PostsQueryRepository implements PostsQueryStateRepository {
@@ -12,21 +17,11 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
     @InjectModel(PostItemType.name)
     private postModel: Model<PostItemType>,
   ) {}
-  async getPostsByBlogId(blogId: string): Promise<PostViewModel[]> {
-    const filter = { blogId: new ObjectId(blogId) };
-    const postsByBlogId = await this.postModel.find(filter);
-    return postsByBlogId.map((post) => ({
-      blogId: post.blogId.toString(),
-      blogName: post.blogName,
-      id: post._id.toString(),
-      content: post.content,
-      createdAt: post.createdAt,
-      shortDescription: post.shortDescription,
-      title: post.title,
-    }));
+
+  private async getPostsCount() {
+    return this.postModel.count();
   }
-  async getPosts(): Promise<PostViewModel[]> {
-    const posts = await this.postModel.find();
+  private getPostsViewModel(posts: PostItemDBType[]) {
     return posts.map((post) => ({
       blogId: post.blogId.toString(),
       blogName: post.blogName,
@@ -36,6 +31,39 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
       shortDescription: post.shortDescription,
       title: post.title,
     }));
+  }
+  private async getPaginatedPosts(
+    pageParams: PageSizeQueryModel,
+    posts: PostItemDBType[],
+  ) {
+    const paginated = new Paginated<PostViewModel>(
+      { ...pageParams, totalCount: await this.getPostsCount() },
+      this.getPostsViewModel(posts),
+    ).transformPagination();
+    return paginated;
+  }
+
+  async getPostsByBlogId(
+    pageParams: PageSizeQueryModel,
+    blogId: string,
+  ): Promise<PaginationViewModel<PostViewModel>> {
+    const { skip, pageSize } = pageParams;
+    const filter = { blogId: new ObjectId(blogId) };
+
+    const postsByBlogId = await this.postModel
+      .find(filter)
+      .skip(skip)
+      .limit(pageSize);
+
+    return this.getPaginatedPosts(pageParams, postsByBlogId);
+  }
+  async getPosts(
+    pageParams: PageSizeQueryModel,
+  ): Promise<PaginationViewModel<PostViewModel>> {
+    const { skip, pageSize } = pageParams;
+    const posts = await this.postModel.find().skip(skip).limit(pageSize);
+
+    return this.getPaginatedPosts(pageParams, posts);
   }
   async getPostById(id: string): Promise<PostViewModel | null> {
     const post = await this.postModel.findById(id).lean();
@@ -51,7 +79,6 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
         title: post.title,
       };
     }
-
     return null;
   }
 }

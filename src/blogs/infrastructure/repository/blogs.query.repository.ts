@@ -4,6 +4,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { BlogsQueryStateRepository } from 'src/blogs/application/blogs.query.interface';
 import { BlogViewModel } from './models/view.models';
+import {
+  PageSizeQueryModel,
+  PaginationViewModel,
+} from 'src/common/common-types';
+import { Paginated } from 'src/common/utils';
 
 @Injectable()
 export class BlogsQueryRepository implements BlogsQueryStateRepository {
@@ -11,15 +16,28 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
     @InjectModel(BlogItemType.name)
     private blogModel: Model<BlogItemType>,
   ) {}
-  async getBlogs(): Promise<BlogViewModel[]> {
-    // return await BlogsModelClass.find(filter).skip(skip).limit(limit).lean();
-    const blogs = await this.blogModel.find();
-    return blogs.map((blog) => ({
-      name: blog.name,
-      youtubeUrl: blog.youtubeUrl,
-      id: blog._id.toString(),
-      createdAt: blog.createdAt,
-    }));
+  async getBlogsCount() {
+    return await this.blogModel.count();
+  }
+  async getBlogs(
+    pageParams: PageSizeQueryModel,
+  ): Promise<PaginationViewModel<BlogViewModel>> {
+    const { skip, searchNameTerm, pageSize } = pageParams;
+    const blogs = await this.blogModel
+      .find(searchNameTerm)
+      .skip(skip)
+      .limit(pageSize);
+
+    const paginated = new Paginated<BlogViewModel>(
+      { ...pageParams, totalCount: await this.getBlogsCount() },
+      blogs.map((blog) => ({
+        name: blog.name,
+        youtubeUrl: blog.youtubeUrl,
+        id: blog._id.toString(),
+        createdAt: blog.createdAt,
+      })),
+    ).transformPagination();
+    return paginated;
   }
   async getBlogById(id: string): Promise<BlogViewModel | null> {
     const blog = await this.blogModel.findById(id);

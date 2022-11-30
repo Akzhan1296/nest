@@ -20,7 +20,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       };
 
       const responseBody: any = exception.getResponse();
-      console.log(responseBody);
       if (Array.isArray(responseBody.message)) {
         responseBody.message.forEach((m) =>
           errorResponse.errorMessages.push(m),
@@ -31,12 +30,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
       response.status(status).json(errorResponse);
       return;
-    } else {
-      response.status(status).json({
-        statusCode: status,
-        timestamp: new Date().toISOString(),
-        path: request.url,
-      });
     }
+
+    response.status(status).json({
+      statusCode: status,
+      timestamp: new Date().toISOString(),
+      path: request.url,
+    });
   }
 }
