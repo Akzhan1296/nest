@@ -9,7 +9,8 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       stopAtFirstError: true,
-      // transform: true,
+      transform: true,
+      transformOptions: { enableImplicitConversion: true },
       exceptionFactory: (errors) => {
         const errorsForProperty = [];
 

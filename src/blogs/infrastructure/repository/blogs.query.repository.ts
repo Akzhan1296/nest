@@ -1,4 +1,4 @@
-import { BlogItemType } from '../blogs.type';
+import { BlogItemDBType, BlogItemType, SearchTermBlogs } from '../blogs.type';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -10,34 +10,47 @@ import {
 } from 'src/common/common-types';
 import { Paginated } from 'src/common/utils';
 
+// asc сначала старые потом новые
+// desc сначала новые потом старые
+
 @Injectable()
 export class BlogsQueryRepository implements BlogsQueryStateRepository {
   constructor(
     @InjectModel(BlogItemType.name)
     private blogModel: Model<BlogItemType>,
   ) {}
-  async getBlogsCount() {
-    return await this.blogModel.count();
+  private async getBlogsCount(filter: SearchTermBlogs) {
+    return await this.blogModel.find(filter).count();
+  }
+  private getBlogsViews(blogs: BlogItemDBType[]) {
+    return blogs.map((blog) => ({
+      name: blog.name,
+      youtubeUrl: blog.youtubeUrl,
+      id: blog._id.toString(),
+      createdAt: blog.createdAt,
+    }));
   }
   async getBlogs(
     pageParams: PageSizeQueryModel,
   ): Promise<PaginationViewModel<BlogViewModel>> {
-    const { skip, searchNameTerm, pageSize } = pageParams;
+    const { searchNameTerm, skip, pageSize, sortBy, sortDirection } =
+      pageParams;
+
+    const filter: SearchTermBlogs = { name: new RegExp(searchNameTerm) };
+
     const blogs = await this.blogModel
-      .find(searchNameTerm)
+      .find(filter)
       .skip(skip)
+      .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
       .limit(pageSize);
 
-    const paginated = new Paginated<BlogViewModel>(
-      { ...pageParams, totalCount: await this.getBlogsCount() },
-      blogs.map((blog) => ({
-        name: blog.name,
-        youtubeUrl: blog.youtubeUrl,
-        id: blog._id.toString(),
-        createdAt: blog.createdAt,
-      })),
-    ).transformPagination();
-    return paginated;
+    return Paginated.transformPagination(
+      {
+        ...pageParams,
+        totalCount: await this.getBlogsCount(filter),
+      },
+      this.getBlogsViews(blogs),
+    );
   }
   async getBlogById(id: string): Promise<BlogViewModel | null> {
     const blog = await this.blogModel.findById(id);
@@ -50,5 +63,8 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
       };
     }
     return null;
+  }
+  async dropBlogs() {
+    return this.blogModel.collection.drop();
   }
 }

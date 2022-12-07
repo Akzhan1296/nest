@@ -4,15 +4,18 @@ export class QueryParamsPipe implements PipeTransform {
   public transform(value: any) {
     const pageSize = +value.pageSize || 10;
     const pageNumber = +value.pageNumber || 1;
-    const searchNameTerm = value.searchNameTerm
-      ? { name: new RegExp(value.searchNameTerm) }
-      : {};
     const skip = pageSize * (pageNumber - 1);
+    // const searchNameTerm = value.searchNameTerm || '';
+    // const searchLoginTerm = value.searchLoginTerm || '';
+    // const searchEmailTerm = value.searchEmailTerm || '';
+
     return {
       pageSize,
       pageNumber,
-      searchNameTerm,
       skip,
+      // searchNameTerm,
+      // searchLoginTerm,
+      // searchEmailTerm,
     };
   }
 }

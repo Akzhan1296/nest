@@ -16,3 +16,5 @@ export class BlogItemDBType {
   _id: ObjectId;
   createdAt: Date;
 }
+
+export type SearchTermBlogs = { name: RegExp };

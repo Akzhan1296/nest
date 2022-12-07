@@ -20,4 +20,25 @@ export class UsersQueryRepository {
     }
     return null;
   }
+  async getUsers(params: any): Promise<UserViewModel[]> {
+    params.searchLoginTerm;
+    params.searchEmailTerm;
+
+    // {
+    //   email: 'dsaads@dca',
+    //   login: 'adsasd',
+    // }
+
+    // const users = await this.UserModel.find();
+    // if (user) {
+    //   return {
+    //     login: user.getLogin(),
+    //     createdAt: user.createdAt,
+    //     email: user.getEmail(),
+    //     id: user._id.toString(),
+    //   };
+    // }
+    // return users;
+    return [];
+  }
 }

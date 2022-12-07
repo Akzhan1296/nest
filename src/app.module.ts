@@ -38,6 +38,7 @@ import { UsersController } from './users/api/users.controller';
 import { UsersService } from './users/application/users.service';
 import { UsersRepository } from './users/infrastructure/repository/users.repository';
 import { Users, UsersSchema } from './users/domain/entity/users.schema';
+import { DeleteController } from './delete/delete.controller';
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { Users, UsersSchema } from './users/domain/entity/users.schema';
     PostsController,
     PostsQueryController,
     CommentsController,
+    DeleteController,
   ],
   providers: [
     AppService,

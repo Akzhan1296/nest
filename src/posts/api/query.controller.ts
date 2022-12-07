@@ -6,9 +6,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { CommentsQueryRepository } from 'src/comments/infrastructure/repository/comments.query.repository';
-import { PageSizeQueryModel } from 'src/common/common-types';
-import { QueryParamsPipe } from 'src/common/query-param-pipes';
 import { PostsQueryRepository } from '../infrastructure/repository/posts.query.repository';
+import { PostsQueryType } from './models/input.models';
 
 @Controller('posts')
 export class PostsQueryController {
@@ -17,7 +16,7 @@ export class PostsQueryController {
     protected commentsQueryRepository: CommentsQueryRepository,
   ) {}
   @Get()
-  async getPosts(@Query(new QueryParamsPipe()) pageSize: PageSizeQueryModel) {
+  async getPosts(@Query() pageSize: PostsQueryType) {
     return await this.postsQueryRepository.getPosts(pageSize);
   }
 
@@ -30,7 +29,7 @@ export class PostsQueryController {
 
   @Get(':postId/comments')
   async getCommentsByPostId(
-    @Query(new QueryParamsPipe()) pageSize: PageSizeQueryModel,
+    @Query() pageSize: PostsQueryType,
     @Param() params: { postId: string },
   ) {
     const post = this.postsQueryRepository.getPostById(params.postId);

@@ -1,20 +1,16 @@
 import { PageSizeQueryModel, PaginationViewModel } from './common-types';
 
-export class Paginated<T> {
-  private totalCount = 0;
-  constructor(
-    public pageParams: PageSizeQueryModel & { totalCount: number },
-    public items: T[],
-  ) {}
-  transformPagination(): PaginationViewModel<T> {
+export abstract class Paginated {
+  static transformPagination<T>(
+    pageParams: PageSizeQueryModel & { totalCount: number },
+    items: T[],
+  ): PaginationViewModel<T> {
     return {
-      totalCount: this.pageParams.totalCount,
-      page: this.pageParams.pageNumber,
-      pageSize: this.pageParams.pageSize,
-      pagesCount: Math.ceil(
-        this.pageParams.totalCount / this.pageParams.pageSize,
-      ),
-      items: this.items,
+      totalCount: pageParams.totalCount,
+      page: pageParams.pageNumber,
+      pageSize: pageParams.pageSize,
+      pagesCount: Math.ceil(pageParams.totalCount / pageParams.pageSize),
+      items: items,
     };
   }
 }

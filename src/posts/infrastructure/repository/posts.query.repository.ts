@@ -36,23 +36,23 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
     pageParams: PageSizeQueryModel,
     posts: PostItemDBType[],
   ) {
-    const paginated = new Paginated<PostViewModel>(
+    return Paginated.transformPagination<PostViewModel>(
       { ...pageParams, totalCount: await this.getPostsCount() },
       this.getPostsViewModel(posts),
-    ).transformPagination();
-    return paginated;
+    );
   }
 
   async getPostsByBlogId(
     pageParams: PageSizeQueryModel,
     blogId: string,
   ): Promise<PaginationViewModel<PostViewModel>> {
-    const { skip, pageSize } = pageParams;
+    const { skip, pageSize, sortBy, sortDirection } = pageParams;
     const filter = { blogId: new ObjectId(blogId) };
 
     const postsByBlogId = await this.postModel
       .find(filter)
       .skip(skip)
+      .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
       .limit(pageSize);
 
     return this.getPaginatedPosts(pageParams, postsByBlogId);
@@ -60,8 +60,12 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
   async getPosts(
     pageParams: PageSizeQueryModel,
   ): Promise<PaginationViewModel<PostViewModel>> {
-    const { skip, pageSize } = pageParams;
-    const posts = await this.postModel.find().skip(skip).limit(pageSize);
+    const { skip, pageSize, sortBy, sortDirection } = pageParams;
+    const posts = await this.postModel
+      .find()
+      .skip(skip)
+      .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
+      .limit(pageSize);
 
     return this.getPaginatedPosts(pageParams, posts);
   }
@@ -80,5 +84,8 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
       };
     }
     return null;
+  }
+  async dropPosts() {
+    return this.postModel.collection.drop();
   }
 }

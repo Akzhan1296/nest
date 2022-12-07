@@ -1,4 +1,5 @@
 import { MaxLength, MinLength } from 'class-validator';
+import { PageSizeDTO } from 'src/common/common-types';
 
 export class PostInputModel {
   @MaxLength(30)
@@ -14,4 +15,9 @@ export class CreateCommentInputModel {
   @MinLength(20)
   @MaxLength(300)
   public content: string;
+}
+
+export class PostsQueryType extends PageSizeDTO {
+  sortBy = 'createdAt';
+  sortDirection = 'desc';
 }

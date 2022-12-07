@@ -5,6 +5,10 @@ import { CreateUserInputModelType } from './models/users.models';
 @Controller('users')
 export class UsersController {
   constructor(protected usersService: UsersService) {}
+  @Get()
+  // getUsers(){
+
+  // }
   @Post()
   createUser(@Body() inputModel: CreateUserInputModelType) {
     return this.usersService.createUser(inputModel);
