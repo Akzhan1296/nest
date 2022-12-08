@@ -4,3 +4,4 @@ export type UserViewModel = {
   email: string;
   createdAt: Date;
 };
+

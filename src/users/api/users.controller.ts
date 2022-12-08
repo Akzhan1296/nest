@@ -1,22 +1,35 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { UsersService } from '../application/users.service';
-import { CreateUserInputModelType } from './models/users.models';
+import { UsersQueryRepository } from '../infrastructure/repository/users.query.repository';
+import { AddUserInputModel, UsersQueryType } from './models/users.models';
 
 @Controller('users')
 export class UsersController {
-  constructor(protected usersService: UsersService) {}
+  constructor(
+    protected usersService: UsersService,
+    protected usersQueryRepository: UsersQueryRepository,
+  ) {}
   @Get()
-  // getUsers(){
-
-  // }
+  async getUsers(@Query() pageSize: UsersQueryType) {
+    return await this.usersQueryRepository.getUsers(pageSize);
+  }
   @Post()
-  createUser(@Body() inputModel: CreateUserInputModelType) {
-    return this.usersService.createUser(inputModel);
+  @HttpCode(201)
+  async createUser(@Body() inputModel: AddUserInputModel) {
+    const user = await this.usersService.addUser(inputModel);
+    return await this.usersQueryRepository.findUserById(user._id.toString());
   }
   @Delete(':id')
-  deleteUser(@Param() params: { id: string }) {
-    return {
-      userId: params.id,
-    };
+  async deleteUser(@Param() params: { id: string }) {
+    return await this.usersService.deleteUser(params.id);
   }
 }

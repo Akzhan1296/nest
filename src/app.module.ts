@@ -37,7 +37,10 @@ import {
 import { UsersController } from './users/api/users.controller';
 import { UsersService } from './users/application/users.service';
 import { UsersRepository } from './users/infrastructure/repository/users.repository';
+import { UsersQueryRepository } from './users/infrastructure/repository/users.query.repository';
 import { Users, UsersSchema } from './users/domain/entity/users.schema';
+
+//delete controller
 import { DeleteController } from './delete/delete.controller';
 
 @Module({
@@ -67,9 +70,6 @@ import { DeleteController } from './delete/delete.controller';
   ],
   providers: [
     AppService,
-    //users
-    UsersService,
-    UsersRepository,
     //blogs
     factoryBlogsService(),
     BlogsRepository,
@@ -82,6 +82,10 @@ import { DeleteController } from './delete/delete.controller';
     CommentsService,
     CommentsRepository,
     CommentsQueryRepository,
+    //users
+    UsersService,
+    UsersRepository,
+    UsersQueryRepository,
   ],
 })
 export class AppModule {}

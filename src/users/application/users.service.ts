@@ -1,10 +1,11 @@
 import {
+  BadRequestException,
   ImATeapotException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { Users, UsersDocument } from '../domain/entity/users.schema';
-import { CreateUserDTO } from './dto/users.dto';
+import { AddUserDTO } from './dto/users.dto';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { UsersRepository } from '../infrastructure/repository/users.repository';
@@ -16,19 +17,20 @@ export class UsersService {
     private UsersModel: Model<UsersDocument>,
     protected usersRepository: UsersRepository,
   ) {}
-  async newUser(createUserDTO: CreateUserDTO) {
+
+  async newUser(addUserDTO: AddUserDTO) {
     const newUser = new this.UsersModel();
-    const { login, password, email } = createUserDTO;
+    const { login, password, email } = addUserDTO;
     try {
-      newUser.createUser(login, email, password);
+      newUser.addUser(login, email, password);
     } catch (err) {
-      throw new ImATeapotException(err);
+      throw new BadRequestException(err);
     }
 
     return newUser;
   }
-  async createUser(createUserDTO: CreateUserDTO) {
-    const newUser = await this.newUser(createUserDTO);
+  async addUser(addUserDTO: AddUserDTO) {
+    const newUser = await this.newUser(addUserDTO);
     await this.usersRepository.save(newUser);
     return newUser;
   }

@@ -5,7 +5,7 @@ import { HydratedDocument } from 'mongoose';
 
 export type UsersDocument = HydratedDocument<Users>;
 
-@Schema()
+@Schema({ timestamps: true })
 export class Users {
   @Prop()
   private login: string;
@@ -37,17 +37,18 @@ export class Users {
     return this.password;
   }
   setEmail(email: string) {
-    const reg = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
-    if (!reg.test(email)) {
-      throw new Error('rex exp error');
-    }
+    // const reg = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
+    // console.log(reg.test(email));
+    // if (!reg.test(email)) {
+    //   throw new Error('rex exp error');
+    // }
     this.email = email;
   }
   getEmail() {
     return this.email;
   }
 
-  createUser(email: string, password: string, login: string) {
+  addUser(email: string, password: string, login: string) {
     this.setLogin(login);
     this.setEmail(email);
     this.setPassword(password);
@@ -61,4 +62,4 @@ UsersSchema.methods.setPassword = Users.prototype.setPassword;
 UsersSchema.methods.getPassword = Users.prototype.getPassword;
 UsersSchema.methods.setEmail = Users.prototype.setEmail;
 UsersSchema.methods.getEmail = Users.prototype.getEmail;
-UsersSchema.methods.createUser = Users.prototype.createUser;
+UsersSchema.methods.addUser = Users.prototype.addUser;

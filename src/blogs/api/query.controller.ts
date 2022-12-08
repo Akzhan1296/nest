@@ -21,7 +21,6 @@ export class BlogsQueryController {
   async getBlogs(
     @Query() pageSize: BlogsQueryType,
   ): Promise<PaginationViewModel<BlogViewModel>> {
-    console.log(pageSize);
     return await this.blogsQueryRepository.getBlogs(pageSize);
   }
   @Get(':id')
