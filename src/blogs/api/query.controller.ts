@@ -5,8 +5,8 @@ import {
   NotFoundException,
   Query,
 } from '@nestjs/common';
-import { PaginationViewModel } from 'src/common/common-types';
 import { PostsQueryRepository } from 'src/posts/infrastructure/repository/posts.query.repository';
+import { PaginationViewModel } from '../../common/common-types';
 import { BlogsQueryRepository } from '../infrastructure/repository/blogs.query.repository';
 import { BlogViewModel } from '../infrastructure/repository/models/view.models';
 import { BlogsQueryType } from './models/input.models';

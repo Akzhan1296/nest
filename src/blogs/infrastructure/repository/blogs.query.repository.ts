@@ -4,11 +4,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { BlogsQueryStateRepository } from 'src/blogs/application/blogs.query.interface';
 import { BlogViewModel } from './models/view.models';
+import { Paginated } from '../../../common/utils';
 import {
   PageSizeQueryModel,
   PaginationViewModel,
-} from 'src/common/common-types';
-import { Paginated } from '../../../common/utils';
+} from '../../../common/common-types';
 
 // asc сначала старые потом новые
 // desc сначала новые потом старые

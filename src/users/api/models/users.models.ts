@@ -1,6 +1,5 @@
 import { MinLength, MaxLength, Matches } from 'class-validator';
-import { PageSizeDTO } from 'src/common/common-types';
-
+import { PageSizeDTO } from '../../../common/common-types';
 export class AddUserInputModel {
   @MinLength(3)
   @MaxLength(10)

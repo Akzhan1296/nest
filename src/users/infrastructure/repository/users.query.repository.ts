@@ -2,11 +2,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Users, UsersDocument } from 'src/users/domain/entity/users.schema';
 import { Model } from 'mongoose';
 import { UserViewModel } from '../models/view.models';
+
+import { Paginated } from '../../../common/utils';
 import {
   PageSizeQueryModel,
   PaginationViewModel,
-} from 'src/common/common-types';
-import { Paginated } from '../../../common/utils';
+} from '../../../common/common-types';
 
 export class UsersQueryRepository {
   constructor(

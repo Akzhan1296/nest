@@ -1,5 +1,5 @@
 import { MaxLength, MinLength } from 'class-validator';
-import { PageSizeDTO } from 'src/common/common-types';
+import { PageSizeDTO } from '../../../common/common-types';
 
 export class PostInputModel {
   @MaxLength(30)

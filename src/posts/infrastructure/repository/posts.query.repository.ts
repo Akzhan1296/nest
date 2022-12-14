@@ -5,11 +5,11 @@ import { ObjectId } from 'mongodb';
 import { PostItemDBType, PostItemType } from '../posts.type';
 import { InjectModel } from '@nestjs/mongoose';
 import { PostViewModel } from './models/view.models';
+import { Paginated } from '../../../common/utils';
 import {
   PageSizeQueryModel,
   PaginationViewModel,
-} from 'src/common/common-types';
-import { Paginated } from '../../../common/utils';
+} from '../../../common/common-types';
 
 @Injectable()
 export class PostsQueryRepository implements PostsQueryStateRepository {

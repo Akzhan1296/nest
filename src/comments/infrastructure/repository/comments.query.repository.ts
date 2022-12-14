@@ -6,11 +6,11 @@ import {
   CommentDocument,
 } from 'src/comments/domain/entity/comments.schema';
 import { CommentViewModel } from '../models/view.models';
+import { Paginated } from '../../../common/utils';
 import {
   PageSizeQueryModel,
   PaginationViewModel,
-} from 'src/common/common-types';
-import { Paginated } from '../../../common/utils';
+} from '../../../common/common-types';
 
 @Injectable()
 export class CommentsQueryRepository {

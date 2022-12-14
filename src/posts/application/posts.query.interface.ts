@@ -1,7 +1,7 @@
 import {
   PageSizeQueryModel,
   PaginationViewModel,
-} from 'src/common/common-types';
+} from '../../common/common-types';
 import { PostViewModel } from '../infrastructure/repository/models/view.models';
 
 export abstract class PostsQueryStateRepository {

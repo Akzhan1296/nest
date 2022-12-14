@@ -1,5 +1,5 @@
 import { Matches, MaxLength } from 'class-validator';
-import { PageSizeDTO } from 'src/common/common-types';
+import { PageSizeDTO } from '../../../common/common-types';
 
 export class BlogInputModelType {
   @MaxLength(15)
