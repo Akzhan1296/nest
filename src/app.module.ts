@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ConfigModule } from '@nestjs/config';
+// import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -46,7 +46,7 @@ import { DeleteController } from './delete/delete.controller';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    // ConfigModule.forRoot(),
     MongooseModule.forRoot(
       settings.MONGO_URI +
         settings.MONGO_DB_NAME +
