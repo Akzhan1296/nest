@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
-import { BlogsStateRepository } from 'src/blogs/application/blogs.interface';
+import { BlogsStateRepository } from '../../blogs/application/blogs.interface';
 import { PostItemType } from '../infrastructure/posts.type';
 import { CreatePostDTO } from './dto/posts.dto';
 import { PostsStateRepository } from './posts.interface';
