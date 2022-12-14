@@ -9,7 +9,7 @@ import {
   PageSizeQueryModel,
   PaginationViewModel,
 } from 'src/common/common-types';
-import { Paginated } from 'src/common/utils';
+import { Paginated } from '../../../common/utils';
 
 @Injectable()
 export class PostsQueryRepository implements PostsQueryStateRepository {

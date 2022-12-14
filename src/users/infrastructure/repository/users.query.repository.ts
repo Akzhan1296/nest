@@ -6,7 +6,7 @@ import {
   PageSizeQueryModel,
   PaginationViewModel,
 } from 'src/common/common-types';
-import { Paginated } from 'src/common/utils';
+import { Paginated } from '../../../common/utils';
 
 export class UsersQueryRepository {
   constructor(
@@ -57,10 +57,6 @@ export class UsersQueryRepository {
         { login: new RegExp(searchLoginTerm) },
       ],
     };
-
-    console.log(sortDirection);
-    console.log(sortBy);
-
 
     const users = await this.UserModel.find(filter)
       .skip(skip)
