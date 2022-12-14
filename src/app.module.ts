@@ -42,9 +42,11 @@ import { Users, UsersSchema } from './users/domain/entity/users.schema';
 
 //delete controller
 import { DeleteController } from './delete/delete.controller';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     MongooseModule.forRoot(
       settings.MONGO_URI +
         settings.MONGO_DB_NAME +
