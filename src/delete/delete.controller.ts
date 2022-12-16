@@ -19,7 +19,7 @@ export class DeleteController {
     await this.blogsQueryRepository.dropBlogs();
     await this.postsQueryRepository.dropPosts();
     await this.commentsQueryRepository.dropComments();
-    await this.usersQueryRepository.dropUsers();
+    // await this.usersQueryRepository.dropUsers();
     return;
   }
 }
