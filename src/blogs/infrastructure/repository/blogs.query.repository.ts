@@ -25,9 +25,10 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
   private getBlogsViews(blogs: BlogItemDBType[]) {
     return blogs.map((blog) => ({
       name: blog.name,
-      youtubeUrl: blog.youtubeUrl,
+      websiteUrl: blog.websiteUrl,
       id: blog._id.toString(),
       createdAt: blog.createdAt,
+      description: blog.description,
     }));
   }
   async getBlogs(
@@ -57,9 +58,10 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
     if (blog) {
       return {
         name: blog.name,
-        youtubeUrl: blog.youtubeUrl,
+        websiteUrl: blog.websiteUrl,
         id: blog._id.toString(),
         createdAt: blog.createdAt,
+        description: blog.description,
       };
     }
     return null;

@@ -5,7 +5,12 @@ import { BlogType } from './dto/blogs.dto';
 export class BlogsService {
   constructor(protected blogRepository: BlogsStateRepository) {}
   createBlog(dto: BlogType): Promise<BlogItemDBType> {
-    const newBlog = new BlogItemType(dto.name, dto.youtubeUrl, new Date());
+    const newBlog = new BlogItemType(
+      dto.name,
+      dto.websiteUrl,
+      new Date(),
+      dto.description,
+    );
     return this.blogRepository.createBlog(newBlog);
   }
   async updateBlog(id: string, dto: BlogType): Promise<boolean> {

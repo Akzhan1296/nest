@@ -4,17 +4,19 @@ import { ObjectId } from 'mongodb';
 export class BlogItemType {
   constructor(
     public name: string,
-    public youtubeUrl: string,
+    public websiteUrl: string,
     public createdAt: Date,
+    public description: string,
   ) {}
 }
 
 // db type
 export class BlogItemDBType {
   name: string;
-  youtubeUrl: string;
+  websiteUrl: string;
   _id: ObjectId;
   createdAt: Date;
+  description: string;
 }
 
 export type SearchTermBlogs = { name: RegExp };

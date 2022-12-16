@@ -1,4 +1,5 @@
 export type BlogType = {
   name: string;
-  youtubeUrl: string;
+  websiteUrl: string;
+  description: string;
 };

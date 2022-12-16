@@ -21,7 +21,7 @@ export class BlogsRepository implements BlogsStateRepository {
   async updateBlog(id: string, dto: BlogItemType): Promise<boolean> {
     const blog = await this.blogModel.findOne({ _id: id });
     blog.name = dto.name;
-    blog.youtubeUrl = dto.youtubeUrl;
+    blog.websiteUrl = dto.websiteUrl;
     const isBlogUpdated = blog
       .save()
       .then((savedDoc) => {

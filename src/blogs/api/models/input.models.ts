@@ -6,7 +6,9 @@ export class BlogInputModelType {
   name: string;
   @Matches('^https://([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(/[a-zA-Z0-9_-]+)*/?$')
   @MaxLength(100)
-  youtubeUrl: string;
+  websiteUrl: string;
+  @MaxLength(500)
+  description: string;
 }
 
 export class CreatePostByBlogIdInputType {
