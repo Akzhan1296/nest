@@ -16,9 +16,9 @@ export class DeleteController {
   @Delete()
   @HttpCode(204)
   async deleteBlog(): Promise<undefined> {
-    await this.blogsQueryRepository.dropBlogs();
-    await this.postsQueryRepository.dropPosts();
-    await this.commentsQueryRepository.dropComments();
+    // await this.blogsQueryRepository.dropBlogs();
+    // await this.postsQueryRepository.dropPosts();
+    // await this.commentsQueryRepository.dropComments();
     // await this.usersQueryRepository.dropUsers();
     return;
   }
