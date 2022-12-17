@@ -17,7 +17,7 @@ export class AuthRegistrationInputModal {
   password: string;
   @IsString()
   // eslint-disable-next-line prettier/prettier
-  @Matches('^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+  @Matches('^[w-.]+@([w-]+.)+[w-]{2,4}$')
   email: string;
 }
 
@@ -27,6 +27,6 @@ export class AuthRegistrationConfirmInputModal {
 }
 export class AuthEmailResendingInputModal {
   // eslint-disable-next-line prettier/prettier
-  @Matches('^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+  @Matches('^[w-.]+@([w-]+.)+[w-]{2,4}$')
   email: string;
 }
