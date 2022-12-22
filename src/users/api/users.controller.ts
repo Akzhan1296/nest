@@ -25,7 +25,12 @@ export class UsersController {
   @Post()
   @HttpCode(201)
   async createUser(@Body() inputModel: AddUserInputModel) {
-    const user = await this.usersService.addUser(inputModel);
+    const user = await this.usersService.createUser({
+      ...inputModel,
+      isConfirmed: false,
+      emailExpirationDate: null,
+      confirmCode: null,
+    });
     return await this.usersQueryRepository.findUserById(user._id.toString());
   }
   @Delete(':id')

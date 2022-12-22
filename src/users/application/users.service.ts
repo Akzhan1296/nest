@@ -5,10 +5,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Users, UsersDocument } from '../domain/entity/users.schema';
-import { AddUserDTO } from './dto/users.dto';
+import { CreateUserDTO } from './dto/users.dto';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { UsersRepository } from '../infrastructure/repository/users.repository';
+import { generateHash } from '../../common/utils';
 
 @Injectable()
 export class UsersService {
@@ -18,19 +19,24 @@ export class UsersService {
     protected usersRepository: UsersRepository,
   ) {}
 
-  async newUser(addUserDTO: AddUserDTO) {
+  private async _createUser(createUserDTO: CreateUserDTO) {
     const newUser = new this.UsersModel();
-    const { login, password, email } = addUserDTO;
     try {
-      newUser.addUser(login, email, password);
+      newUser.createUser(createUserDTO);
     } catch (err) {
-      throw new BadRequestException(err);
+      throw new Error(err);
+      // throw new BadRequestException(err);
     }
 
     return newUser;
   }
-  async addUser(addUserDTO: AddUserDTO) {
-    const newUser = await this.newUser(addUserDTO);
+  async createUser(createUserDTO: CreateUserDTO) {
+    const { password, ...restCreateUserData } = createUserDTO;
+    const passwordHash = await generateHash(password);
+    const newUser = await this._createUser({
+      ...restCreateUserData,
+      password: passwordHash,
+    });
     await this.usersRepository.save(newUser);
     return newUser;
   }

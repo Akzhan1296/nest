@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-// import { ConfigModule } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -41,9 +41,12 @@ import { UsersRepository } from './users/infrastructure/repository/users.reposit
 import { UsersQueryRepository } from './users/infrastructure/repository/users.query.repository';
 import { Users, UsersSchema } from './users/domain/entity/users.schema';
 
+//auth
+import { AuthController } from './auth/api/auth.controller';
+import { AuthService } from './auth/application/auth.service';
+
 //delete controller
 import { DeleteController } from './delete/delete.controller';
-import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -63,6 +66,7 @@ import { ConfigModule } from '@nestjs/config';
   ],
   controllers: [
     AppController,
+    AuthController,
     UsersController,
     BlogsController,
     BlogsQueryController,
@@ -89,6 +93,8 @@ import { ConfigModule } from '@nestjs/config';
     UsersService,
     UsersRepository,
     UsersQueryRepository,
+    //auth
+    AuthService,
   ],
 })
 export class AppModule {}

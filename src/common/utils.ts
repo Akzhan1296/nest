@@ -1,4 +1,5 @@
 import { PageSizeQueryModel, PaginationViewModel } from './common-types';
+import * as bcrypt from 'bcrypt';
 
 export abstract class Paginated {
   static transformPagination<T>(
@@ -14,3 +15,9 @@ export abstract class Paginated {
     };
   }
 }
+
+export const generateHash = async (password: string) => {
+  console.log(password);
+  const hash = await bcrypt.hash(password, 10);
+  return hash;
+};

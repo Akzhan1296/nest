@@ -10,6 +10,17 @@ export class UsersRepository {
   async findUserById(id: string): Promise<UsersDocument> {
     return await this.UserModel.findOne({ _id: id });
   }
+  async findUserByConfirmCode(confirmCode: string): Promise<UsersDocument> {
+    return await this.UserModel.findOne({ confirmCode });
+  }
+  async findUserByEmail(email: string): Promise<UsersDocument> {
+    return await this.UserModel.findOne({ email });
+  }
+  async findUserByEmailOrLogin(emailOrLogin: string): Promise<UsersDocument> {
+    return await this.UserModel.findOne({
+      $or: [{ email: emailOrLogin }, { login: emailOrLogin }],
+    });
+  }
   async save(user: UsersDocument): Promise<boolean> {
     return user
       .save()
