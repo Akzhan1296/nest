@@ -7,11 +7,13 @@ import {
   NotFoundException,
   Param,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { CommentsService } from '../application/comments.service';
 import { CommentsQueryRepository } from '../infrastructure/repository/comments.query.repository';
 import { CommentViewModel } from '../infrastructure/models/view.models';
 import { CommentInputModelType } from './models/input.models';
+import { AuthGuard } from '../../guards/auth.guard';
 
 @Controller('comments')
 export class CommentsController {
@@ -34,6 +36,7 @@ export class CommentsController {
   }
 
   @Put(':commentId')
+  @UseGuards(AuthGuard)
   @HttpCode(204)
   async updateComment(
     @Param() params: { commentId: string },
@@ -46,6 +49,7 @@ export class CommentsController {
     return;
   }
   @Delete(':commentId')
+  @UseGuards(AuthGuard)
   @HttpCode(204)
   async deleteComment(
     @Param() params: { commentId: string },

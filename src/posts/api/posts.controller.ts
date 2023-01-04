@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { CommentsService } from 'src/comments/application/comments.service';
 import { CommentsQueryRepository } from 'src/comments/infrastructure/repository/comments.query.repository';
@@ -15,6 +16,8 @@ import { PostsService } from '../application/posts.service';
 import { PostViewModel } from '../infrastructure/repository/models/view.models';
 import { PostsQueryRepository } from '../infrastructure/repository/posts.query.repository';
 import { CreateCommentInputModel, PostInputModel } from './models/input.models';
+import { AuthGuard } from '../../guards/auth.guard';
+import { AuthBasicGuard } from '../../guards/authBasic.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -27,6 +30,7 @@ export class PostsController {
   ) {}
 
   @Post()
+  @UseGuards(AuthBasicGuard)
   @HttpCode(201)
   async createPost(
     @Body() postsInputModel: PostInputModel,
@@ -39,6 +43,7 @@ export class PostsController {
   }
 
   @Put(':id')
+  @UseGuards(AuthBasicGuard)
   @HttpCode(204)
   async updatePost(
     @Param() params: { id: string },
@@ -49,6 +54,7 @@ export class PostsController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthBasicGuard)
   @HttpCode(204)
   async deletePost(@Param() params: { id: string }) {
     this.postService.deletePost(params.id);
@@ -56,6 +62,7 @@ export class PostsController {
   }
 
   @Post(':postId/comments')
+  @UseGuards(AuthGuard)
   @HttpCode(201)
   async createCommentForSelectedPost(
     @Param() params: { postId: string },

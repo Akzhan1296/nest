@@ -4,7 +4,6 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { Request } from 'express';
 import { UsersQueryRepository } from '../users/infrastructure/repository/users.query.repository';
 import { JwtService } from '@nestjs/jwt';
