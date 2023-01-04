@@ -67,6 +67,6 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
     return null;
   }
   async dropBlogs() {
-    return this.blogModel.collection.drop();
+    return this.blogModel.deleteMany({});
   }
 }

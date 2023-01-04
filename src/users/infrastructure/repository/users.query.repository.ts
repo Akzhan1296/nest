@@ -73,6 +73,6 @@ export class UsersQueryRepository {
   }
 
   async dropUsers() {
-    return this.UserModel.collection.drop();
+    return this.UserModel.deleteMany({});
   }
 }

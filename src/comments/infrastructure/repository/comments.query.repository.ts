@@ -76,6 +76,6 @@ export class CommentsQueryRepository {
     return this.getPaginatedPosts(pageParams, comments);
   }
   async dropComments() {
-    return this.CommentModel.collection.drop();
+    return this.CommentModel.deleteMany({});
   }
 }
