@@ -66,6 +66,24 @@ export class AuthService {
   }
 
   async registrationUser(createUser: RegistrationUserDTO) {
+    const isLoginAlreadyExist =
+      await this.usersRepository.findUserByEmailOrLogin(createUser.login);
+    if (isLoginAlreadyExist) {
+      throw new BadRequestException({
+        message: 'login is already exist',
+        field: 'login',
+      });
+    }
+
+    const isEmailAlreadyExist =
+      await this.usersRepository.findUserByEmailOrLogin(createUser.login);
+    if (isEmailAlreadyExist) {
+      throw new BadRequestException({
+        message: 'email is already exist',
+        field: 'email',
+      });
+    }
+
     const confirmCode = new ObjectId().toString();
     let user = null;
     try {
