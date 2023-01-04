@@ -25,7 +25,7 @@ export class AuthController {
     protected usersQueryRepository: UsersQueryRepository,
   ) {}
   @Post('login')
-  @HttpCode(201)
+  @HttpCode(200)
   async login(@Body() inputModel: AuthLoginInputModal) {
     const token = await this.authService.login(inputModel);
     return token;

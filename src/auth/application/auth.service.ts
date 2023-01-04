@@ -76,7 +76,7 @@ export class AuthService {
     }
 
     const isEmailAlreadyExist =
-      await this.usersRepository.findUserByEmailOrLogin(createUser.login);
+      await this.usersRepository.findUserByEmailOrLogin(createUser.email);
     if (isEmailAlreadyExist) {
       throw new BadRequestException({
         message: 'email is already exist',
@@ -122,7 +122,10 @@ export class AuthService {
     const confirmCodeExpDate = userByConfirmCode.getEmailExpirationDate();
     const isConfirmed = userByConfirmCode.getIsConfirmed();
     if (isConfirmed)
-      throw new BadRequestException('Email is already confirmed');
+      throw new BadRequestException({
+        message: 'Email is already confirmed',
+        field: 'code',
+      });
     if (code === confirmCode.code && confirmCodeExpDate > new Date()) {
       userByConfirmCode.setIsConfirmed(true);
       return await this.usersRepository.save(userByConfirmCode);
@@ -135,7 +138,10 @@ export class AuthService {
     if (!userByEmail)
       throw new NotFoundException('user with this email not found');
     if (userByEmail.getIsConfirmed())
-      throw new BadRequestException('Email is already confirmed');
+      throw new BadRequestException({
+        message: 'Email is already confirmed',
+        field: 'email',
+      });
     const newConfirmCode = new ObjectId().toString();
 
     userByEmail.setConfirmCode(newConfirmCode);
