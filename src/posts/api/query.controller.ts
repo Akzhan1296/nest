@@ -32,7 +32,7 @@ export class PostsQueryController {
     @Query() pageSize: PostsQueryType,
     @Param() params: { postId: string },
   ) {
-    const post = this.postsQueryRepository.getPostById(params.postId);
+    const post = await this.postsQueryRepository.getPostById(params.postId);
     if (!post) throw new NotFoundException('post not found');
     return await this.commentsQueryRepository.getCommentsByPostId(
       pageSize,

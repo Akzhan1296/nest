@@ -135,8 +135,13 @@ export class AuthService {
   }
   async registrationEmailResending(email: string) {
     const userByEmail = await this.usersRepository.findUserByEmail(email);
-    if (!userByEmail)
-      throw new NotFoundException('user with this email not found');
+    if (!userByEmail) {
+      throw new BadRequestException({
+        message: 'user with this email not found',
+        field: 'email',
+      });
+    }
+
     if (userByEmail.getIsConfirmed())
       throw new BadRequestException({
         message: 'Email is already confirmed',
