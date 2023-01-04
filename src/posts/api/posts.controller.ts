@@ -7,8 +7,10 @@ import {
   Param,
   Post,
   Put,
+  Req,
   UseGuards,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { CommentsService } from 'src/comments/application/comments.service';
 import { CommentsQueryRepository } from 'src/comments/infrastructure/repository/comments.query.repository';
 import { CommentViewModel } from 'src/comments/infrastructure/models/view.models';
@@ -65,14 +67,14 @@ export class PostsController {
   @UseGuards(AuthGuard)
   @HttpCode(201)
   async createCommentForSelectedPost(
+    @Req() request: Request,
     @Param() params: { postId: string },
     @Body() commentInputModel: CreateCommentInputModel,
   ): Promise<CommentViewModel> {
-    const userId = 'userId'; // from JWT
 
     const comment = await this.commentsService.createCommentForSelectedPost({
       postId: params.postId,
-      userId,
+      userId: request.body.userId,
       content: commentInputModel.content,
     });
     return await this.commentsQueryRepository.getCommentById(

@@ -24,10 +24,16 @@ export class AuthGuard implements CanActivate {
     }
 
     const token = request.headers.authorization.split(' ')[1];
-    const payload = this.jwtService.decode(token) as JwtPayloadDTO;
+    let payload = null;
     let user = null;
 
-    if (payload && payload.id.length > 0) {
+    try {
+      payload = this.jwtService.decode(token) as JwtPayloadDTO;
+    } catch (err) {
+      throw new Error(err);
+    }
+
+    if (payload && payload.id && payload.id.length > 0) {
       user = await this.usersQueryRepository.findUserById(payload.id);
     }
     if (user) {
