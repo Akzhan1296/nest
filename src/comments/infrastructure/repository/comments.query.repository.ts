@@ -19,8 +19,9 @@ export class CommentsQueryRepository {
     private CommentModel: Model<CommentDocument>,
   ) {}
 
-  private async getCommentsCount() {
-    return this.CommentModel.count();
+  private async getCommentsCount(postId: string | undefined) {
+    const filter = postId ? { postId } : {};
+    return this.CommentModel.find(filter).count();
   }
   private getCommentsViewModel(comments: CommentDocument[]) {
     return comments.map((comment) => ({
@@ -35,9 +36,10 @@ export class CommentsQueryRepository {
   private async getPaginatedPosts(
     pageParams: PageSizeQueryModel,
     comments: CommentDocument[],
+    postId?: string,
   ) {
     return Paginated.transformPagination<CommentViewModel>(
-      { ...pageParams, totalCount: await this.getCommentsCount() },
+      { ...pageParams, totalCount: await this.getCommentsCount(postId) },
       this.getCommentsViewModel(comments),
     );
   }
@@ -52,7 +54,6 @@ export class CommentsQueryRepository {
   async getCommentById(id: string): Promise<CommentViewModel | null> {
     const comment = await this.CommentModel.findById({ _id: id });
     if (comment) {
-      console.log(comment);
       return {
         id: comment._id.toString(),
         content: comment.getContent(),
@@ -73,7 +74,7 @@ export class CommentsQueryRepository {
       .skip(skip)
       .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
       .limit(pageSize);
-    return this.getPaginatedPosts(pageParams, comments);
+    return this.getPaginatedPosts(pageParams, comments, postId);
   }
   async dropComments() {
     return this.CommentModel.deleteMany({});
