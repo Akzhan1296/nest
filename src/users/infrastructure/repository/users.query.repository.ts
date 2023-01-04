@@ -1,7 +1,7 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Users, UsersDocument } from 'src/users/domain/entity/users.schema';
 import { Model } from 'mongoose';
-import { UserViewModel } from '../models/view.models';
+import { UserViewModel, UserViewModelWithoutDate } from '../models/view.models';
 
 import { Paginated } from '../../../common/utils';
 import {
@@ -28,12 +28,11 @@ export class UsersQueryRepository {
     }));
   }
 
-  async findUserById(id: string): Promise<UserViewModel | null> {
+  async findUserById(id: string): Promise<UserViewModelWithoutDate | null> {
     const user = await this.UserModel.findOne({ _id: id });
     if (user) {
       return {
         login: user.getLogin(),
-        createdAt: user.createdAt,
         email: user.getEmail(),
         id: user._id.toString(),
       };

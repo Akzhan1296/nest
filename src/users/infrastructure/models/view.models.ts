@@ -5,3 +5,8 @@ export type UserViewModel = {
   createdAt: Date;
 };
 
+export type UserViewModelWithoutDate = {
+  id: string;
+  login: string;
+  email: string;
+};

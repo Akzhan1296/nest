@@ -47,6 +47,7 @@ import { AuthService } from './auth/application/auth.service';
 
 //delete controller
 import { DeleteController } from './delete/delete.controller';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -95,6 +96,7 @@ import { DeleteController } from './delete/delete.controller';
     UsersQueryRepository,
     //auth
     AuthService,
+    JwtService,
   ],
 })
 export class AppModule {}

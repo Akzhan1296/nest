@@ -3,7 +3,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import { UsersService } from '../../users/application/users.service';
 import { emailAdapter } from '../../common/adapter';
@@ -15,12 +14,15 @@ import {
 import { add } from 'date-fns';
 import { UsersRepository } from '../../users/infrastructure/repository/users.repository';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { settings } from '../../settings';
 
 @Injectable()
 export class AuthService {
   constructor(
     protected usersService: UsersService,
     protected usersRepository: UsersRepository,
+    protected jwtService: JwtService,
   ) {}
 
   private async checkCreds(creds: AuthDTO) {
@@ -38,8 +40,29 @@ export class AuthService {
     return null;
   }
 
-  async login(authDTO: AuthDTO) {
-    const user = this.checkCreds(authDTO);
+  async login(authDTO: AuthDTO): Promise<{ accessToken: string } | null> {
+    const user = await this.checkCreds(authDTO);
+    if (user) {
+      const login = user.getLogin();
+      const password = user.getPassword();
+      const email = user.getEmail();
+      const id = user._id;
+      const isConfirmed = user.getIsConfirmed();
+
+      const payload = {
+        login,
+        password,
+        email,
+        id,
+        isConfirmed,
+      };
+      const jwtToken = this.jwtService.sign(payload, {
+        secret: settings.JWT_SECRET,
+        expiresIn: '1d',
+      });
+      return { accessToken: jwtToken };
+    }
+    return null;
   }
 
   async registrationUser(createUser: RegistrationUserDTO) {

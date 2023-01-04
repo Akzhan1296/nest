@@ -1,4 +1,15 @@
-import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { Request } from 'express';
+import { AuthGuard } from '../../guards/auth.guard';
+import { UsersQueryRepository } from '../../users/infrastructure/repository/users.query.repository';
 import { AuthService } from '../application/auth.service';
 import {
   AuthEmailResendingInputModal,
@@ -9,11 +20,15 @@ import {
 
 @Controller('auth')
 export class AuthController {
-  constructor(protected authService: AuthService) {}
+  constructor(
+    protected authService: AuthService,
+    protected usersQueryRepository: UsersQueryRepository,
+  ) {}
   @Post('login')
   @HttpCode(201)
   async login(@Body() inputModel: AuthLoginInputModal) {
-    return this.authService.login(inputModel);
+    const token = await this.authService.login(inputModel);
+    return token;
   }
   @Post('registration-confirmation')
   @HttpCode(204)
@@ -35,7 +50,8 @@ export class AuthController {
     return this.authService.registrationEmailResending(inputModel.email);
   }
   @Get('me')
-  async getMe() {
-    return null;
+  @UseGuards(AuthGuard)
+  async getMe(@Req() request: Request) {
+    return await this.usersQueryRepository.findUserById(request.body.userId);
   }
 }
