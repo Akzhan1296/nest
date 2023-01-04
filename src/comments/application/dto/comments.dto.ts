@@ -6,4 +6,6 @@ export type CreateCommentDTO = {
 
 export type UpdateCommentDTO = {
   content: string;
+  userId: string;
+  commentId: string;
 };

@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -43,18 +44,21 @@ export class CommentsService {
     return newComment;
   }
 
-  async updateComment(
-    id: string,
-    updateCommentDTO: UpdateCommentDTO,
-  ): Promise<boolean> {
-    const comment = await this.commentsRepository.findCommentById(id);
+  async updateComment(updateCommentDTO: UpdateCommentDTO): Promise<boolean> {
+    const comment = await this.commentsRepository.findCommentById(
+      updateCommentDTO.commentId,
+    );
     if (!comment) throw new NotFoundException('comment not found');
+    if (comment.userId.toString() !== updateCommentDTO.userId)
+      throw new ForbiddenException('not your comment');
     comment.setContent(updateCommentDTO.content);
     return this.commentsRepository.save(comment);
   }
-  async deleteComment(id: string): Promise<boolean> {
+  async deleteComment(userId: string, id: string): Promise<boolean> {
     const comment = await this.commentsRepository.findCommentById(id);
     if (!comment) throw new NotFoundException('comment not found');
+    if (comment.userId.toString() !== userId)
+      throw new ForbiddenException('not your comment');
     return this.commentsRepository.delete(comment);
   }
 }
