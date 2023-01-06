@@ -18,6 +18,7 @@ export class RefreshTokenGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const request: Request = context.switchToHttp().getRequest();
     if (!request.headers.cookie) {
+      console.log(request.headers.cookie);
       throw new UnauthorizedException();
     }
     let payload = null;
@@ -27,6 +28,7 @@ export class RefreshTokenGuard implements CanActivate {
     try {
       payload = this.jwtService.decode(refreshToken) as RefreshTokenPayloadDTO;
     } catch (err) {
+      console.log(err);
       throw new UnauthorizedException();
     }
     if (
@@ -39,7 +41,7 @@ export class RefreshTokenGuard implements CanActivate {
           payload.refreshTokenId,
         );
     }
-    if (!refreshTokenFromBlackList) throw new UnauthorizedException();
+    if (refreshTokenFromBlackList) throw new UnauthorizedException();
 
     request.body.refreshTokenId = payload.refreshTokenId;
     request.body.userId = payload.userId;

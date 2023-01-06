@@ -7,12 +7,15 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthBasicGuard } from '../../guards/authBasic.guard';
 import { UsersService } from '../application/users.service';
 import { UsersQueryRepository } from '../infrastructure/repository/users.query.repository';
 import { AddUserInputModel, UsersQueryType } from './models/users.models';
 
 @Controller('users')
+@UseGuards(AuthBasicGuard)
 export class UsersController {
   constructor(
     protected usersService: UsersService,
