@@ -17,7 +17,6 @@ export abstract class Paginated {
 }
 
 export const generateHash = async (password: string) => {
-  console.log(password);
   const hash = await bcrypt.hash(password, 10);
   return hash;
 };

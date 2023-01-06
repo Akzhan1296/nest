@@ -49,6 +49,12 @@ import { AuthService } from './auth/application/auth.service';
 import { DeleteController } from './delete/delete.controller';
 import { JwtService } from '@nestjs/jwt';
 
+//jwt
+import { AuthJwtService } from './jwt/application/jwt.service';
+import { JwtTokensQueryRepository } from './jwt/infrastructura/repository/jwt.query.repository';
+import { JwtTokensRepository } from './jwt/infrastructura/repository/jwt.repository';
+import { JwtTokens, JwtSchema } from './jwt/domain/jwt.schema';
+
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -63,6 +69,7 @@ import { JwtService } from '@nestjs/jwt';
       { name: PostItemType.name, schema: PostsSchema },
       { name: Comment.name, schema: CommentSchema },
       { name: Users.name, schema: UsersSchema },
+      { name: JwtTokens.name, schema: JwtSchema },
     ]),
   ],
   controllers: [
@@ -96,7 +103,11 @@ import { JwtService } from '@nestjs/jwt';
     UsersQueryRepository,
     //auth
     AuthService,
-    JwtService,
+    JwtService, //from nest
+    //jwt
+    AuthJwtService,
+    JwtTokensRepository,
+    JwtTokensQueryRepository,
   ],
 })
 export class AppModule {}

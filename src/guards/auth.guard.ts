@@ -7,7 +7,7 @@ import {
 import { Request } from 'express';
 import { UsersQueryRepository } from '../users/infrastructure/repository/users.query.repository';
 import { JwtService } from '@nestjs/jwt';
-import { JwtPayloadDTO } from '../auth/application/dto/auth.dto';
+import { JwtPayloadDTO } from '../jwt/application/dto/jwt.dto';
 
 @Injectable()
 
@@ -33,7 +33,7 @@ export class AuthGuard implements CanActivate {
       throw new Error(err);
     }
 
-    if (payload && payload.id && payload.id.length > 0) {
+    if (payload && payload.userId && payload.userId.length > 0) {
       user = await this.usersQueryRepository.findUserById(payload.id);
     }
     if (user) {

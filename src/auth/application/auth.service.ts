@@ -2,27 +2,28 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { UsersService } from '../../users/application/users.service';
 import { emailAdapter } from '../../common/adapter';
 import {
   AuthDTO,
+  GetRefreshTokenDTO,
   RegistrationConfirmationDTO,
   RegistrationUserDTO,
 } from './dto/auth.dto';
 import { add } from 'date-fns';
 import { UsersRepository } from '../../users/infrastructure/repository/users.repository';
 import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
-import { settings } from '../../settings';
+import { AuthJwtService } from '../../jwt/application/jwt.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     protected usersService: UsersService,
     protected usersRepository: UsersRepository,
-    protected jwtService: JwtService,
+    protected authJwtService: AuthJwtService,
   ) {}
 
   private async checkCreds(creds: AuthDTO) {
@@ -40,31 +41,34 @@ export class AuthService {
     return null;
   }
 
-  async login(authDTO: AuthDTO): Promise<{ accessToken: string } | null> {
+  async login(
+    authDTO: AuthDTO,
+  ): Promise<{ accessToken: string; refreshToken: string } | null> {
     const user = await this.checkCreds(authDTO);
     if (user) {
-      const login = user.getLogin();
-      const password = user.getPassword();
-      const email = user.getEmail();
-      const id = user._id;
-      const isConfirmed = user.getIsConfirmed();
-
-      const payload = {
-        login,
-        password,
-        email,
-        id,
-        isConfirmed,
-      };
-      const jwtToken = this.jwtService.sign(payload, {
-        secret: settings.JWT_SECRET,
-        expiresIn: '1d',
-      });
-      return { accessToken: jwtToken };
+      const accessToken = await this.authJwtService.createAccessToken(user);
+      const refreshToken = await this.authJwtService.createRefreshToken(user);
+      return { accessToken, refreshToken };
     }
-    return null;
+    throw new UnauthorizedException({ message: 'email or login incorrect' });
   }
-
+  async refreshToken(
+    getRefreshTokenDTO: GetRefreshTokenDTO,
+  ): Promise<{ accessToken: string; refreshToken: string } | null> {
+    const user = await this.usersRepository.findUserById(
+      getRefreshTokenDTO.userId,
+    );
+    const isRefreshTokenAddedToBlackList =
+      this.authJwtService.addRefreshTokenToBlacklist(
+        getRefreshTokenDTO.refreshTokenId,
+      );
+    if (user && isRefreshTokenAddedToBlackList) {
+      const accessToken = await this.authJwtService.createAccessToken(user);
+      const refreshToken = await this.authJwtService.createRefreshToken(user);
+      return { accessToken, refreshToken };
+    }
+    throw new NotFoundException({ message: 'User not found' });
+  }
   async registrationUser(createUser: RegistrationUserDTO) {
     const isLoginAlreadyExist =
       await this.usersRepository.findUserByEmailOrLogin(createUser.login);
