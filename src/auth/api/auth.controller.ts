@@ -36,7 +36,7 @@ export class AuthController {
     const tokens = await this.authService.login(inputModel);
     response.cookie('refreshToken', `${tokens.refreshToken}`, {
       httpOnly: true,
-      secure: false,
+      secure: true,
     });
     response.status(200).send({ accessToken: tokens.accessToken });
   }
