@@ -18,14 +18,13 @@ export class RefreshTokenGuard implements CanActivate {
   ) {}
   async canActivate(context: ExecutionContext) {
     const request: Request = context.switchToHttp().getRequest();
-    console.log(request.headers.cookie);
-    if (!request.headers.cookie) {
+    const { refreshToken } = request.cookies;
+    if (!refreshToken) {
       console.log('no cookie');
-      console.log(request.headers.cookie);
+      console.log(refreshToken);
       throw new UnauthorizedException();
     }
     let refreshTokenFromBlackList = null;
-    const refreshToken = request.headers.cookie.split('=')[1];
     let payload = null;
 
     try {
@@ -50,7 +49,7 @@ export class RefreshTokenGuard implements CanActivate {
     }
 
     if (refreshTokenFromBlackList) {
-      console.log(refreshTokenFromBlackList);
+      console.log('refreshTokenFromBlackList', refreshTokenFromBlackList);
       throw new UnauthorizedException();
     }
 
