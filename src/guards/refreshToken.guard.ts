@@ -18,6 +18,7 @@ export class RefreshTokenGuard implements CanActivate {
   ) {}
   async canActivate(context: ExecutionContext) {
     const request: Request = context.switchToHttp().getRequest();
+    console.log(request.headers.cookie);
     if (!request.headers.cookie) {
       console.log('no cookie');
       console.log(request.headers.cookie);
@@ -44,6 +45,8 @@ export class RefreshTokenGuard implements CanActivate {
         await this.jwtTokensQueryRepository.findRefreshTokenById(
           payload.refreshTokenId,
         );
+    } else {
+      throw new UnauthorizedException();
     }
 
     if (refreshTokenFromBlackList) {
