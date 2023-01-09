@@ -20,6 +20,7 @@ export class RefreshTokenGuard implements CanActivate {
     const request: Request = context.switchToHttp().getRequest();
     if (!request.headers.cookie) {
       console.log('no cookie');
+      console.log(request.headers.cookie);
       throw new UnauthorizedException();
     }
     let refreshTokenFromBlackList = null;
