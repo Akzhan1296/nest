@@ -8,10 +8,9 @@ import { Request } from 'express';
 import { UsersQueryRepository } from '../users/infrastructure/repository/users.query.repository';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayloadDTO } from '../jwt/application/dto/jwt.dto';
+import { settings } from '../settings';
 
 @Injectable()
-
-// : boolean | Promise<boolean> | Observable<boolean>
 export class AuthGuard implements CanActivate {
   constructor(
     private usersQueryRepository: UsersQueryRepository,
@@ -28,16 +27,17 @@ export class AuthGuard implements CanActivate {
     let user = null;
 
     try {
-      payload = this.jwtService.decode(token) as JwtPayloadDTO;
+      payload = this.jwtService.verify(token, {
+        secret: settings.JWT_SECRET,
+      }) as JwtPayloadDTO;
     } catch (err) {
       throw new Error(err);
     }
-
     if (payload && payload.userId && payload.userId.length > 0) {
-      user = await this.usersQueryRepository.findUserById(payload.id);
+      user = await this.usersQueryRepository.findUserById(payload.userId);
     }
     if (user) {
-      request.body.userId = payload.id;
+      request.body.userId = payload.userId;
       return true;
     }
     throw new UnauthorizedException();

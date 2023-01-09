@@ -34,7 +34,7 @@ export class AuthController {
     @Body() inputModel: AuthLoginInputModal,
   ) {
     const tokens = await this.authService.login(inputModel);
-    response.cookie('refreshToken', `Bearer ${tokens.refreshToken}`, {
+    response.cookie('refreshToken', `${tokens.refreshToken}`, {
       httpOnly: true,
       secure: false,
     });
@@ -48,7 +48,7 @@ export class AuthController {
       userId: request.body.userId,
       refreshTokenId: request.body.refreshTokenId,
     });
-    response.cookie('refreshToken', `Bearer ${tokens.refreshToken}`, {
+    response.cookie('refreshToken', `${tokens.refreshToken}`, {
       httpOnly: true,
       secure: false,
     });

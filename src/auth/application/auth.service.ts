@@ -47,6 +47,7 @@ export class AuthService {
     const user = await this.checkCreds(authDTO);
     if (user) {
       const accessToken = await this.authJwtService.createAccessToken(user);
+      // const accessToken = await this.authJwtService.createRefreshToken(user);
       const refreshToken = await this.authJwtService.createRefreshToken(user);
       return { accessToken, refreshToken };
     }
