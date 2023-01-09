@@ -1,7 +1,7 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Users, UsersDocument } from 'src/users/domain/entity/users.schema';
 import { Model } from 'mongoose';
-import { UserViewModel } from '../models/view.models';
+import { MeViewModel, UserViewModel } from '../models/view.models';
 
 import { Paginated } from '../../../common/utils';
 import {
@@ -28,11 +28,22 @@ export class UsersQueryRepository {
     }));
   }
 
-  async findUserById(id: string) {
+  async findUserById(id: string): Promise<UserViewModel | null> {
     const user = await this.UserModel.findOne({ _id: id });
     if (user) {
       return {
-        // createdAt: user.createdAt,
+        createdAt: user.createdAt,
+        login: user.getLogin(),
+        email: user.getEmail(),
+        id: user._id.toString(),
+      };
+    }
+    return null;
+  }
+  async findMe(id: string): Promise<MeViewModel | null> {
+    const user = await this.UserModel.findOne({ _id: id });
+    if (user) {
+      return {
         login: user.getLogin(),
         email: user.getEmail(),
         userId: user._id.toString(),
@@ -72,7 +83,6 @@ export class UsersQueryRepository {
       this.getUsersViews(users),
     );
   }
-
   async dropUsers() {
     return this.UserModel.deleteMany({});
   }

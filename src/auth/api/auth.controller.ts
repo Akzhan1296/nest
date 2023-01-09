@@ -84,6 +84,6 @@ export class AuthController {
   @Get('me')
   @UseGuards(AuthGuard)
   async getMe(@Req() request: Request) {
-    return await this.usersQueryRepository.findUserById(request.body.userId);
+    return await this.usersQueryRepository.findMe(request.body.userId);
   }
 }
