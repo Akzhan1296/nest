@@ -28,14 +28,14 @@ export class UsersQueryRepository {
     }));
   }
 
-  async findUserById(id: string): Promise<UserViewModel | null> {
+  async findUserById(id: string) {
     const user = await this.UserModel.findOne({ _id: id });
     if (user) {
       return {
-        createdAt: user.createdAt,
+        // createdAt: user.createdAt,
         login: user.getLogin(),
         email: user.getEmail(),
-        id: user._id.toString(),
+        userId: user._id.toString(),
       };
     }
     return null;
