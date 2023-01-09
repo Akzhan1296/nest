@@ -28,10 +28,11 @@ export class UsersQueryRepository {
     }));
   }
 
-  async findUserById(id: string): Promise<UserViewModelWithoutDate | null> {
+  async findUserById(id: string): Promise<UserViewModel | null> {
     const user = await this.UserModel.findOne({ _id: id });
     if (user) {
       return {
+        createdAt: user.createdAt,
         login: user.getLogin(),
         email: user.getEmail(),
         id: user._id.toString(),
