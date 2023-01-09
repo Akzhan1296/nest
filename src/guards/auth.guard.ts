@@ -31,7 +31,7 @@ export class AuthGuard implements CanActivate {
         secret: settings.JWT_SECRET,
       }) as JwtPayloadDTO;
     } catch (err) {
-      throw new Error(err);
+      throw new UnauthorizedException();
     }
     if (payload && payload.userId && payload.userId.length > 0) {
       user = await this.usersQueryRepository.findUserById(payload.userId);
