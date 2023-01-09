@@ -32,7 +32,7 @@ export class AuthJwtService {
     };
     const jwtToken = this.jwtService.sign(payload, {
       secret: settings.JWT_SECRET,
-      expiresIn: '10s',
+      expiresIn: '10sec',
     });
     return jwtToken;
   }
@@ -50,7 +50,7 @@ export class AuthJwtService {
     };
     const refreshToken = this.jwtService.sign(payload, {
       secret: settings.JWT_SECRET,
-      expiresIn: '20s',
+      expiresIn: '20sec',
     });
     return refreshToken;
   }

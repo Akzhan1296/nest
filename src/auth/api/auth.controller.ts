@@ -55,13 +55,13 @@ export class AuthController {
     response.status(200).send({ accessToken: tokens.accessToken });
   }
   @Post('logout')
-  // @UseGuards(RefreshTokenGuard)
-  @HttpCode(403)
+  @UseGuards(RefreshTokenGuard)
+  @HttpCode(401)
   async logOut(@Req() request: Request) {
-    return [];
-    // return this.authJwtService.addRefreshTokenToBlacklist(
-    //   request.body.refreshTokenId,
-    // );
+    // return [];
+    return this.authJwtService.addRefreshTokenToBlacklist(
+      request.body.refreshTokenId,
+    );
   }
   @Post('registration-confirmation')
   @HttpCode(204)
