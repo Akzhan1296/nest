@@ -20,8 +20,6 @@ export class RefreshTokenGuard implements CanActivate {
     const request: Request = context.switchToHttp().getRequest();
     const { refreshToken } = request.cookies;
     if (!refreshToken) {
-      console.log('no cookie');
-      console.log(refreshToken);
       throw new UnauthorizedException();
     }
     let refreshTokenFromBlackList = null;
@@ -32,7 +30,6 @@ export class RefreshTokenGuard implements CanActivate {
         secret: settings.JWT_SECRET,
       }) as RefreshTokenPayloadDTO;
     } catch (err) {
-      console.log('no payload');
       throw new UnauthorizedException();
     }
     if (
@@ -49,7 +46,6 @@ export class RefreshTokenGuard implements CanActivate {
     }
 
     if (refreshTokenFromBlackList) {
-      console.log('refreshTokenFromBlackList', refreshTokenFromBlackList);
       throw new UnauthorizedException();
     }
 
