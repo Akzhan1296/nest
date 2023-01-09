@@ -1,7 +1,7 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Users, UsersDocument } from 'src/users/domain/entity/users.schema';
 import { Model } from 'mongoose';
-import { UserViewModel, UserViewModelWithoutDate } from '../models/view.models';
+import { UserViewModel } from '../models/view.models';
 
 import { Paginated } from '../../../common/utils';
 import {

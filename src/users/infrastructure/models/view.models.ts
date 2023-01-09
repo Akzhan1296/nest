@@ -4,9 +4,3 @@ export type UserViewModel = {
   email: string;
   createdAt: Date;
 };
-
-export type UserViewModelWithoutDate = {
-  id: string;
-  login: string;
-  email: string;
-};
