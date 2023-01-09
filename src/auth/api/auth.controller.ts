@@ -56,7 +56,7 @@ export class AuthController {
   }
   @Post('logout')
   @UseGuards(RefreshTokenGuard)
-  @HttpCode(401)
+  @HttpCode(204)
   async logOut(@Req() request: Request) {
     // return [];
     return this.authJwtService.addRefreshTokenToBlacklist(
