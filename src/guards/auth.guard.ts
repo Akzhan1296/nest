@@ -5,9 +5,9 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { UsersQueryRepository } from '../users/infrastructure/repository/users.query.repository';
+import { UsersQueryRepository } from '../features/users/infrastructure/repository/users.query.repository';
 import { JwtService } from '@nestjs/jwt';
-import { JwtPayloadDTO } from '../jwt/application/dto/jwt.dto';
+import { JwtPayloadDTO } from '../features/jwt/application/dto/jwt.dto';
 import { settings } from '../settings';
 
 @Injectable()

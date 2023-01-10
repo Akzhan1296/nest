@@ -7,53 +7,56 @@ import { AppService } from './app.service';
 import { settings } from './settings';
 
 //blogs
-import { BlogsController } from './blogs/api/blogs.controller';
-import { BlogsQueryController } from './blogs/api/query.controller';
-import { factoryBlogsService } from './blogs/factory/blogs.factory';
-import { BlogsRepository } from './blogs/infrastructure/repository/blogs.repository';
-import { BlogsQueryRepository } from './blogs/infrastructure/repository/blogs.query.repository';
-import { BlogItemType } from './blogs/infrastructure/blogs.type';
-import { BlogsSchema } from './blogs/schema/blogs.schema';
+import { BlogsController } from './features/blogs/api/blogs.controller';
+import { BlogsQueryController } from './features/blogs/api/query.controller';
+import { factoryBlogsService } from './features/blogs/factory/blogs.factory';
+import { BlogsRepository } from './features/blogs/infrastructure/repository/blogs.repository';
+import { BlogsQueryRepository } from './features/blogs/infrastructure/repository/blogs.query.repository';
+import { BlogItemType } from './features/blogs/infrastructure/blogs.type';
+import { BlogsSchema } from './features/blogs/schema/blogs.schema';
 
 //posts
-import { PostsController } from './posts/api/posts.controller';
-import { PostsQueryController } from './posts/api/query.controller';
-import { factoryPostService } from './posts/factory/posts.factory';
-import { PostsRepository } from './posts/infrastructure/repository/posts.repository';
-import { PostsQueryRepository } from './posts/infrastructure/repository/posts.query.repository';
-import { PostItemType } from './posts/infrastructure/posts.type';
-import { PostsSchema } from './posts/schema/posts.schema';
+import { PostsController } from './features/posts/api/posts.controller';
+import { PostsQueryController } from './features/posts/api/query.controller';
+import { factoryPostService } from './features/posts/factory/posts.factory';
+import { PostsRepository } from './features/posts/infrastructure/repository/posts.repository';
+import { PostsQueryRepository } from './features/posts/infrastructure/repository/posts.query.repository';
+import { PostItemType } from './features/posts/infrastructure/posts.type';
+import { PostsSchema } from './features/posts/schema/posts.schema';
 
 // comments
-import { CommentsController } from './comments/api/comments.controller';
-import { CommentsService } from './comments/application/comments.service';
-import { CommentsRepository } from './comments/infrastructure/repository/comments.repository';
-import { CommentsQueryRepository } from './comments/infrastructure/repository/comments.query.repository';
+import { CommentsController } from './features/comments/api/comments.controller';
+import { CommentsService } from './features/comments/application/comments.service';
+import { CommentsRepository } from './features/comments/infrastructure/repository/comments.repository';
+import { CommentsQueryRepository } from './features/comments/infrastructure/repository/comments.query.repository';
 import {
   CommentSchema,
   Comment,
-} from './comments/domain/entity/comments.schema';
+} from './features/comments/domain/entity/comments.schema';
 
 //users
-import { UsersController } from './users/api/users.controller';
-import { UsersService } from './users/application/users.service';
-import { UsersRepository } from './users/infrastructure/repository/users.repository';
-import { UsersQueryRepository } from './users/infrastructure/repository/users.query.repository';
-import { Users, UsersSchema } from './users/domain/entity/users.schema';
+import { UsersController } from './features/users/api/users.controller';
+import { UsersService } from './features/users/application/users.service';
+import { UsersRepository } from './features/users/infrastructure/repository/users.repository';
+import { UsersQueryRepository } from './features/users/infrastructure/repository/users.query.repository';
+import {
+  Users,
+  UsersSchema,
+} from './features/users/domain/entity/users.schema';
 
 //auth
-import { AuthController } from './auth/api/auth.controller';
-import { AuthService } from './auth/application/auth.service';
+import { AuthController } from './features/auth/api/auth.controller';
+import { AuthService } from './features/auth/application/auth.service';
 
 //delete controller
-import { DeleteController } from './delete/delete.controller';
+import { DeleteController } from './features/delete/delete.controller';
 import { JwtService } from '@nestjs/jwt';
 
 //jwt
-import { AuthJwtService } from './jwt/application/jwt.service';
-import { JwtTokensQueryRepository } from './jwt/infrastructura/repository/jwt.query.repository';
-import { JwtTokensRepository } from './jwt/infrastructura/repository/jwt.repository';
-import { JwtTokens, JwtSchema } from './jwt/domain/jwt.schema';
+import { AuthJwtService } from './features/jwt/application/jwt.service';
+import { JwtTokensQueryRepository } from './features/jwt/infrastructura/repository/jwt.query.repository';
+import { JwtTokensRepository } from './features/jwt/infrastructura/repository/jwt.repository';
+import { JwtTokens, JwtSchema } from './features/jwt/domain/jwt.schema';
 
 @Module({
   imports: [

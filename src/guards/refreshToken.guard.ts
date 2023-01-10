@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { RefreshTokenPayloadDTO } from '../jwt/application/dto/jwt.dto';
-import { JwtTokensQueryRepository } from '../jwt/infrastructura/repository/jwt.query.repository';
+import { RefreshTokenPayloadDTO } from '../features/jwt/application/dto/jwt.dto';
+import { JwtTokensQueryRepository } from '../features/jwt/infrastructura/repository/jwt.query.repository';
 import { settings } from '../settings';
 
 @Injectable()
