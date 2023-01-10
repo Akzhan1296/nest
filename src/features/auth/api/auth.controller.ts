@@ -51,9 +51,8 @@ export class AuthController {
     @Req() request: Request,
     @Res() response: Response,
   ): Promise<undefined> {
-    const tokens = await this.authService.refreshToken({
+    const tokens = await this.authService.updateRefreshToken({
       userId: request.body.userId,
-      refreshTokenId: request.body.refreshTokenId,
     });
     response.cookie('refreshToken', `${tokens.refreshToken}`, {
       httpOnly: true,
@@ -67,9 +66,7 @@ export class AuthController {
   @UseGuards(RefreshTokenGuard)
   @HttpCode(204)
   async logOut(@Req() request: Request): Promise<boolean> {
-    return this.authJwtService.addRefreshTokenToBlacklist(
-      request.body.refreshTokenId,
-    );
+    return false;
   }
 
   @Post('registration-confirmation')

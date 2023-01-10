@@ -53,17 +53,14 @@ export class AuthService {
     }
     throw new UnauthorizedException({ message: 'email or login incorrect' });
   }
-  async refreshToken(
+  async updateRefreshToken(
     getRefreshTokenDTO: GetRefreshTokenDTO,
   ): Promise<{ accessToken: string; refreshToken: string } | null> {
     const user = await this.usersRepository.findUserById(
       getRefreshTokenDTO.userId,
     );
-    const isRefreshTokenAddedToBlackList =
-      this.authJwtService.addRefreshTokenToBlacklist(
-        getRefreshTokenDTO.refreshTokenId,
-      );
-    if (user && isRefreshTokenAddedToBlackList) {
+
+    if (user) {
       const accessToken = await this.authJwtService.createAccessToken(user);
       const refreshToken = await this.authJwtService.createRefreshToken(user);
       return { accessToken, refreshToken };

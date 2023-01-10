@@ -22,7 +22,6 @@ export class RefreshTokenGuard implements CanActivate {
     if (!refreshToken) {
       throw new UnauthorizedException();
     }
-    let refreshTokenFromBlackList = null;
     let payload = null;
 
     try {
@@ -32,24 +31,15 @@ export class RefreshTokenGuard implements CanActivate {
     } catch (err) {
       throw new UnauthorizedException();
     }
-    if (
-      payload &&
-      payload.refreshTokenId &&
-      payload.refreshTokenId.length > 0
-    ) {
-      refreshTokenFromBlackList =
-        await this.jwtTokensQueryRepository.findRefreshTokenById(
-          payload.refreshTokenId,
-        );
+    if (payload) {
     } else {
       throw new UnauthorizedException();
     }
 
-    if (refreshTokenFromBlackList) {
-      throw new UnauthorizedException();
-    }
+    // if (refreshTokenFromBlackList) {
+    //   throw new UnauthorizedException();
+    // }
 
-    request.body.refreshTokenId = payload.refreshTokenId;
     request.body.userId = payload.userId;
 
     return true;

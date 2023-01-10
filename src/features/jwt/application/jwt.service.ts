@@ -37,16 +37,19 @@ export class AuthJwtService {
     return accessToken;
   }
   async createRefreshToken(user: UsersDocument): Promise<string> {
+    const deviceId = new ObjectId();
+    const createdAt = new Date();
     const userId = user._id;
-    const refreshTokenId = new ObjectId().toString();
+
     const login = user.getLogin();
     const email = user.getEmail();
 
     const payload = {
       userId,
-      refreshTokenId,
       login,
       email,
+      deviceId,
+      createdAt,
     };
     const refreshToken = this.jwtService.sign(payload, {
       secret: settings.JWT_SECRET,
@@ -54,9 +57,9 @@ export class AuthJwtService {
     });
     return refreshToken;
   }
-  async addRefreshTokenToBlacklist(refreshTokenId: string): Promise<boolean> {
-    const newJwtModel = new this.JwtTokenModel();
-    newJwtModel.setRefreshTokenId(refreshTokenId);
-    return await this.jwtTokensRepository.save(newJwtModel);
-  }
+  // async addRefreshTokenToBlacklist(refreshTokenId: string): Promise<boolean> {
+  //   const newJwtModel = new this.JwtTokenModel();
+  //   newJwtModel.setRefreshTokenId(refreshTokenId);
+  //   return await this.jwtTokensRepository.save(newJwtModel);
+  // }
 }

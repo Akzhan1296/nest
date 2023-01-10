@@ -10,5 +10,4 @@ export type RefreshTokenPayloadDTO = {
   login: string;
   email: string;
   userId: string;
-  refreshTokenId: string;
 };

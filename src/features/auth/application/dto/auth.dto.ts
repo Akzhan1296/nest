@@ -14,5 +14,4 @@ export type AuthDTO = {
 };
 export type GetRefreshTokenDTO = {
   userId: string;
-  refreshTokenId: string;
 };

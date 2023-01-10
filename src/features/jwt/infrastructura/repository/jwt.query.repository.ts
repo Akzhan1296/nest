@@ -9,11 +9,6 @@ export class JwtTokensQueryRepository {
     @InjectModel(JwtTokens.name)
     private JwtTokenModel: Model<JwtTokensDocument>,
   ) {}
-  async findRefreshTokenById(
-    refreshTokenId: string,
-  ): Promise<JwtTokensDocument> {
-    return await this.JwtTokenModel.findOne({ refreshTokenId });
-  }
   async dropJwts() {
     return this.JwtTokenModel.deleteMany({});
   }
