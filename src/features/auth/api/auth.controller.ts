@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  Ip,
   Post,
   Req,
   Res,
@@ -32,13 +33,19 @@ export class AuthController {
   @Post('login')
   @HttpCode(200)
   async login(
+    @Req() request: Request,
     @Res() response: Response,
+    @Ip() deviceIp,
     @Body() inputModel: AuthLoginInputModal,
   ): Promise<undefined> {
-    const tokens = await this.authService.login(inputModel);
+    const tokens = await this.authService.login({
+      ...inputModel,
+      deviceIp,
+      deviceName: request.headers['user-agent'],
+    });
     response.cookie('refreshToken', `${tokens.refreshToken}`, {
       httpOnly: true,
-      secure: true,
+      secure: false,
     });
     response.status(200).send({ accessToken: tokens.accessToken });
     return;
@@ -53,10 +60,11 @@ export class AuthController {
   ): Promise<undefined> {
     const tokens = await this.authService.updateRefreshToken({
       userId: request.body.userId,
+      deviceId: request.body.deviceId,
     });
     response.cookie('refreshToken', `${tokens.refreshToken}`, {
       httpOnly: true,
-      secure: true,
+      secure: false,
     });
     response.status(200).send({ accessToken: tokens.accessToken });
     return;

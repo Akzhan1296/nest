@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -9,6 +10,10 @@ export class JwtTokensRepository {
     @InjectModel(JwtTokens.name)
     private JwtTokenModel: Model<JwtTokensDocument>,
   ) {}
+  async getJwtByDeviceId(deviceId: string) {
+    const deviceIdObject = new ObjectId(deviceId);
+    return await this.JwtTokenModel.findOne({ deviceId: deviceIdObject });
+  }
   async save(token: JwtTokensDocument): Promise<boolean> {
     return token
       .save()

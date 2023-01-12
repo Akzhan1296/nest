@@ -45,10 +45,15 @@ export class AuthService {
   async login(
     authDTO: AuthDTO,
   ): Promise<{ accessToken: string; refreshToken: string }> {
+    const { deviceName, deviceIp } = authDTO;
     const user = await this.checkCreds(authDTO);
     if (user) {
       const accessToken = await this.authJwtService.createAccessToken(user);
-      const refreshToken = await this.authJwtService.createRefreshToken(user);
+      const refreshToken = await this.authJwtService.createRefreshToken({
+        user,
+        deviceName,
+        deviceIp,
+      });
       return { accessToken, refreshToken };
     }
     throw new UnauthorizedException({ message: 'email or login incorrect' });
@@ -62,7 +67,9 @@ export class AuthService {
 
     if (user) {
       const accessToken = await this.authJwtService.createAccessToken(user);
-      const refreshToken = await this.authJwtService.createRefreshToken(user);
+      const refreshToken = await this.authJwtService.updateRefreshToken(
+        getRefreshTokenDTO.deviceId,
+      );
       return { accessToken, refreshToken };
     }
     throw new NotFoundException({ message: 'User not found' });
