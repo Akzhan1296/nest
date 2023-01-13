@@ -12,6 +12,7 @@ import {
 import { Request, Response } from 'express';
 import { AuthGuard } from '../../../guards/auth.guard';
 import { RefreshTokenGuard } from '../../../guards/refreshToken.guard';
+import { DeviceService } from '../../devices/application/devices.service';
 import { AuthJwtService } from '../../jwt/application/jwt.service';
 import { MeViewModel } from '../../users/infrastructure/models/view.models';
 import { UsersQueryRepository } from '../../users/infrastructure/repository/users.query.repository';
@@ -26,6 +27,7 @@ import {
 export class AuthController {
   constructor(
     protected authService: AuthService,
+    protected deviceService: DeviceService,
     protected authJwtService: AuthJwtService,
     protected usersQueryRepository: UsersQueryRepository,
   ) {}
@@ -45,7 +47,7 @@ export class AuthController {
     });
     response.cookie('refreshToken', `${tokens.refreshToken}`, {
       httpOnly: true,
-      secure: false,
+      secure: true,
     });
     response.status(200).send({ accessToken: tokens.accessToken });
     return;
@@ -64,7 +66,7 @@ export class AuthController {
     });
     response.cookie('refreshToken', `${tokens.refreshToken}`, {
       httpOnly: true,
-      secure: false,
+      secure: true,
     });
     response.status(200).send({ accessToken: tokens.accessToken });
     return;
@@ -74,7 +76,10 @@ export class AuthController {
   @UseGuards(RefreshTokenGuard)
   @HttpCode(204)
   async logOut(@Req() request: Request): Promise<boolean> {
-    return false;
+    return this.deviceService.deleteCurrentDevice({
+      deviceId: request.body.deviceId,
+      userId: request.body.userId,
+    });
   }
 
   @Post('registration-confirmation')

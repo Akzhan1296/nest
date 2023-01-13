@@ -18,6 +18,7 @@ import { UsersRepository } from '../../users/infrastructure/repository/users.rep
 import * as bcrypt from 'bcrypt';
 import { AuthJwtService } from '../../jwt/application/jwt.service';
 import { UsersDocument } from '../../users/domain/entity/users.schema';
+import { JwtTokensRepository } from '../../jwt/infrastructura/repository/jwt.repository';
 
 @Injectable()
 export class AuthService {
@@ -25,6 +26,7 @@ export class AuthService {
     protected usersService: UsersService,
     protected usersRepository: UsersRepository,
     protected authJwtService: AuthJwtService,
+    protected jwtTokensRepository: JwtTokensRepository,
   ) {}
 
   private async checkCreds(creds: AuthDTO): Promise<UsersDocument | null> {
@@ -47,16 +49,27 @@ export class AuthService {
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const { deviceName, deviceIp } = authDTO;
     const user = await this.checkCreds(authDTO);
-    if (user) {
-      const accessToken = await this.authJwtService.createAccessToken(user);
-      const refreshToken = await this.authJwtService.createRefreshToken({
-        user,
-        deviceName,
-        deviceIp,
-      });
-      return { accessToken, refreshToken };
+    let refreshToken = null;
+    if (!user) {
+      throw new UnauthorizedException({ message: 'email or login incorrect' });
     }
-    throw new UnauthorizedException({ message: 'email or login incorrect' });
+
+    refreshToken = await this.jwtTokensRepository.getJwtByUserId(
+      user._id.toString(),
+    );
+    if (refreshToken) {
+      return this.updateRefreshToken({
+        userId: user._id.toString(),
+        deviceId: refreshToken.getDeviceId(),
+      });
+    }
+    const accessToken = await this.authJwtService.createAccessToken(user);
+    refreshToken = await this.authJwtService.createRefreshToken({
+      user,
+      deviceName,
+      deviceIp,
+    });
+    return { accessToken, refreshToken };
   }
   async updateRefreshToken(
     getRefreshTokenDTO: GetRefreshTokenDTO,

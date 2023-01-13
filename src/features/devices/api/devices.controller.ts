@@ -9,22 +9,32 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { RefreshTokenGuard } from '../../../guards/refreshToken.guard';
+import { DevicesViewModel } from '../../jwt/infrastructura/models/view.models';
+import { JwtTokensQueryRepository } from '../../jwt/infrastructura/repository/jwt.query.repository';
+import { DeviceService } from '../application/devices.service';
 
 @Controller('security/devices')
-export class CommentsController {
-  constructor() {} // protected commentsQueryRepository: CommentsQueryRepository, // protected commentsService: CommentsService,
+export class DevicesController {
+  constructor(
+    protected deviceService: DeviceService,
+    protected jwtTokensQueryRepository: JwtTokensQueryRepository,
+  ) {}
 
   @Get('')
   @UseGuards(RefreshTokenGuard)
-  async getDevices(): Promise<undefined> {
-    return undefined;
+  async getDevices(@Req() request: Request): Promise<DevicesViewModel[]> {
+    return this.jwtTokensQueryRepository.getDevicesByUserId(
+      request.body.userId,
+    );
   }
 
   @Delete('')
   @UseGuards(RefreshTokenGuard)
   @HttpCode(204)
-  async deleteAllDevices(): Promise<undefined> {
-    return;
+  async deleteAllDevices(@Req() request: Request): Promise<boolean> {
+    return this.deviceService.deleteAllDevicesExceptCurrent(
+      request.body.deviceId,
+    );
   }
 
   @Delete(':deviceId')
@@ -33,7 +43,10 @@ export class CommentsController {
   async deleteSelectedDevice(
     @Req() request: Request,
     @Param() params: { deviceId: string },
-  ): Promise<undefined> {
-    return;
+  ): Promise<boolean> {
+    return this.deviceService.deleteCurrentDevice({
+      deviceId: params.deviceId,
+      userId: request.body.userId,
+    });
   }
 }

@@ -14,6 +14,16 @@ export class JwtTokensRepository {
     const deviceIdObject = new ObjectId(deviceId);
     return await this.JwtTokenModel.findOne({ deviceId: deviceIdObject });
   }
+  async getJwtByUserId(userId: string) {
+    const userObjectId = new ObjectId(userId);
+    return await this.JwtTokenModel.findOne({ userId: userObjectId });
+  }
+  async deleteDevicesExceptOne(deviceId: string) {
+    const deviceIdObject = new ObjectId(deviceId);
+    return await this.JwtTokenModel.remove({
+      deviceId: { $ne: deviceIdObject },
+    });
+  }
   async save(token: JwtTokensDocument): Promise<boolean> {
     return token
       .save()

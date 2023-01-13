@@ -58,6 +58,10 @@ import { JwtTokensQueryRepository } from './features/jwt/infrastructura/reposito
 import { JwtTokensRepository } from './features/jwt/infrastructura/repository/jwt.repository';
 import { JwtTokens, JwtSchema } from './features/jwt/domain/jwt.schema';
 
+//devices
+import { DevicesController } from './features/devices/api/devices.controller';
+import { DeviceService } from './features/devices/application/devices.service';
+
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -85,6 +89,7 @@ import { JwtTokens, JwtSchema } from './features/jwt/domain/jwt.schema';
     PostsQueryController,
     CommentsController,
     DeleteController,
+    DevicesController,
   ],
   providers: [
     AppService,
@@ -111,6 +116,8 @@ import { JwtTokens, JwtSchema } from './features/jwt/domain/jwt.schema';
     AuthJwtService,
     JwtTokensRepository,
     JwtTokensQueryRepository,
+    //device
+    DeviceService,
   ],
 })
 export class AppModule {}

@@ -23,7 +23,7 @@ export class RefreshTokenGuard implements CanActivate {
       throw new UnauthorizedException();
     }
     let payload = null;
-    let refreshTokenFromRepository = null;
+    let devices = null;
 
     try {
       payload = this.jwtService.verify(refreshToken, {
@@ -33,13 +33,14 @@ export class RefreshTokenGuard implements CanActivate {
       throw new UnauthorizedException();
     }
     if (payload) {
-      refreshTokenFromRepository =
-        this.jwtTokensQueryRepository.getJwtByDeviceId(payload.deviceId);
+      devices = this.jwtTokensQueryRepository.getDevicesByUserId(
+        payload.userId,
+      );
     } else {
       throw new UnauthorizedException();
     }
 
-    if (!refreshTokenFromRepository) throw new UnauthorizedException();
+    if (!devices) throw new UnauthorizedException();
 
     request.body.userId = payload.userId;
     request.body.deviceId = payload.deviceId;

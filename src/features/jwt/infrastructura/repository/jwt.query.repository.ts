@@ -3,6 +3,7 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { JwtTokens, JwtTokensDocument } from '../../domain/jwt.schema';
+import { DevicesViewModel } from '../models/view.models';
 
 @Injectable()
 export class JwtTokensQueryRepository {
@@ -10,10 +11,17 @@ export class JwtTokensQueryRepository {
     @InjectModel(JwtTokens.name)
     private JwtTokenModel: Model<JwtTokensDocument>,
   ) {}
-  async getJwtByDeviceId(deviceId: string) {
-    const deviceIdObject = new ObjectId(deviceId);
-    console.log(deviceIdObject);
-    return await this.JwtTokenModel.find({ deviceId: deviceIdObject });
+  async getDevicesByUserId(userId: string): Promise<DevicesViewModel[]> {
+    const userObjectId = new ObjectId(userId);
+    const tokensMetaData = await this.JwtTokenModel.find({
+      userId: userObjectId,
+    });
+    return tokensMetaData.map((tokenData) => ({
+      ip: tokenData.getDeviceIp(),
+      title: tokenData.getDeviceName(),
+      lastActiveDate: tokenData.getCreatedAt().toString(),
+      deviceId: tokenData.getDeviceId().toString(),
+    }));
   }
   async dropJwts() {
     return this.JwtTokenModel.deleteMany({});
