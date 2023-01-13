@@ -54,8 +54,8 @@ export class AuthService {
       throw new UnauthorizedException({ message: 'email or login incorrect' });
     }
 
-    refreshToken = await this.jwtTokensRepository.getJwtByUserId(
-      user._id.toString(),
+    refreshToken = await this.jwtTokensRepository.getJwtByDeviceName(
+      authDTO.deviceName,
     );
     if (refreshToken) {
       return this.updateRefreshToken({
