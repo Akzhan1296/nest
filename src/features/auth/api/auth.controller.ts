@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AuthGuard } from '../../../guards/auth.guard';
+import { BlockIpGuard } from '../../../guards/ip.guard';
 import { RefreshTokenGuard } from '../../../guards/refreshToken.guard';
 import { DeviceService } from '../../devices/application/devices.service';
 import { AuthJwtService } from '../../jwt/application/jwt.service';
@@ -23,6 +24,7 @@ import {
   AuthRegistrationConfirmInputModal,
   AuthRegistrationInputModal,
 } from './models/auth.models';
+
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -33,6 +35,7 @@ export class AuthController {
   ) {}
 
   @Post('login')
+  @UseGuards(BlockIpGuard)
   @HttpCode(200)
   async login(
     @Req() request: Request,
@@ -47,7 +50,7 @@ export class AuthController {
     });
     response.cookie('refreshToken', `${tokens.refreshToken}`, {
       httpOnly: true,
-      secure: true,
+      secure: false,
     });
     response.status(200).send({ accessToken: tokens.accessToken });
     return;
@@ -66,7 +69,7 @@ export class AuthController {
     });
     response.cookie('refreshToken', `${tokens.refreshToken}`, {
       httpOnly: true,
-      secure: true,
+      secure: false,
     });
     response.status(200).send({ accessToken: tokens.accessToken });
     return;
@@ -83,6 +86,7 @@ export class AuthController {
   }
 
   @Post('registration-confirmation')
+  @UseGuards(BlockIpGuard)
   @HttpCode(204)
   async registrationConfirmation(
     @Body() inputModel: AuthRegistrationConfirmInputModal,
@@ -91,6 +95,7 @@ export class AuthController {
   }
 
   @Post('registration')
+  @UseGuards(BlockIpGuard)
   @HttpCode(204)
   async registration(
     @Body() inputModel: AuthRegistrationInputModal,
@@ -99,6 +104,7 @@ export class AuthController {
   }
 
   @Post('registration-email-resending')
+  @UseGuards(BlockIpGuard)
   @HttpCode(204)
   async registrationEmailResending(
     @Body() inputModel: AuthEmailResendingInputModal,

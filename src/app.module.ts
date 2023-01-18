@@ -62,6 +62,12 @@ import { JwtTokens, JwtSchema } from './features/jwt/domain/jwt.schema';
 import { DevicesController } from './features/devices/api/devices.controller';
 import { DeviceService } from './features/devices/application/devices.service';
 
+//ips
+import { BlockIpsService } from './features/ips/application/ips.service';
+import { BlockIpsRepository } from './features/ips/infrastructure/ips.repository';
+import { BlockIpsQueryRepository } from './features/ips/infrastructure/ips.query.repository';
+import { BlockIps, BlockIpsSchema } from './features/ips/domain/ips.schema';
+
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -77,6 +83,8 @@ import { DeviceService } from './features/devices/application/devices.service';
       { name: Comment.name, schema: CommentSchema },
       { name: Users.name, schema: UsersSchema },
       { name: JwtTokens.name, schema: JwtSchema },
+      { name: BlockIps.name, schema: BlockIpsSchema },
+
     ]),
   ],
   controllers: [
@@ -118,6 +126,10 @@ import { DeviceService } from './features/devices/application/devices.service';
     JwtTokensQueryRepository,
     //device
     DeviceService,
+    //ips
+    BlockIpsService,
+    BlockIpsRepository,
+    BlockIpsQueryRepository,
   ],
 })
 export class AppModule {}
