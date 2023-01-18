@@ -50,7 +50,7 @@ export class AuthController {
     });
     response.cookie('refreshToken', `${tokens.refreshToken}`, {
       httpOnly: true,
-      secure: false,
+      secure: true,
     });
     response.status(200).send({ accessToken: tokens.accessToken });
     return;
@@ -69,7 +69,7 @@ export class AuthController {
     });
     response.cookie('refreshToken', `${tokens.refreshToken}`, {
       httpOnly: true,
-      secure: false,
+      secure: true,
     });
     response.status(200).send({ accessToken: tokens.accessToken });
     return;
