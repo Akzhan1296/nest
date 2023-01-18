@@ -17,4 +17,7 @@ export class BlockIpsQueryRepository {
     }).lean();
     return result;
   }
+  async dropIps() {
+    return this.BlockIpsModel.deleteMany({});
+  }
 }

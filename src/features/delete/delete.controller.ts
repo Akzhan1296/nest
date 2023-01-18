@@ -3,7 +3,9 @@ import { BlogsQueryRepository } from 'src/features/blogs/infrastructure/reposito
 import { CommentsQueryRepository } from 'src/features/comments/infrastructure/repository/comments.query.repository';
 import { PostsQueryRepository } from 'src/features/posts/infrastructure/repository/posts.query.repository';
 import { UsersQueryRepository } from 'src/features/users/infrastructure/repository/users.query.repository';
+import { BlockIpsQueryRepository } from '../ips/infrastructure/ips.query.repository';
 import { JwtTokensQueryRepository } from '../jwt/infrastructura/repository/jwt.query.repository';
+
 
 @Controller('testing/all-data')
 export class DeleteController {
@@ -13,6 +15,7 @@ export class DeleteController {
     protected commentsQueryRepository: CommentsQueryRepository,
     protected usersQueryRepository: UsersQueryRepository,
     protected jwtTokensQueryRepository: JwtTokensQueryRepository,
+    protected blockIpsQueryRepository: BlockIpsQueryRepository,
   ) {}
 
   @Delete()
@@ -23,6 +26,7 @@ export class DeleteController {
     await this.commentsQueryRepository.dropComments();
     await this.usersQueryRepository.dropUsers();
     await this.jwtTokensQueryRepository.dropJwts();
+    await this.blockIpsQueryRepository.dropIps();
     return;
   }
 }
