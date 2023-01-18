@@ -1,4 +1,10 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
 import { BlockIpsService } from '../features/ips/application/ips.service';
 import { BlockIpsQueryRepository } from '../features/ips/infrastructure/ips.query.repository';
@@ -36,8 +42,7 @@ export class BlockIpGuard implements CanActivate {
     }
 
     if (ipData && ipData.length > 5) {
-      response.sendStatus(429);
-      return false;
+      throw new HttpException('ip blocked', HttpStatus.TOO_MANY_REQUESTS);
     } else {
       return true;
     }
