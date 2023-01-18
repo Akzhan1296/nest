@@ -5,7 +5,7 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { BlockIpsService } from '../features/ips/application/ips.service';
 import { BlockIpsQueryRepository } from '../features/ips/infrastructure/ips.query.repository';
 
@@ -17,7 +17,6 @@ export class BlockIpGuard implements CanActivate {
   ) {}
   async canActivate(context: ExecutionContext) {
     const request: Request = context.switchToHttp().getRequest();
-    const response: Response = context.switchToHttp().getResponse();
 
     const ip =
       request.headers['x-forwarded-for'] || request.socket.remoteAddress;

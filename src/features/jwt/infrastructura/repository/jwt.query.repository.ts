@@ -19,7 +19,7 @@ export class JwtTokensQueryRepository {
     return tokensMetaData.map((tokenData) => ({
       ip: tokenData.getDeviceIp(),
       title: tokenData.getDeviceName(),
-      lastActiveDate: tokenData.getCreatedAt().toString(),
+      lastActiveDate: tokenData.getCreatedAt().toISOString(),
       deviceId: tokenData.getDeviceId().toString(),
     }));
   }
