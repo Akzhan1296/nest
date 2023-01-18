@@ -23,10 +23,10 @@ export class DeviceService {
     const device = await this.jwtTokensRepository.getJwtByDeviceId(
       deleteDeviceDTO.deviceId,
     );
-
+    console.log(user._id);
+    console.log(device.getUserId());
     if (!device) throw new NotFoundException();
-    if (user._id.toString() !== device.getUserId().toString())
-      throw new ForbiddenException();
+    if (user._id !== device.getUserId()) throw new ForbiddenException();
     return this.jwtTokensRepository.delete(device);
   }
 
