@@ -33,7 +33,7 @@ export class RefreshTokenGuard implements CanActivate {
       throw new UnauthorizedException();
     }
     if (payload) {
-      devices = this.jwtTokensQueryRepository.getDevicesByUserId(
+      devices = await this.jwtTokensQueryRepository.getDevicesByUserId(
         payload.userId,
       );
     } else {
