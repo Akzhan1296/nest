@@ -1,10 +1,5 @@
-import {
-  Injectable,
-  CanActivate,
-  ExecutionContext,
-  ForbiddenException,
-} from '@nestjs/common';
-import { Request } from 'express';
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Request, Response } from 'express';
 import { BlockIpsService } from '../features/ips/application/ips.service';
 import { BlockIpsQueryRepository } from '../features/ips/infrastructure/ips.query.repository';
 
@@ -16,6 +11,7 @@ export class BlockIpGuard implements CanActivate {
   ) {}
   async canActivate(context: ExecutionContext) {
     const request: Request = context.switchToHttp().getRequest();
+    const response: Response = context.switchToHttp().getResponse();
 
     const ip =
       request.headers['x-forwarded-for'] || request.socket.remoteAddress;
@@ -40,7 +36,8 @@ export class BlockIpGuard implements CanActivate {
     }
 
     if (ipData && ipData.length > 5) {
-      throw new ForbiddenException();
+      response.sendStatus(429);
+      return false;
     } else {
       return true;
     }
