@@ -56,6 +56,7 @@ export class AuthService {
 
     refreshToken = await this.jwtTokensRepository.getJwtByDeviceName(
       authDTO.deviceName,
+      user._id,
     );
     if (refreshToken) {
       return this.updateRefreshToken({

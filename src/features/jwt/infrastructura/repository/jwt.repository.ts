@@ -14,8 +14,8 @@ export class JwtTokensRepository {
     const deviceIdObject = new ObjectId(deviceId);
     return await this.JwtTokenModel.findOne({ deviceId: deviceIdObject });
   }
-  async getJwtByDeviceName(deviceName: string) {
-    return await this.JwtTokenModel.findOne({ deviceName });
+  async getJwtByDeviceName(deviceName: string, userId: ObjectId) {
+    return await this.JwtTokenModel.findOne({ deviceName, userId });
   }
   async getJwtByUserId(userId: string) {
     const userObjectId = new ObjectId(userId);
