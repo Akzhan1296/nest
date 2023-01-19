@@ -93,13 +93,13 @@ export class AuthJwtService {
     );
 
     const payload = {
+      login: refreshTokenMetaData.getLogin(),
+      email: refreshTokenMetaData.getEmail(),
+      userId: refreshTokenMetaData.getUserId(),
       createdAt: refreshTokenMetaData.getCreatedAt(),
       deviceId: refreshTokenMetaData.getDeviceId(),
       deviceIp: refreshTokenMetaData.getDeviceIp(),
       deviceName: refreshTokenMetaData.getDeviceName(),
-      userId: refreshTokenMetaData.getUserId(),
-      email: refreshTokenMetaData.getEmail(),
-      login: refreshTokenMetaData.getLogin(),
     };
 
     if (isTokenSaved) {

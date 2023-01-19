@@ -54,8 +54,8 @@ export class AuthService {
       throw new UnauthorizedException({ message: 'email or login incorrect' });
     }
 
-    refreshToken = await this.jwtTokensRepository.getJwtByDeviceName(
-      authDTO.deviceName,
+    refreshToken = await this.jwtTokensRepository.getJwtByUserId(
+      user._id.toString(),
     );
     if (refreshToken) {
       return this.updateRefreshToken({
@@ -71,6 +71,7 @@ export class AuthService {
     });
     return { accessToken, refreshToken };
   }
+
   async updateRefreshToken(
     getRefreshTokenDTO: GetRefreshTokenDTO,
   ): Promise<{ accessToken: string; refreshToken: string } | null> {
