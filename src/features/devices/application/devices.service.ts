@@ -19,13 +19,20 @@ export class DeviceService {
   ): Promise<boolean> {
     const user = await this.usersRepository.findUserById(
       deleteDeviceDTO.userId,
-    );
+    ); // from jwt
+
     const device = await this.jwtTokensRepository.getJwtByDeviceId(
       deleteDeviceDTO.deviceId,
-    );
+    ); //from params
+
     if (!device) throw new NotFoundException();
-    if (user._id.toString() !== device.getUserId().toString())
+
+    if (user._id.toString() !== device.getUserId().toString()) {
       throw new ForbiddenException();
+    }
+    console.log(user._id.toString());
+    console.log(device.getUserId().toString());
+
     return this.jwtTokensRepository.delete(device);
   }
 

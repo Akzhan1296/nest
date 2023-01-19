@@ -42,8 +42,8 @@ export class RefreshTokenGuard implements CanActivate {
 
     if (!devices) throw new UnauthorizedException();
 
-    request.body.userId = payload.userId;
-    request.body.deviceId = payload.deviceId;
+    request.body.userId = payload.userId; // from jwt payload
+    request.body.deviceId = payload.deviceId; // from jwt payload
 
     return true;
   }

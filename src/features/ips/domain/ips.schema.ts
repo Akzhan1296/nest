@@ -12,9 +12,6 @@ export class BlockIps {
   private path: string;
 
   @Prop()
-  private dateZero: number;
-
-  @Prop()
   private date: number;
 
   getIp() {
