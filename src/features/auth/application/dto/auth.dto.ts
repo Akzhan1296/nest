@@ -18,3 +18,8 @@ export type GetRefreshTokenDTO = {
   userId: string;
   deviceId: string;
 };
+
+export type NewPasswordDTO = {
+  newPassword: string;
+  recoveryCode: string;
+};

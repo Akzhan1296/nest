@@ -34,3 +34,10 @@ export class AuthEmailResendingInputModal {
   @Matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
   email: string;
 }
+
+export class NewPasswordInputModal {
+  @IsString()
+  newPassword: string;
+  @IsMongoId()
+  recoveryCode: string;
+}

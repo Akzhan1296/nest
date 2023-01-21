@@ -10,6 +10,7 @@ import { emailAdapter } from '../../../common/adapter';
 import {
   AuthDTO,
   GetRefreshTokenDTO,
+  NewPasswordDTO,
   RegistrationConfirmationDTO,
   RegistrationUserDTO,
 } from './dto/auth.dto';
@@ -19,6 +20,7 @@ import * as bcrypt from 'bcrypt';
 import { AuthJwtService } from '../../jwt/application/jwt.service';
 import { UsersDocument } from '../../users/domain/entity/users.schema';
 import { JwtTokensRepository } from '../../jwt/infrastructura/repository/jwt.repository';
+import { generateHash } from '../../../common/utils';
 
 @Injectable()
 export class AuthService {
@@ -59,6 +61,7 @@ export class AuthService {
       user._id,
     );
     if (refreshToken) {
+      //update refresh token if user already logined
       return this.updateRefreshToken({
         userId: user._id.toString(),
         deviceId: refreshToken.getDeviceId(),
@@ -158,6 +161,7 @@ export class AuthService {
       throw new BadRequestException('date is already expired');
     }
   }
+
   async registrationEmailResending(email: string): Promise<void> {
     const userByEmail = await this.usersRepository.findUserByEmail(email);
     if (!userByEmail) {
@@ -190,6 +194,58 @@ export class AuthService {
       this.usersRepository.save(userByEmail);
     } catch (err) {
       throw new Error(err);
+    }
+  }
+
+  async passwordRecovery(email: string): Promise<void> {
+    const userByEmail = await this.usersRepository.findUserByEmail(email);
+    if (!userByEmail) {
+      throw new BadRequestException({
+        message: 'user with this email not found',
+        field: 'email',
+      });
+    }
+
+    const newConfirmCode = new ObjectId().toString();
+
+    userByEmail.setConfirmCode(newConfirmCode);
+
+    userByEmail.setEmailExpirationDate(
+      add(new Date(), {
+        minutes: 3,
+      }),
+    );
+    try {
+      await emailAdapter.sendEmail(
+        email,
+        'Nest',
+        `<a href="http://localhost:5005/?code=${newConfirmCode}">Confirm email</a>`,
+      );
+      this.usersRepository.save(userByEmail);
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  async newPassword(newPasswordData: NewPasswordDTO): Promise<boolean> {
+    const userByConfirmCode = await this.usersRepository.findUserByConfirmCode(
+      newPasswordData.recoveryCode,
+    );
+    if (!userByConfirmCode)
+      throw new NotFoundException('user by this confirm code not found');
+
+    const code = userByConfirmCode.getConfirmCode();
+    const confirmCodeExpDate = userByConfirmCode.getEmailExpirationDate();
+
+    if (
+      code === newPasswordData.recoveryCode &&
+      confirmCodeExpDate > new Date()
+    ) {
+      const passwordHash = await generateHash(newPasswordData.newPassword);
+      userByConfirmCode.setPassword(passwordHash);
+      return await this.usersRepository.save(userByConfirmCode);
+    } else {
+      throw new BadRequestException('date is already expired');
     }
   }
 }

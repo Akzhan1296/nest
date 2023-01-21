@@ -23,6 +23,7 @@ import {
   AuthLoginInputModal,
   AuthRegistrationConfirmInputModal,
   AuthRegistrationInputModal,
+  NewPasswordInputModal,
 } from './models/auth.models';
 
 @Controller('auth')
@@ -116,5 +117,23 @@ export class AuthController {
   @UseGuards(AuthGuard)
   async getMe(@Req() request: Request): Promise<MeViewModel> {
     return await this.usersQueryRepository.findMe(request.body.userId);
+  }
+
+  @Post('password-recovery')
+  @UseGuards(BlockIpGuard)
+  @HttpCode(204)
+  async passwordRecovery(
+    @Body() inputModel: AuthEmailResendingInputModal,
+  ): Promise<void> {
+    return this.authService.passwordRecovery(inputModel.email);
+  }
+
+  @Post('password-recovery')
+  @UseGuards(BlockIpGuard)
+  @HttpCode(204)
+  async newPassword(
+    @Body() inputModal: NewPasswordInputModal,
+  ): Promise<boolean> {
+    return this.authService.newPassword(inputModal);
   }
 }
