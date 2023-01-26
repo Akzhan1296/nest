@@ -37,9 +37,9 @@ export class AuthEmailResendingInputModal {
 
 export class NewPasswordInputModal {
   @IsString()
-  newPassword: string;
   @MinLength(6)
   @MaxLength(20)
+  newPassword: string;
   @IsMongoId()
   recoveryCode: string;
 }
