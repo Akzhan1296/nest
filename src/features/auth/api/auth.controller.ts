@@ -128,7 +128,7 @@ export class AuthController {
     return this.authService.passwordRecovery(inputModel.email);
   }
 
-  @Post('password-recovery')
+  @Post('new-password')
   @UseGuards(BlockIpGuard)
   @HttpCode(204)
   async newPassword(
