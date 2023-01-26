@@ -219,7 +219,7 @@ export class AuthService {
       await emailAdapter.sendEmail(
         email,
         'Nest',
-        `<a href="http://localhost:5005/?code=${newConfirmCode}">Confirm email</a>`,
+        `<a href="http://localhost:5005/?recoveryCode=${newConfirmCode}">Recovery Code</a>`,
       );
       this.usersRepository.save(userByEmail);
     } catch (err) {
