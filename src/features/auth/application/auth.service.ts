@@ -200,10 +200,11 @@ export class AuthService {
   async passwordRecovery(email: string): Promise<void> {
     const userByEmail = await this.usersRepository.findUserByEmail(email);
     if (!userByEmail) {
-      throw new BadRequestException({
-        message: 'user with this email not found',
-        field: 'email',
-      });
+      // throw new BadRequestException({
+      //   message: 'user with this email not found',
+      //   field: 'email',
+      // });
+      return;
     }
 
     const newConfirmCode = new ObjectId().toString();

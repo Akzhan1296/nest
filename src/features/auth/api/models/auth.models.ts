@@ -38,6 +38,8 @@ export class AuthEmailResendingInputModal {
 export class NewPasswordInputModal {
   @IsString()
   newPassword: string;
+  @MinLength(6)
+  @MaxLength(20)
   @IsMongoId()
   recoveryCode: string;
 }
