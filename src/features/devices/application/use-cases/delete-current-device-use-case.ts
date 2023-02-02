@@ -3,12 +3,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { UsersRepository } from '../../users/infrastructure/repository/users.repository';
-import { JwtTokensRepository } from '../../jwt/infrastructura/repository/jwt.repository';
-import { DeleteDeviceDTO } from './dto/devices.dto';
+import { UsersRepository } from '../../../users/infrastructure/repository/users.repository';
+import { JwtTokensRepository } from '../../../jwt/infrastructura/repository/jwt.repository';
+import { DeleteDeviceDTO } from './../dto/devices.dto';
 
 @Injectable()
-export class DeviceService {
+export class DeleteCurrentDeviceUseCase {
   constructor(
     protected usersRepository: UsersRepository,
     protected jwtTokensRepository: JwtTokensRepository,
@@ -31,9 +31,5 @@ export class DeviceService {
       throw new ForbiddenException();
     }
     return this.jwtTokensRepository.delete(device);
-  }
-
-  async deleteAllDevicesExceptCurrent(deviceId: string): Promise<boolean> {
-    return this.jwtTokensRepository.deleteDevicesExceptOne(deviceId);
   }
 }

@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { BlockIps, BlockIpsDocument } from '../domain/ips.schema';
 import { BlockIpsRepository } from '../infrastructure/ips.repository';
 import { IpsDataDto } from './dto/ips.dto';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class BlockIpsService {
@@ -19,5 +20,11 @@ export class BlockIpsService {
     ipData.setIp(ipsData.ip);
     ipData.setPath(ipsData.path);
     return this.blockIpsRepository.save(ipData);
+  }
+
+  //scheduler
+  @Cron(CronExpression.EVERY_10_MINUTES)
+  handleCron() {
+    this.blockIpsRepository.dropIps();
   }
 }

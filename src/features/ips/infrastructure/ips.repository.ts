@@ -31,4 +31,8 @@ export class BlockIpsRepository {
         return false;
       });
   }
+  async dropIps() {
+    console.log('drop ips repo every 10 mins');
+    return this.BlockIpsModel.deleteMany({});
+  }
 }

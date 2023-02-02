@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -71,6 +72,7 @@ import { BlockIps, BlockIpsSchema } from './features/ips/domain/ips.schema';
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    ScheduleModule.forRoot(),
     MongooseModule.forRoot(
       settings.MONGO_URI +
         settings.MONGO_DB_NAME +
@@ -84,7 +86,6 @@ import { BlockIps, BlockIpsSchema } from './features/ips/domain/ips.schema';
       { name: Users.name, schema: UsersSchema },
       { name: JwtTokens.name, schema: JwtSchema },
       { name: BlockIps.name, schema: BlockIpsSchema },
-
     ]),
   ],
   controllers: [
