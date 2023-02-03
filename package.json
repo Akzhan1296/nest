@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
+    "@nestjs/cqrs": "^9.0.1",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
     "@types/cookie-parser": "^1.4.3",

@@ -1,15 +1,23 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { emailAdapter } from '../../../../common/adapter';
 import { add } from 'date-fns';
 import { UsersRepository } from '../../../users/infrastructure/repository/users.repository';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-@Injectable()
-export class EmailResendingUseCase {
+export class EmailResendingCommand {
+  constructor(public email: string) {}
+}
+@CommandHandler(EmailResendingCommand)
+export class EmailResendingUseCase
+  implements ICommandHandler<EmailResendingCommand>
+{
   constructor(protected usersRepository: UsersRepository) {}
 
-  async execute(email: string): Promise<void> {
-    const userByEmail = await this.usersRepository.findUserByEmail(email);
+  async execute(command: EmailResendingCommand): Promise<void> {
+    const userByEmail = await this.usersRepository.findUserByEmail(
+      command.email,
+    );
     if (!userByEmail) {
       throw new BadRequestException({
         message: 'user with this email not found',
@@ -33,7 +41,7 @@ export class EmailResendingUseCase {
     );
     try {
       await emailAdapter.sendEmail(
-        email,
+        command.email,
         'Nest',
         `<a href="http://localhost:5005/?code=${newConfirmCode}">Confirm email</a>`,
       );

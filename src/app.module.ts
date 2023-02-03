@@ -68,9 +68,27 @@ import { BlockIpsService } from './features/ips/application/ips.service';
 import { BlockIpsRepository } from './features/ips/infrastructure/ips.repository';
 import { BlockIpsQueryRepository } from './features/ips/infrastructure/ips.query.repository';
 import { BlockIps, BlockIpsSchema } from './features/ips/domain/ips.schema';
+import { CqrsModule } from '@nestjs/cqrs';
+import { LoginUseCase } from './features/auth/application/use-cases/login-use-case';
+import { UpdateRefreshTokenUseCase } from './features/auth/application/use-cases/update-refresh-token-use-case';
+import { NewPasswordUseCase } from './features/auth/application/use-cases/new-password-use-case';
+import { PasswordRecoveryUseCase } from './features/auth/application/use-cases/password-recovery-use-case';
+import { RegistrationConfirmationUseCase } from './features/auth/application/use-cases/registration-confirmation-use-case';
+import { EmailResendingUseCase } from './features/auth/application/use-cases/registration-email-resendings-use-case';
+import { RegistrationUserUseCase } from './features/auth/application/use-cases/registration-user-use-case';
 
+const authUseCases = [
+  LoginUseCase,
+  UpdateRefreshTokenUseCase,
+  NewPasswordUseCase,
+  PasswordRecoveryUseCase,
+  RegistrationConfirmationUseCase,
+  EmailResendingUseCase,
+  RegistrationUserUseCase,
+];
 @Module({
   imports: [
+    CqrsModule,
     ConfigModule.forRoot(),
     ScheduleModule.forRoot(),
     MongooseModule.forRoot(
@@ -131,6 +149,7 @@ import { BlockIps, BlockIpsSchema } from './features/ips/domain/ips.schema';
     BlockIpsService,
     BlockIpsRepository,
     BlockIpsQueryRepository,
+    ...authUseCases,
   ],
 })
 export class AppModule {}

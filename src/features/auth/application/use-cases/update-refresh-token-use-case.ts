@@ -1,26 +1,33 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { GetRefreshTokenDTO } from './../dto/auth.dto';
 import { UsersRepository } from '../../../users/infrastructure/repository/users.repository';
 import { AuthJwtService } from '../../../jwt/application/jwt.service';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-@Injectable()
-export class UpdateRefreshTokenUseCase {
+export class UpdateRefreshTokenCommand {
+  constructor(public getRefreshTokenDTO: GetRefreshTokenDTO) {}
+}
+
+@CommandHandler(UpdateRefreshTokenCommand)
+export class UpdateRefreshTokenUseCase
+  implements ICommandHandler<UpdateRefreshTokenCommand>
+{
   constructor(
     protected usersRepository: UsersRepository,
     protected authJwtService: AuthJwtService,
   ) {}
 
   async execute(
-    getRefreshTokenDTO: GetRefreshTokenDTO,
+    command: UpdateRefreshTokenCommand,
   ): Promise<{ accessToken: string; refreshToken: string } | null> {
     const user = await this.usersRepository.findUserById(
-      getRefreshTokenDTO.userId,
+      command.getRefreshTokenDTO.userId,
     );
 
     if (user) {
       const accessToken = await this.authJwtService.createAccessToken(user);
       const refreshToken = await this.authJwtService.updateRefreshToken(
-        getRefreshTokenDTO.deviceId,
+        command.getRefreshTokenDTO.deviceId,
       );
       return { accessToken, refreshToken };
     }
