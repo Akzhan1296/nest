@@ -1,13 +1,16 @@
-import { Injectable } from '@nestjs/common';
 import { Users, UsersDocument } from '../../domain/entity/users.schema';
 import { CreateUserDTO } from './../dto/users.dto';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { UsersRepository } from '../../infrastructure/repository/users.repository';
 import { generateHash } from '../../../../common/utils';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-@Injectable()
-export class CreateUserUseCase {
+export class CreateUserCommand {
+  constructor(public createUserDTO: CreateUserDTO) {}
+}
+@CommandHandler(CreateUserCommand)
+export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
   constructor(
     @InjectModel(Users.name)
     private UsersModel: Model<UsersDocument>,
@@ -26,8 +29,8 @@ export class CreateUserUseCase {
 
     return newUser;
   }
-  async createUser(createUserDTO: CreateUserDTO): Promise<UsersDocument> {
-    const { password, ...restCreateUserData } = createUserDTO;
+  async execute(command: CreateUserCommand): Promise<UsersDocument> {
+    const { password, ...restCreateUserData } = command.createUserDTO;
     const passwordHash = await generateHash(password);
     const newUser = await this._createUser({
       ...restCreateUserData,

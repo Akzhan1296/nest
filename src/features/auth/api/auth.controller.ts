@@ -30,7 +30,7 @@ import { PasswordRecoveryCommand } from '../application/use-cases/password-recov
 import { RegistrationConfirmationCommand } from '../application/use-cases/registration-confirmation-use-case';
 import { EmailResendingCommand } from '../application/use-cases/registration-email-resendings-use-case';
 import { RegistrationUserCommand } from '../application/use-cases/registration-user-use-case';
-import { UpdateRefreshTokenCommand } from '../application/use-cases/update-refresh-token-use-case';
+import { UpdateUserRefreshTokenCommand } from '../application/use-cases/update-refresh-token-use-case';
 
 // modes
 import { MeViewModel } from '../../users/infrastructure/models/view.models';
@@ -83,7 +83,7 @@ export class AuthController {
     @Res() response: Response,
   ): Promise<undefined> {
     const tokens = await this.commandBus.execute(
-      new UpdateRefreshTokenCommand({
+      new UpdateUserRefreshTokenCommand({
         userId: request.body.userId,
         deviceId: request.body.deviceId,
       }),

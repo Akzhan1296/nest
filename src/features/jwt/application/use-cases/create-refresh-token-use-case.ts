@@ -2,14 +2,20 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
-import { BadGatewayException, Injectable } from '@nestjs/common';
+import { BadGatewayException } from '@nestjs/common';
 import { settings } from '../../../../settings';
 import { JwtTokens, JwtTokensDocument } from '../../domain/jwt.schema';
 import { JwtTokensRepository } from '../../infrastructura/repository/jwt.repository';
 import { CreateRefreshTokenDTO } from './../dto/jwt.dto';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-@Injectable()
-export class CreateRefreshtokenUseCase {
+export class CreateRefreshTokenCommand {
+  constructor(public createRefreshTokenDTO: CreateRefreshTokenDTO) {}
+}
+@CommandHandler(CreateRefreshTokenCommand)
+export class CreateRefreshTokenUseCase
+  implements ICommandHandler<CreateRefreshTokenCommand>
+{
   constructor(
     @InjectModel(JwtTokens.name)
     private JwtTokenModel: Model<JwtTokensDocument>,
@@ -17,12 +23,10 @@ export class CreateRefreshtokenUseCase {
     protected jwtTokensRepository: JwtTokensRepository,
   ) {}
 
-  async createRefreshToken(
-    createRefreshTokenDTO: CreateRefreshTokenDTO,
-  ): Promise<string | null> {
+  async execute(command: CreateRefreshTokenCommand): Promise<string | null> {
     let refreshToken = null;
 
-    const { user, deviceIp, deviceName } = createRefreshTokenDTO;
+    const { user, deviceIp, deviceName } = command.createRefreshTokenDTO;
     const deviceId = new ObjectId();
     const createdAt = new Date();
     const userId = user._id;

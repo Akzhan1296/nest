@@ -1,19 +1,25 @@
 import { JwtService } from '@nestjs/jwt';
-import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { UsersDocument } from '../../../users/domain/entity/users.schema';
 import { settings } from '../../../../settings';
 import { JwtTokens } from '../../domain/jwt.schema';
 import { JwtTokensRepository } from '../../infrastructura/repository/jwt.repository';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-@Injectable()
-export class CreateAccessTokenUseCase {
+export class CreateAccessTokenCommand {
+  constructor(public user: UsersDocument) {}
+}
+@CommandHandler(CreateAccessTokenCommand)
+export class CreateAccessTokenUseCase
+  implements ICommandHandler<CreateAccessTokenCommand>
+{
   constructor(
     @InjectModel(JwtTokens.name)
     protected jwtService: JwtService,
     protected jwtTokensRepository: JwtTokensRepository,
   ) {}
-  async createAccessToken(user: UsersDocument): Promise<string> {
+  async execute(command: CreateAccessTokenCommand): Promise<string> {
+    const { user } = command;
     const login = user.getLogin();
     const password = user.getPassword();
     const email = user.getEmail();

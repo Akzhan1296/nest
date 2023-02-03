@@ -1,17 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Users } from '../../domain/entity/users.schema';
-import { InjectModel } from '@nestjs/mongoose';
+import { NotFoundException } from '@nestjs/common';
 import { UsersRepository } from '../../infrastructure/repository/users.repository';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-@Injectable()
-export class DeleteUserUseCase {
-  constructor(
-    @InjectModel(Users.name)
-    protected usersRepository: UsersRepository,
-  ) {}
+export class DeleteUserCommand {
+  constructor(public id: string) {}
+}
+@CommandHandler(DeleteUserCommand)
+export class DeleteUserUseCase implements ICommandHandler<DeleteUserCommand> {
+  constructor(protected usersRepository: UsersRepository) {}
 
-  async deleteUser(id: string): Promise<boolean> {
-    const user = await this.usersRepository.findUserById(id);
+  async execute(command: DeleteUserCommand): Promise<boolean> {
+    const user = await this.usersRepository.findUserById(command.id);
     if (!user) throw new NotFoundException('user not found');
     return this.usersRepository.delete(user);
   }

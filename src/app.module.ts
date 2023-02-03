@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
+import { CqrsModule } from '@nestjs/cqrs';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -68,7 +69,6 @@ import { BlockIpsService } from './features/ips/application/ips.service';
 import { BlockIpsRepository } from './features/ips/infrastructure/ips.repository';
 import { BlockIpsQueryRepository } from './features/ips/infrastructure/ips.query.repository';
 import { BlockIps, BlockIpsSchema } from './features/ips/domain/ips.schema';
-import { CqrsModule } from '@nestjs/cqrs';
 import { LoginUseCase } from './features/auth/application/use-cases/login-use-case';
 import { UpdateRefreshTokenUseCase } from './features/auth/application/use-cases/update-refresh-token-use-case';
 import { NewPasswordUseCase } from './features/auth/application/use-cases/new-password-use-case';
@@ -76,6 +76,8 @@ import { PasswordRecoveryUseCase } from './features/auth/application/use-cases/p
 import { RegistrationConfirmationUseCase } from './features/auth/application/use-cases/registration-confirmation-use-case';
 import { EmailResendingUseCase } from './features/auth/application/use-cases/registration-email-resendings-use-case';
 import { RegistrationUserUseCase } from './features/auth/application/use-cases/registration-user-use-case';
+import { CreateUserUseCase } from './features/users/application/use-cases/create-user-use-case';
+import { DeleteUserUseCase } from './features/users/application/use-cases/delete-user-use-case';
 
 const authUseCases = [
   LoginUseCase,
@@ -86,6 +88,7 @@ const authUseCases = [
   EmailResendingUseCase,
   RegistrationUserUseCase,
 ];
+const usersUseCases = [CreateUserUseCase, DeleteUserUseCase];
 @Module({
   imports: [
     CqrsModule,
@@ -119,6 +122,8 @@ const authUseCases = [
     DevicesController,
   ],
   providers: [
+    ...authUseCases,
+    ...usersUseCases,
     AppService,
     //blogs
     factoryBlogsService(),
@@ -149,7 +154,6 @@ const authUseCases = [
     BlockIpsService,
     BlockIpsRepository,
     BlockIpsQueryRepository,
-    ...authUseCases,
   ],
 })
 export class AppModule {}

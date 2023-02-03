@@ -1,23 +1,29 @@
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
-import { BadGatewayException, Injectable } from '@nestjs/common';
+import { BadGatewayException } from '@nestjs/common';
 import { settings } from '../../../../settings';
 import { JwtTokens } from '../../domain/jwt.schema';
 import { JwtTokensRepository } from '../../infrastructura/repository/jwt.repository';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-@Injectable()
-export class UpdateRefreshTokenUseCase {
+export class UpdateRefreshTokenCommand {
+  constructor(public deviceId: string) {}
+}
+@CommandHandler(UpdateRefreshTokenCommand)
+export class UpdateRefreshTokenUseCase
+  implements ICommandHandler<UpdateRefreshTokenCommand>
+{
   constructor(
     @InjectModel(JwtTokens.name)
     protected jwtService: JwtService,
     protected jwtTokensRepository: JwtTokensRepository,
   ) {}
 
-  async updateRefreshToken(deviceId: string): Promise<string | null> {
+  async execute(command: UpdateRefreshTokenCommand): Promise<string | null> {
     let updatedRefreshToken = null;
 
     const refreshTokenMetaData =
-      await this.jwtTokensRepository.getJwtByDeviceId(deviceId);
+      await this.jwtTokensRepository.getJwtByDeviceId(command.deviceId);
 
     refreshTokenMetaData.setCreatedAt(new Date());
     const isTokenSaved = await this.jwtTokensRepository.save(

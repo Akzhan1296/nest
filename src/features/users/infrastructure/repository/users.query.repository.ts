@@ -11,7 +11,8 @@ import {
   PageSizeQueryModel,
   PaginationViewModel,
 } from '../../../../common/common-types';
-
+import { Injectable } from '@nestjs/common';
+@Injectable()
 export class UsersQueryRepository {
   constructor(
     @InjectModel(Users.name)

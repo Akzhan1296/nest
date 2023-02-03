@@ -6,6 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { UsersRepository } from '../infrastructure/repository/users.repository';
 import { generateHash } from '../../../common/utils';
 
+// TO-DO ask about using use-case inside different use-case
 @Injectable()
 export class UsersService {
   constructor(

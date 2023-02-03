@@ -3,11 +3,15 @@ import * as bcrypt from 'bcrypt';
 import { UnauthorizedException } from '@nestjs/common';
 import { AuthDTO } from './../dto/auth.dto';
 import { UsersRepository } from '../../../users/infrastructure/repository/users.repository';
-import { AuthJwtService } from '../../../jwt/application/jwt.service';
+// import { AuthJwtService } from '../../../jwt/application/jwt.service';
 import { UsersDocument } from '../../../users/domain/entity/users.schema';
 import { JwtTokensRepository } from '../../../jwt/infrastructura/repository/jwt.repository';
-import { UpdateRefreshTokenUseCase } from './update-refresh-token-use-case';
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandBus, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+
+//command
+import { UpdateUserRefreshTokenCommand } from './update-refresh-token-use-case';
+import { CreateAccessTokenCommand } from '../../../jwt/application/use-cases/create-access-token-use-case';
+import { CreateRefreshTokenCommand } from '../../../jwt/application/use-cases/create-refresh-token-use-case';
 
 export class LoginCommand {
   constructor(public authDTO: AuthDTO) {}
@@ -16,10 +20,10 @@ export class LoginCommand {
 @CommandHandler(LoginCommand)
 export class LoginUseCase implements ICommandHandler<LoginCommand> {
   constructor(
+    private commandBus: CommandBus,
     protected usersRepository: UsersRepository,
-    protected authJwtService: AuthJwtService,
-    protected jwtTokensRepository: JwtTokensRepository,
-    protected updateRefreshTokenuseCase: UpdateRefreshTokenUseCase,
+    // protected authJwtService: AuthJwtService,
+    protected jwtTokensRepository: JwtTokensRepository, // protected createAccessTokenCommand: CreateAccessTokenCommand, // protected updateRefreshTokenUseCase: UpdateRefreshTokenUseCase,
   ) {}
 
   private async checkCreds(creds: AuthDTO): Promise<UsersDocument | null> {
@@ -53,19 +57,32 @@ export class LoginUseCase implements ICommandHandler<LoginCommand> {
     );
     if (refreshToken) {
       //update refresh token if user already logined
-      return this.updateRefreshTokenuseCase.execute({
-        getRefreshTokenDTO: {
+      return this.commandBus.execute(
+        new UpdateUserRefreshTokenCommand({
           userId: user._id.toString(),
           deviceId: refreshToken.getDeviceId(),
-        },
-      });
+        }),
+      );
     }
-    const accessToken = await this.authJwtService.createAccessToken(user);
-    refreshToken = await this.authJwtService.createRefreshToken({
-      user,
-      deviceName,
-      deviceIp,
-    });
+    // const accessToken = await this.authJwtService.createAccessToken(user);
+    const accessToken = await this.commandBus.execute(
+      new CreateAccessTokenCommand(user),
+    );
+
+    // refreshToken = await this.authJwtService.createRefreshToken({
+    //   user,
+    //   deviceName,
+    //   deviceIp,
+    // });
+
+    refreshToken = await this.commandBus.execute(
+      new CreateRefreshTokenCommand({
+        user,
+        deviceName,
+        deviceIp,
+      }),
+    );
+
     return { accessToken, refreshToken };
   }
 }

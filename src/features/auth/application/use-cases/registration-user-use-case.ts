@@ -1,11 +1,11 @@
 import { BadRequestException } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
-import { UsersService } from '../../../users/application/users.service';
 import { RegistrationUserDTO } from './../dto/auth.dto';
 import { add } from 'date-fns';
 import { UsersRepository } from '../../../users/infrastructure/repository/users.repository';
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandBus, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { AuthService } from '../auth.service';
+import { CreateUserCommand } from '../../../users/application/use-cases/create-user-use-case';
 
 export class RegistrationUserCommand {
   constructor(public createUser: RegistrationUserDTO) {}
@@ -16,9 +16,9 @@ export class RegistrationUserUseCase
   implements ICommandHandler<RegistrationUserCommand>
 {
   constructor(
-    protected usersService: UsersService,
+    protected commandBus: CommandBus,
     protected usersRepository: UsersRepository,
-    protected authService: AuthService,
+    protected authService: AuthService, // protected createUserUseCase: CreateUserUseCase,
   ) {}
 
   async execute(command: RegistrationUserCommand): Promise<void> {
@@ -47,14 +47,16 @@ export class RegistrationUserUseCase
     const confirmCode = new ObjectId().toString();
     let user = null;
     try {
-      user = await this.usersService.createUser({
-        ...command.createUser,
-        confirmCode,
-        isConfirmed: false,
-        emailExpirationDate: add(new Date(), {
-          minutes: 3,
+      user = await this.commandBus.execute(
+        new CreateUserCommand({
+          ...command.createUser,
+          confirmCode,
+          isConfirmed: false,
+          emailExpirationDate: add(new Date(), {
+            minutes: 3,
+          }),
         }),
-      });
+      );
     } catch (err) {
       throw new Error(err);
     }

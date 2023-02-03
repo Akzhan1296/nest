@@ -5,7 +5,8 @@ import {
 } from 'src/features/users/domain/entity/users.schema';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
-
+import { Injectable } from '@nestjs/common';
+@Injectable()
 export class UsersRepository {
   constructor(
     @InjectModel(Users.name)
