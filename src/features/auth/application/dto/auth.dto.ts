@@ -23,3 +23,10 @@ export type NewPasswordDTO = {
   newPassword: string;
   recoveryCode: string;
 };
+
+export type EmailDataDTO = {
+  email: string;
+  code: string;
+  letterTitle: string;
+  letterText: string;
+};

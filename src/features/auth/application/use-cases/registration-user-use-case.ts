@@ -1,11 +1,11 @@
 import { BadRequestException } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { UsersService } from '../../../users/application/users.service';
-import { emailAdapter } from '../../../../common/adapter';
 import { RegistrationUserDTO } from './../dto/auth.dto';
 import { add } from 'date-fns';
 import { UsersRepository } from '../../../users/infrastructure/repository/users.repository';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { AuthService } from '../auth.service';
 
 export class RegistrationUserCommand {
   constructor(public createUser: RegistrationUserDTO) {}
@@ -18,6 +18,7 @@ export class RegistrationUserUseCase
   constructor(
     protected usersService: UsersService,
     protected usersRepository: UsersRepository,
+    protected authService: AuthService,
   ) {}
 
   async execute(command: RegistrationUserCommand): Promise<void> {
@@ -60,11 +61,12 @@ export class RegistrationUserUseCase
 
     if (user) {
       try {
-        await emailAdapter.sendEmail(
-          command.createUser.email,
-          'Nest',
-          `<a href="http://localhost:5005/?code=${confirmCode}">Confirm email</a>`,
-        );
+        await this.authService.sendEmail({
+          email: command.createUser.email,
+          code: confirmCode,
+          letterTitle: 'Registration',
+          letterText: 'Confirm code',
+        });
       } catch (err) {
         throw new Error(err);
       }

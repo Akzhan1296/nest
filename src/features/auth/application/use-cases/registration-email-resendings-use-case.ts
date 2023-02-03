@@ -1,9 +1,9 @@
 import { BadRequestException } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
-import { emailAdapter } from '../../../../common/adapter';
 import { add } from 'date-fns';
 import { UsersRepository } from '../../../users/infrastructure/repository/users.repository';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { AuthService } from '../auth.service';
 
 export class EmailResendingCommand {
   constructor(public email: string) {}
@@ -12,7 +12,10 @@ export class EmailResendingCommand {
 export class EmailResendingUseCase
   implements ICommandHandler<EmailResendingCommand>
 {
-  constructor(protected usersRepository: UsersRepository) {}
+  constructor(
+    protected usersRepository: UsersRepository,
+    protected authService: AuthService,
+  ) {}
 
   async execute(command: EmailResendingCommand): Promise<void> {
     const userByEmail = await this.usersRepository.findUserByEmail(
@@ -40,11 +43,12 @@ export class EmailResendingUseCase
       }),
     );
     try {
-      await emailAdapter.sendEmail(
-        command.email,
-        'Nest',
-        `<a href="http://localhost:5005/?code=${newConfirmCode}">Confirm email</a>`,
-      );
+      await this.authService.sendEmail({
+        email: command.email,
+        code: newConfirmCode,
+        letterTitle: 'Registration code resending',
+        letterText: 'Confirm code',
+      });
       this.usersRepository.save(userByEmail);
     } catch (err) {
       throw new Error(err);

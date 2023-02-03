@@ -11,14 +11,19 @@ import {
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { Request, Response } from 'express';
+
+// guards
 import { AuthGuard } from '../../../guards/auth.guard';
 import { BlockIpGuard } from '../../../guards/ip.guard';
 import { RefreshTokenGuard } from '../../../guards/refreshToken.guard';
+
+// services
 import { DeviceService } from '../../devices/application/devices.service';
-import { AuthJwtService } from '../../jwt/application/jwt.service';
-import { MeViewModel } from '../../users/infrastructure/models/view.models';
+
+// query repo
 import { UsersQueryRepository } from '../../users/infrastructure/repository/users.query.repository';
-import { AuthService } from '../application/auth.service';
+
+// commands
 import { LoginCommand } from '../application/use-cases/login-use-case';
 import { NewPasswordCommand } from '../application/use-cases/new-password-use-case';
 import { PasswordRecoveryCommand } from '../application/use-cases/password-recovery-use-case';
@@ -26,6 +31,9 @@ import { RegistrationConfirmationCommand } from '../application/use-cases/regist
 import { EmailResendingCommand } from '../application/use-cases/registration-email-resendings-use-case';
 import { RegistrationUserCommand } from '../application/use-cases/registration-user-use-case';
 import { UpdateRefreshTokenCommand } from '../application/use-cases/update-refresh-token-use-case';
+
+// modes
+import { MeViewModel } from '../../users/infrastructure/models/view.models';
 import {
   AuthEmailResendingInputModal,
   AuthLoginInputModal,
@@ -38,9 +46,7 @@ import {
 export class AuthController {
   constructor(
     private commandBus: CommandBus,
-    protected authService: AuthService,
     protected deviceService: DeviceService,
-    protected authJwtService: AuthJwtService,
     protected usersQueryRepository: UsersQueryRepository,
   ) {}
 
@@ -76,10 +82,6 @@ export class AuthController {
     @Req() request: Request,
     @Res() response: Response,
   ): Promise<undefined> {
-    // const tokens = await this.authService.updateRefreshToken({
-    //   userId: request.body.userId,
-    //   deviceId: request.body.deviceId,
-    // });
     const tokens = await this.commandBus.execute(
       new UpdateRefreshTokenCommand({
         userId: request.body.userId,
@@ -110,7 +112,6 @@ export class AuthController {
   async registrationConfirmation(
     @Body() inputModel: AuthRegistrationConfirmInputModal,
   ): Promise<boolean> {
-    // return this.authService.registrationConfirmation(inputModel);
     return this.commandBus.execute(
       new RegistrationConfirmationCommand(inputModel),
     );
@@ -122,7 +123,6 @@ export class AuthController {
   async registration(
     @Body() inputModel: AuthRegistrationInputModal,
   ): Promise<void> {
-    // return this.authService.registrationUser(inputModel);
     return this.commandBus.execute(new RegistrationUserCommand(inputModel));
   }
 
@@ -132,7 +132,6 @@ export class AuthController {
   async registrationEmailResending(
     @Body() inputModel: AuthEmailResendingInputModal,
   ): Promise<void> {
-    // return this.authService.registrationEmailResending(inputModel.email);
     return this.commandBus.execute(new EmailResendingCommand(inputModel.email));
   }
 

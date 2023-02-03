@@ -1,8 +1,8 @@
 import { ObjectId } from 'mongodb';
-import { emailAdapter } from '../../../../common/adapter';
 import { add } from 'date-fns';
 import { UsersRepository } from '../../../users/infrastructure/repository/users.repository';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { AuthService } from '../auth.service';
 
 export class PasswordRecoveryCommand {
   constructor(public email: string) {}
@@ -11,7 +11,10 @@ export class PasswordRecoveryCommand {
 export class PasswordRecoveryUseCase
   implements ICommandHandler<PasswordRecoveryCommand>
 {
-  constructor(protected usersRepository: UsersRepository) {}
+  constructor(
+    protected usersRepository: UsersRepository,
+    protected authService: AuthService,
+  ) {}
 
   async execute(command: PasswordRecoveryCommand): Promise<void> {
     const userByEmail = await this.usersRepository.findUserByEmail(
@@ -21,19 +24,20 @@ export class PasswordRecoveryUseCase
       return;
     }
 
-    const newConfirmCode = new ObjectId().toString();
-    userByEmail.setConfirmCode(newConfirmCode);
+    const newRecoveryCode = new ObjectId().toString();
+    userByEmail.setConfirmCode(newRecoveryCode);
     userByEmail.setEmailExpirationDate(
       add(new Date(), {
         minutes: 3,
       }),
     );
     try {
-      await emailAdapter.sendEmail(
-        command.email,
-        'Nest',
-        `<a href="http://localhost:5005/?recoveryCode=${newConfirmCode}">Recovery Code</a>`,
-      );
+      await this.authService.sendEmail({
+        email: command.email,
+        code: newRecoveryCode,
+        letterTitle: 'Password recovery',
+        letterText: 'Recovery Code',
+      });
       this.usersRepository.save(userByEmail);
     } catch (err) {
       throw new Error(err);
