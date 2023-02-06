@@ -37,6 +37,7 @@ export class PasswordRecoveryUseCase
         code: newRecoveryCode,
         letterTitle: 'Password recovery',
         letterText: 'Recovery Code',
+        codeText: 'recoveryCode',
       });
       this.usersRepository.save(userByEmail);
     } catch (err) {
