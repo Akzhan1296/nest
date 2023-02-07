@@ -3,7 +3,6 @@ import * as bcrypt from 'bcrypt';
 import { UnauthorizedException } from '@nestjs/common';
 import { AuthDTO } from './../dto/auth.dto';
 import { UsersRepository } from '../../../users/infrastructure/repository/users.repository';
-// import { AuthJwtService } from '../../../jwt/application/jwt.service';
 import { UsersDocument } from '../../../users/domain/entity/users.schema';
 import { JwtTokensRepository } from '../../../jwt/infrastructura/repository/jwt.repository';
 import { CommandBus, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
@@ -22,7 +21,6 @@ export class LoginUseCase implements ICommandHandler<LoginCommand> {
   constructor(
     private commandBus: CommandBus,
     protected usersRepository: UsersRepository,
-    // protected authJwtService: AuthJwtService,
     protected jwtTokensRepository: JwtTokensRepository, // protected createAccessTokenCommand: CreateAccessTokenCommand, // protected updateRefreshTokenUseCase: UpdateRefreshTokenUseCase,
   ) {}
 
@@ -50,7 +48,6 @@ export class LoginUseCase implements ICommandHandler<LoginCommand> {
     if (!user) {
       throw new UnauthorizedException({ message: 'email or login incorrect' });
     }
-
     refreshToken = await this.jwtTokensRepository.getJwtByDeviceName(
       deviceName,
       user._id,
@@ -64,17 +61,9 @@ export class LoginUseCase implements ICommandHandler<LoginCommand> {
         }),
       );
     }
-    // const accessToken = await this.authJwtService.createAccessToken(user);
     const accessToken = await this.commandBus.execute(
       new CreateAccessTokenCommand(user),
     );
-
-    // refreshToken = await this.authJwtService.createRefreshToken({
-    //   user,
-    //   deviceName,
-    //   deviceIp,
-    // });
-
     refreshToken = await this.commandBus.execute(
       new CreateRefreshTokenCommand({
         user,
@@ -82,7 +71,6 @@ export class LoginUseCase implements ICommandHandler<LoginCommand> {
         deviceIp,
       }),
     );
-
     return { accessToken, refreshToken };
   }
 }

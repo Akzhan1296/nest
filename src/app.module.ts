@@ -78,15 +78,19 @@ import { EmailResendingUseCase } from './features/auth/application/use-cases/reg
 import { RegistrationUserUseCase } from './features/auth/application/use-cases/registration-user-use-case';
 import { CreateUserUseCase } from './features/users/application/use-cases/create-user-use-case';
 import { DeleteUserUseCase } from './features/users/application/use-cases/delete-user-use-case';
+import { CreateRefreshTokenUseCase } from './features/jwt/application/use-cases/create-refresh-token-use-case';
+import { CreateAccessTokenUseCase } from './features/jwt/application/use-cases/create-access-token-use-case';
 
 const authUseCases = [
   LoginUseCase,
-  UpdateRefreshTokenUseCase,
   NewPasswordUseCase,
   PasswordRecoveryUseCase,
   RegistrationConfirmationUseCase,
   EmailResendingUseCase,
   RegistrationUserUseCase,
+  UpdateRefreshTokenUseCase,
+  CreateRefreshTokenUseCase,
+  CreateAccessTokenUseCase,
 ];
 const usersUseCases = [CreateUserUseCase, DeleteUserUseCase];
 @Module({
@@ -122,8 +126,6 @@ const usersUseCases = [CreateUserUseCase, DeleteUserUseCase];
     DevicesController,
   ],
   providers: [
-    ...authUseCases,
-    ...usersUseCases,
     AppService,
     //blogs
     factoryBlogsService(),
@@ -154,6 +156,8 @@ const usersUseCases = [CreateUserUseCase, DeleteUserUseCase];
     BlockIpsService,
     BlockIpsRepository,
     BlockIpsQueryRepository,
+    ...authUseCases,
+    ...usersUseCases,
   ],
 })
 export class AppModule {}

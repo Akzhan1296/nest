@@ -15,8 +15,8 @@ export class UpdateRefreshTokenUseCase
 {
   constructor(
     @InjectModel(JwtTokens.name)
-    protected jwtService: JwtService,
     protected jwtTokensRepository: JwtTokensRepository,
+    protected jwtService: JwtService,
   ) {}
 
   async execute(command: UpdateRefreshTokenCommand): Promise<string | null> {

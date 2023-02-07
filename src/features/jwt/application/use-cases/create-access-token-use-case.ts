@@ -1,9 +1,6 @@
 import { JwtService } from '@nestjs/jwt';
-import { InjectModel } from '@nestjs/mongoose';
 import { UsersDocument } from '../../../users/domain/entity/users.schema';
 import { settings } from '../../../../settings';
-import { JwtTokens } from '../../domain/jwt.schema';
-import { JwtTokensRepository } from '../../infrastructura/repository/jwt.repository';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 export class CreateAccessTokenCommand {
@@ -13,11 +10,7 @@ export class CreateAccessTokenCommand {
 export class CreateAccessTokenUseCase
   implements ICommandHandler<CreateAccessTokenCommand>
 {
-  constructor(
-    @InjectModel(JwtTokens.name)
-    protected jwtService: JwtService,
-    protected jwtTokensRepository: JwtTokensRepository,
-  ) {}
+  constructor(protected jwtService: JwtService) {}
   async execute(command: CreateAccessTokenCommand): Promise<string> {
     const { user } = command;
     const login = user.getLogin();
@@ -33,6 +26,7 @@ export class CreateAccessTokenUseCase
       userId,
       isConfirmed,
     };
+    console.log(this.jwtService.sign);
     const accessToken = this.jwtService.sign(payload, {
       secret: settings.JWT_SECRET,
       expiresIn: '10sec',

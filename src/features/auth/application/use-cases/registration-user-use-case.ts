@@ -18,7 +18,7 @@ export class RegistrationUserUseCase
   constructor(
     protected commandBus: CommandBus,
     protected usersRepository: UsersRepository,
-    protected authService: AuthService, // protected createUserUseCase: CreateUserUseCase,
+    protected authService: AuthService,
   ) {}
 
   async execute(command: RegistrationUserCommand): Promise<void> {
