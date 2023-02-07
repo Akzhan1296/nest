@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { CommentsService } from 'src/features/comments/application/comments.service';
+// import { CommentsService } from 'src/features/comments/application/comments.service';
 import { CommentsQueryRepository } from 'src/features/comments/infrastructure/repository/comments.query.repository';
 import { CommentViewModel } from 'src/features/comments/infrastructure/models/view.models';
 import { PostsService } from '../application/posts.service';
@@ -20,6 +20,8 @@ import { PostsQueryRepository } from '../infrastructure/repository/posts.query.r
 import { CreateCommentInputModel, PostInputModel } from './models/input.models';
 import { AuthGuard } from '../../../guards/auth.guard';
 import { AuthBasicGuard } from '../../../guards/authBasic.guard';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateCommentCommand } from '../../comments/application/use-cases/create-comment-use-case';
 
 @Controller('posts')
 export class PostsController {
@@ -27,8 +29,9 @@ export class PostsController {
     @Inject(PostsService.name)
     protected postService: PostsService,
     protected postQuerysRepository: PostsQueryRepository,
-    protected commentsService: CommentsService,
+    // protected commentsService: CommentsService,
     protected commentsQueryRepository: CommentsQueryRepository,
+    protected commandBus: CommandBus,
   ) {}
 
   @Post()
@@ -66,11 +69,19 @@ export class PostsController {
     @Param() params: { postId: string },
     @Body() commentInputModel: CreateCommentInputModel,
   ): Promise<CommentViewModel> {
-    const comment = await this.commentsService.createCommentForSelectedPost({
-      postId: params.postId,
-      userId: request.body.userId,
-      content: commentInputModel.content,
-    });
+    // const comment = await this.commentsService.createCommentForSelectedPost({
+    //   postId: params.postId,
+    //   userId: request.body.userId,
+    //   content: commentInputModel.content,
+    // });
+    const comment = await this.commandBus.execute(
+      new CreateCommentCommand({
+        postId: params.postId,
+        userId: request.body.userId,
+        content: commentInputModel.content,
+      }),
+    );
+
     return await this.commentsQueryRepository.getCommentById(
       comment._id.toString(),
     );

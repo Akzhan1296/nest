@@ -1,17 +1,19 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Comment, CommentDocument } from '../../domain/entity/comments.schema';
 import { CreateCommentDTO } from './../dto/comments.dto';
 import { CommentsRepository } from '../../infrastructure/repository/comments.repository';
 import { PostsRepository } from '../../../posts/infrastructure/repository/posts.repository';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-@Injectable()
-export class CreateCommentUseCase {
+export class CreateCommentCommand {
+  constructor(public createCommentDTO: CreateCommentDTO) {}
+}
+@CommandHandler(CreateCommentCommand)
+export class CreateCommentUseCase
+  implements ICommandHandler<CreateCommentCommand>
+{
   constructor(
     @InjectModel(Comment.name)
     private CommentModel: Model<CommentDocument>,
@@ -27,14 +29,12 @@ export class CreateCommentUseCase {
     return new this.CommentModel(createCommentDTO);
   }
 
-  async createCommentForSelectedPost(
-    createCommentDTO: CreateCommentDTO,
-  ): Promise<CommentDocument> {
+  async execute(command: CreateCommentCommand): Promise<CommentDocument> {
     const post = await this.postsRepository.getPostById(
-      createCommentDTO.postId,
+      command.createCommentDTO.postId,
     );
     if (!post) throw new NotFoundException('post not found');
-    const newComment = this.createComment(createCommentDTO);
+    const newComment = this.createComment(command.createCommentDTO);
     await this.commentsRepository.save(newComment);
     return newComment;
   }

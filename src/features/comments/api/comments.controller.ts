@@ -12,16 +12,18 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 
-import { CommentsService } from '../application/comments.service';
 import { CommentsQueryRepository } from '../infrastructure/repository/comments.query.repository';
 import { CommentViewModel } from '../infrastructure/models/view.models';
 import { CommentInputModelType } from './models/input.models';
 import { AuthGuard } from '../../../guards/auth.guard';
+import { CommandBus } from '@nestjs/cqrs';
+import { UpdateCommentCommand } from '../application/use-cases/update-comment-use-case';
+import { DeleteCommentCommand } from '../application/use-cases/delete-comment-use-case';
 
 @Controller('comments')
 export class CommentsController {
   constructor(
-    protected commentsService: CommentsService,
+    protected commandBus: CommandBus,
     protected commentsQueryRepository: CommentsQueryRepository,
   ) {}
 
@@ -44,11 +46,13 @@ export class CommentsController {
     @Param() params: { commentId: string },
     @Body() commentInputModel: CommentInputModelType,
   ): Promise<boolean> {
-    return await this.commentsService.updateComment({
-      commentId: params.commentId,
-      userId: request.body.userId,
-      content: commentInputModel.content,
-    });
+    return await this.commandBus.execute(
+      new UpdateCommentCommand({
+        commentId: params.commentId,
+        userId: request.body.userId,
+        content: commentInputModel.content,
+      }),
+    );
   }
 
   @Delete(':commentId')
@@ -58,9 +62,11 @@ export class CommentsController {
     @Req() request: Request,
     @Param() params: { commentId: string },
   ): Promise<boolean> {
-    return await this.commentsService.deleteComment(
-      request.body.userId,
-      params.commentId,
+    return await this.commandBus.execute(
+      new DeleteCommentCommand({
+        userId: request.body.userId,
+        commentId: params.commentId,
+      }),
     );
   }
 }

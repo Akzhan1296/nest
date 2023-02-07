@@ -9,3 +9,8 @@ export type UpdateCommentDTO = {
   userId: string;
   commentId: string;
 };
+
+export type DeleteCommentDTO = {
+  userId: string;
+  commentId: string;
+};

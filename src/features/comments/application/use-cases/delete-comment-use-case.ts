@@ -1,23 +1,26 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Comment } from '../../domain/entity/comments.schema';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CommentsRepository } from '../../infrastructure/repository/comments.repository';
+import { DeleteCommentDTO } from '../dto/comments.dto';
 
-@Injectable()
-export class DeleteCommentUseCase {
-  constructor(
-    @InjectModel(Comment.name)
-    protected commentsRepository: CommentsRepository,
-  ) {}
+export class DeleteCommentCommand {
+  deleteCommentDTO: DeleteCommentDTO;
+  constructor(props: DeleteCommentDTO) {
+    this.deleteCommentDTO = props;
+  }
+}
+@CommandHandler(DeleteCommentCommand)
+export class DeleteCommentUseCase
+  implements ICommandHandler<DeleteCommentCommand>
+{
+  constructor(protected commentsRepository: CommentsRepository) {}
 
-  async deleteComment(userId: string, id: string): Promise<boolean> {
-    const comment = await this.commentsRepository.findCommentById(id);
+  async execute(command: DeleteCommentCommand): Promise<boolean> {
+    const comment = await this.commentsRepository.findCommentById(
+      command.deleteCommentDTO.commentId,
+    );
     if (!comment) throw new NotFoundException('comment not found');
-    if (comment.userId.toString() !== userId)
+    if (comment.userId.toString() !== command.deleteCommentDTO.userId)
       throw new ForbiddenException('not your comment');
     return this.commentsRepository.delete(comment);
   }

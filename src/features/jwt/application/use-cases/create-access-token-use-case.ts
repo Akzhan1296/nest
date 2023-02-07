@@ -26,7 +26,6 @@ export class CreateAccessTokenUseCase
       userId,
       isConfirmed,
     };
-    console.log(this.jwtService.sign);
     const accessToken = this.jwtService.sign(payload, {
       secret: settings.JWT_SECRET,
       expiresIn: '10sec',

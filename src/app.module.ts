@@ -28,7 +28,7 @@ import { PostsSchema } from './features/posts/schema/posts.schema';
 
 // comments
 import { CommentsController } from './features/comments/api/comments.controller';
-import { CommentsService } from './features/comments/application/comments.service';
+// import { CommentsService } from './features/comments/application/comments.service';
 import { CommentsRepository } from './features/comments/infrastructure/repository/comments.repository';
 import { CommentsQueryRepository } from './features/comments/infrastructure/repository/comments.query.repository';
 import {
@@ -80,6 +80,9 @@ import { CreateUserUseCase } from './features/users/application/use-cases/create
 import { DeleteUserUseCase } from './features/users/application/use-cases/delete-user-use-case';
 import { CreateRefreshTokenUseCase } from './features/jwt/application/use-cases/create-refresh-token-use-case';
 import { CreateAccessTokenUseCase } from './features/jwt/application/use-cases/create-access-token-use-case';
+import { CreateCommentUseCase } from './features/comments/application/use-cases/create-comment-use-case';
+import { DeleteCommentUseCase } from './features/comments/application/use-cases/delete-comment-use-case';
+import { UpdateCommentUseCase } from './features/comments/application/use-cases/update-comment-use-case';
 
 const authUseCases = [
   LoginUseCase,
@@ -93,6 +96,11 @@ const authUseCases = [
   CreateAccessTokenUseCase,
 ];
 const usersUseCases = [CreateUserUseCase, DeleteUserUseCase];
+const commentsUseCases = [
+  CreateCommentUseCase,
+  DeleteCommentUseCase,
+  UpdateCommentUseCase,
+];
 @Module({
   imports: [
     CqrsModule,
@@ -136,7 +144,7 @@ const usersUseCases = [CreateUserUseCase, DeleteUserUseCase];
     PostsRepository,
     PostsQueryRepository,
     //comments
-    CommentsService,
+    // CommentsService,
     CommentsRepository,
     CommentsQueryRepository,
     //users
@@ -158,6 +166,7 @@ const usersUseCases = [CreateUserUseCase, DeleteUserUseCase];
     BlockIpsQueryRepository,
     ...authUseCases,
     ...usersUseCases,
+    ...commentsUseCases,
   ],
 })
 export class AppModule {}

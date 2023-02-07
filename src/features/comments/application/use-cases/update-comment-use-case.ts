@@ -1,28 +1,25 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Comment } from '../../domain/entity/comments.schema';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { UpdateCommentDTO } from './../dto/comments.dto';
 import { CommentsRepository } from '../../infrastructure/repository/comments.repository';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-@Injectable()
-export class UpdateCommentUseCase {
-  constructor(
-    @InjectModel(Comment.name)
-    protected commentsRepository: CommentsRepository,
-  ) {}
+export class UpdateCommentCommand {
+  constructor(public updateCommentDTO: UpdateCommentDTO) {}
+}
+@CommandHandler(UpdateCommentCommand)
+export class UpdateCommentUseCase
+  implements ICommandHandler<UpdateCommentCommand>
+{
+  constructor(protected commentsRepository: CommentsRepository) {}
 
-  async updateComment(updateCommentDTO: UpdateCommentDTO): Promise<boolean> {
+  async execute(command: UpdateCommentCommand): Promise<boolean> {
     const comment = await this.commentsRepository.findCommentById(
-      updateCommentDTO.commentId,
+      command.updateCommentDTO.commentId,
     );
     if (!comment) throw new NotFoundException('comment not found');
-    if (comment.userId.toString() !== updateCommentDTO.userId)
+    if (comment.userId.toString() !== command.updateCommentDTO.userId)
       throw new ForbiddenException('not your comment');
-    comment.setContent(updateCommentDTO.content);
+    comment.setContent(command.updateCommentDTO.content);
     return this.commentsRepository.save(comment);
   }
 }
