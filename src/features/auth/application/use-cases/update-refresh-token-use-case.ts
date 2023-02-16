@@ -10,7 +10,7 @@ export class UpdateUserRefreshTokenCommand {
 }
 
 @CommandHandler(UpdateUserRefreshTokenCommand)
-export class UpdateRefreshTokenUseCase
+export class UpdateUserRefreshTokenUseCase
   implements ICommandHandler<UpdateUserRefreshTokenCommand>
 {
   constructor(

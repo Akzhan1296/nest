@@ -70,7 +70,7 @@ import { BlockIpsRepository } from './features/ips/infrastructure/ips.repository
 import { BlockIpsQueryRepository } from './features/ips/infrastructure/ips.query.repository';
 import { BlockIps, BlockIpsSchema } from './features/ips/domain/ips.schema';
 import { LoginUseCase } from './features/auth/application/use-cases/login-use-case';
-import { UpdateRefreshTokenUseCase } from './features/auth/application/use-cases/update-refresh-token-use-case';
+import { UpdateUserRefreshTokenUseCase } from './features/auth/application/use-cases/update-refresh-token-use-case';
 import { NewPasswordUseCase } from './features/auth/application/use-cases/new-password-use-case';
 import { PasswordRecoveryUseCase } from './features/auth/application/use-cases/password-recovery-use-case';
 import { RegistrationConfirmationUseCase } from './features/auth/application/use-cases/registration-confirmation-use-case';
@@ -91,7 +91,7 @@ const authUseCases = [
   RegistrationConfirmationUseCase,
   EmailResendingUseCase,
   RegistrationUserUseCase,
-  UpdateRefreshTokenUseCase,
+  UpdateUserRefreshTokenUseCase,
   CreateRefreshTokenUseCase,
   CreateAccessTokenUseCase,
 ];
