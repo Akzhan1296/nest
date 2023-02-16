@@ -14,7 +14,6 @@ export class UpdateRefreshTokenUseCase
   implements ICommandHandler<UpdateRefreshTokenCommand>
 {
   constructor(
-    @InjectModel(JwtTokens.name)
     protected jwtTokensRepository: JwtTokensRepository,
     protected jwtService: JwtService,
   ) {}
