@@ -38,7 +38,7 @@ import {
 
 //users
 import { UsersController } from './features/users/api/users.controller';
-import { UsersService } from './features/users/application/users.service';
+// import { UsersService } from './features/users/application/users.service';
 import { UsersRepository } from './features/users/infrastructure/repository/users.repository';
 import { UsersQueryRepository } from './features/users/infrastructure/repository/users.query.repository';
 import {
@@ -55,7 +55,7 @@ import { DeleteController } from './features/delete/delete.controller';
 import { JwtService } from '@nestjs/jwt';
 
 //jwt
-import { AuthJwtService } from './features/jwt/application/jwt.service';
+// import { AuthJwtService } from './features/jwt/application/jwt.service';
 import { JwtTokensQueryRepository } from './features/jwt/infrastructura/repository/jwt.query.repository';
 import { JwtTokensRepository } from './features/jwt/infrastructura/repository/jwt.repository';
 import { JwtTokens, JwtSchema } from './features/jwt/domain/jwt.schema';
@@ -83,6 +83,7 @@ import { CreateAccessTokenUseCase } from './features/jwt/application/use-cases/c
 import { CreateCommentUseCase } from './features/comments/application/use-cases/create-comment-use-case';
 import { DeleteCommentUseCase } from './features/comments/application/use-cases/delete-comment-use-case';
 import { UpdateCommentUseCase } from './features/comments/application/use-cases/update-comment-use-case';
+import { UpdateRefreshTokenUseCase } from './features/jwt/application/use-cases/update-refresh-token-use-case';
 
 const authUseCases = [
   LoginUseCase,
@@ -92,8 +93,6 @@ const authUseCases = [
   EmailResendingUseCase,
   RegistrationUserUseCase,
   UpdateUserRefreshTokenUseCase,
-  CreateRefreshTokenUseCase,
-  CreateAccessTokenUseCase,
 ];
 const usersUseCases = [CreateUserUseCase, DeleteUserUseCase];
 const commentsUseCases = [
@@ -101,6 +100,12 @@ const commentsUseCases = [
   DeleteCommentUseCase,
   UpdateCommentUseCase,
 ];
+const jwtUseCases = [
+  CreateRefreshTokenUseCase,
+  CreateAccessTokenUseCase,
+  UpdateRefreshTokenUseCase,
+];
+
 @Module({
   imports: [
     CqrsModule,
@@ -148,14 +153,14 @@ const commentsUseCases = [
     CommentsRepository,
     CommentsQueryRepository,
     //users
-    UsersService,
+    // UsersService,
     UsersRepository,
     UsersQueryRepository,
     //auth
     AuthService,
     JwtService, //from nest
     //jwt
-    AuthJwtService,
+    // AuthJwtService,
     JwtTokensRepository,
     JwtTokensQueryRepository,
     //device
@@ -164,9 +169,11 @@ const commentsUseCases = [
     BlockIpsService,
     BlockIpsRepository,
     BlockIpsQueryRepository,
+    // use cases
     ...authUseCases,
     ...usersUseCases,
     ...commentsUseCases,
+    ...jwtUseCases,
   ],
 })
 export class AppModule {}
