@@ -2,11 +2,13 @@ import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { UsersRepository } from '../../../users/infrastructure/repository/users.repository';
 import { JwtTokensRepository } from '../../../jwt/infrastructura/repository/jwt.repository';
 import { DeleteDeviceDTO } from './../dto/devices.dto';
-import { ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 export class DeleteCurrentDeviceCommand {
   constructor(public deleteDeviceDTO: DeleteDeviceDTO) {}
 }
+
+@CommandHandler(DeleteCurrentDeviceCommand)
 export class DeleteCurrentDeviceUseCase
   implements ICommandHandler<DeleteCurrentDeviceCommand>
 {
