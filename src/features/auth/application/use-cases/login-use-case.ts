@@ -21,7 +21,7 @@ export class LoginUseCase implements ICommandHandler<LoginCommand> {
   constructor(
     private commandBus: CommandBus,
     protected usersRepository: UsersRepository,
-    protected jwtTokensRepository: JwtTokensRepository, // protected createAccessTokenCommand: CreateAccessTokenCommand, // protected updateRefreshTokenUseCase: UpdateRefreshTokenUseCase,
+    protected jwtTokensRepository: JwtTokensRepository,
   ) {}
 
   private async checkCreds(creds: AuthDTO): Promise<UsersDocument | null> {

@@ -17,9 +17,6 @@ import { AuthGuard } from '../../../guards/auth.guard';
 import { BlockIpGuard } from '../../../guards/ip.guard';
 import { RefreshTokenGuard } from '../../../guards/refreshToken.guard';
 
-// services
-import { DeviceService } from '../../devices/application/devices.service';
-
 // query repo
 import { UsersQueryRepository } from '../../users/infrastructure/repository/users.query.repository';
 
@@ -31,6 +28,7 @@ import { RegistrationConfirmationCommand } from '../application/use-cases/regist
 import { EmailResendingCommand } from '../application/use-cases/registration-email-resendings-use-case';
 import { RegistrationUserCommand } from '../application/use-cases/registration-user-use-case';
 import { UpdateUserRefreshTokenCommand } from '../application/use-cases/update-refresh-token-use-case';
+import { DeleteCurrentDeviceCommand } from '../../devices/application/use-cases/delete-current-device-use-case';
 
 // modes
 import { MeViewModel } from '../../users/infrastructure/models/view.models';
@@ -46,7 +44,6 @@ import {
 export class AuthController {
   constructor(
     private commandBus: CommandBus,
-    protected deviceService: DeviceService,
     protected usersQueryRepository: UsersQueryRepository,
   ) {}
 
@@ -100,10 +97,12 @@ export class AuthController {
   @UseGuards(RefreshTokenGuard)
   @HttpCode(204)
   async logOut(@Req() request: Request): Promise<boolean> {
-    return this.deviceService.deleteCurrentDevice({
-      deviceId: request.body.deviceId,
-      userId: request.body.userId,
-    });
+    return this.commandBus.execute(
+      new DeleteCurrentDeviceCommand({
+        deviceId: request.body.deviceId,
+        userId: request.body.userId,
+      }),
+    );
   }
 
   @Post('registration-confirmation')

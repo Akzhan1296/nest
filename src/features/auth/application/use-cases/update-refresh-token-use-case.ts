@@ -15,7 +15,7 @@ export class UpdateUserRefreshTokenUseCase
 {
   constructor(
     protected commandBus: CommandBus,
-    protected usersRepository: UsersRepository, // protected authJwtService: AuthJwtService,
+    protected usersRepository: UsersRepository,
   ) {}
 
   async execute(

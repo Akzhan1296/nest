@@ -1,10 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { JwtTokensRepository } from '../../../jwt/infrastructura/repository/jwt.repository';
 
-@Injectable()
-export class DeleteAllDevicesUseCase {
+export class DeleteDevicesExceptOneCommand {
+  constructor(public deviceId: string) {}
+}
+@CommandHandler(DeleteDevicesExceptOneCommand)
+export class DeleteDevicesExceptOneUseCase
+  implements ICommandHandler<DeleteDevicesExceptOneCommand>
+{
   constructor(protected jwtTokensRepository: JwtTokensRepository) {}
-  async deleteAllDevicesExceptCurrent(deviceId: string): Promise<boolean> {
-    return this.jwtTokensRepository.deleteDevicesExceptOne(deviceId);
+  async execute(command: DeleteDevicesExceptOneCommand): Promise<boolean> {
+    return this.jwtTokensRepository.deleteDevicesExceptOne(command.deviceId);
   }
 }

@@ -7,16 +7,19 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
 import { Request } from 'express';
 import { RefreshTokenGuard } from '../../../guards/refreshToken.guard';
 import { DevicesViewModel } from '../../jwt/infrastructura/models/view.models';
 import { JwtTokensQueryRepository } from '../../jwt/infrastructura/repository/jwt.query.repository';
-import { DeviceService } from '../application/devices.service';
+//commands
+import { DeleteCurrentDeviceCommand } from '../application/use-cases/delete-current-device-use-case';
+import { DeleteDevicesExceptOneCommand } from '../application/use-cases/delete-all-device-use-case';
 
 @Controller('security/devices')
 export class DevicesController {
   constructor(
-    protected deviceService: DeviceService,
+    private commandBus: CommandBus,
     protected jwtTokensQueryRepository: JwtTokensQueryRepository,
   ) {}
 
@@ -32,8 +35,8 @@ export class DevicesController {
   @UseGuards(RefreshTokenGuard)
   @HttpCode(204)
   async deleteAllDevices(@Req() request: Request): Promise<boolean> {
-    return this.deviceService.deleteAllDevicesExceptCurrent(
-      request.body.deviceId,
+    return this.commandBus.execute(
+      new DeleteDevicesExceptOneCommand(request.body.deviceId as string),
     );
   }
 
@@ -44,9 +47,11 @@ export class DevicesController {
     @Req() request: Request,
     @Param() params: { deviceId: string },
   ): Promise<boolean> {
-    return this.deviceService.deleteCurrentDevice({
-      deviceId: params.deviceId,
-      userId: request.body.userId,
-    });
+    return this.commandBus.execute(
+      new DeleteCurrentDeviceCommand({
+        deviceId: params.deviceId,
+        userId: request.body.userId,
+      }),
+    );
   }
 }

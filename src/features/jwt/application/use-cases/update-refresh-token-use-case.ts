@@ -1,8 +1,6 @@
 import { JwtService } from '@nestjs/jwt';
-import { InjectModel } from '@nestjs/mongoose';
 import { BadGatewayException } from '@nestjs/common';
 import { settings } from '../../../../settings';
-import { JwtTokens } from '../../domain/jwt.schema';
 import { JwtTokensRepository } from '../../infrastructura/repository/jwt.repository';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 

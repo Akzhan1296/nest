@@ -28,7 +28,6 @@ import { PostsSchema } from './features/posts/schema/posts.schema';
 
 // comments
 import { CommentsController } from './features/comments/api/comments.controller';
-// import { CommentsService } from './features/comments/application/comments.service';
 import { CommentsRepository } from './features/comments/infrastructure/repository/comments.repository';
 import { CommentsQueryRepository } from './features/comments/infrastructure/repository/comments.query.repository';
 import {
@@ -38,7 +37,6 @@ import {
 
 //users
 import { UsersController } from './features/users/api/users.controller';
-// import { UsersService } from './features/users/application/users.service';
 import { UsersRepository } from './features/users/infrastructure/repository/users.repository';
 import { UsersQueryRepository } from './features/users/infrastructure/repository/users.query.repository';
 import {
@@ -55,20 +53,20 @@ import { DeleteController } from './features/delete/delete.controller';
 import { JwtService } from '@nestjs/jwt';
 
 //jwt
-// import { AuthJwtService } from './features/jwt/application/jwt.service';
 import { JwtTokensQueryRepository } from './features/jwt/infrastructura/repository/jwt.query.repository';
 import { JwtTokensRepository } from './features/jwt/infrastructura/repository/jwt.repository';
 import { JwtTokens, JwtSchema } from './features/jwt/domain/jwt.schema';
 
 //devices
 import { DevicesController } from './features/devices/api/devices.controller';
-import { DeviceService } from './features/devices/application/devices.service';
 
 //ips
 import { BlockIpsService } from './features/ips/application/ips.service';
 import { BlockIpsRepository } from './features/ips/infrastructure/ips.repository';
 import { BlockIpsQueryRepository } from './features/ips/infrastructure/ips.query.repository';
 import { BlockIps, BlockIpsSchema } from './features/ips/domain/ips.schema';
+
+//use-cases
 import { LoginUseCase } from './features/auth/application/use-cases/login-use-case';
 import { UpdateUserRefreshTokenUseCase } from './features/auth/application/use-cases/update-refresh-token-use-case';
 import { NewPasswordUseCase } from './features/auth/application/use-cases/new-password-use-case';
@@ -84,6 +82,8 @@ import { CreateCommentUseCase } from './features/comments/application/use-cases/
 import { DeleteCommentUseCase } from './features/comments/application/use-cases/delete-comment-use-case';
 import { UpdateCommentUseCase } from './features/comments/application/use-cases/update-comment-use-case';
 import { UpdateRefreshTokenUseCase } from './features/jwt/application/use-cases/update-refresh-token-use-case';
+import { DeleteCurrentDeviceUseCase } from './features/devices/application/use-cases/delete-current-device-use-case';
+import { DeleteDevicesExceptOneUseCase } from './features/devices/application/use-cases/delete-all-device-use-case';
 
 const authUseCases = [
   LoginUseCase,
@@ -104,6 +104,10 @@ const jwtUseCases = [
   CreateRefreshTokenUseCase,
   CreateAccessTokenUseCase,
   UpdateRefreshTokenUseCase,
+];
+const devicesUseCases = [
+  DeleteCurrentDeviceUseCase,
+  DeleteDevicesExceptOneUseCase,
 ];
 
 @Module({
@@ -163,8 +167,6 @@ const jwtUseCases = [
     // AuthJwtService,
     JwtTokensRepository,
     JwtTokensQueryRepository,
-    //device
-    DeviceService,
     //ips
     BlockIpsService,
     BlockIpsRepository,
@@ -174,6 +176,7 @@ const jwtUseCases = [
     ...usersUseCases,
     ...commentsUseCases,
     ...jwtUseCases,
+    ...devicesUseCases,
   ],
 })
 export class AppModule {}
