@@ -37,6 +37,7 @@ import {
 
 //users
 import { UsersController } from './features/users/api/users.controller';
+import { UsersService } from './features/users/application/users.service';
 import { UsersRepository } from './features/users/infrastructure/repository/users.repository';
 import { UsersQueryRepository } from './features/users/infrastructure/repository/users.query.repository';
 import {
@@ -157,7 +158,7 @@ const devicesUseCases = [
     CommentsRepository,
     CommentsQueryRepository,
     //users
-    // UsersService,
+    UsersService,
     UsersRepository,
     UsersQueryRepository,
     //auth
