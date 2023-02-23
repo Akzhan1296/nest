@@ -1,8 +1,12 @@
-export type CreateCommentDTO = {
+export interface CreateCommentDTO {
   userId: string;
   content: string;
   postId: string;
-};
+}
+
+export interface CreateCommentWithUserLogin extends CreateCommentDTO {
+  userLogin: string;
+}
 
 export type UpdateCommentDTO = {
   content: string;

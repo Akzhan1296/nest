@@ -2,10 +2,14 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Comment, CommentDocument } from '../../domain/entity/comments.schema';
-import { CreateCommentDTO } from './../dto/comments.dto';
+import {
+  CreateCommentDTO,
+  CreateCommentWithUserLogin,
+} from './../dto/comments.dto';
 import { CommentsRepository } from '../../infrastructure/repository/comments.repository';
 import { PostsRepository } from '../../../posts/infrastructure/repository/posts.repository';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { UsersRepository } from '../../../users/infrastructure/repository/users.repository';
 
 export class CreateCommentCommand {
   constructor(public createCommentDTO: CreateCommentDTO) {}
@@ -19,10 +23,13 @@ export class CreateCommentUseCase
     private CommentModel: Model<CommentDocument>,
     protected commentsRepository: CommentsRepository,
     protected postsRepository: PostsRepository,
+    protected usersRepository: UsersRepository,
   ) {}
 
   // domain factory
-  private createComment(createCommentDTO: CreateCommentDTO): CommentDocument {
+  private createComment(
+    createCommentDTO: CreateCommentWithUserLogin,
+  ): CommentDocument {
     const contentLength = createCommentDTO.content.length;
     if (contentLength < 20 || contentLength > 300)
       throw new BadRequestException('length error');
@@ -34,7 +41,13 @@ export class CreateCommentUseCase
       command.createCommentDTO.postId,
     );
     if (!post) throw new NotFoundException('post not found');
-    const newComment = this.createComment(command.createCommentDTO);
+    const user = await this.usersRepository.findUserById(
+      command.createCommentDTO.userId,
+    );
+    const newComment = this.createComment({
+      ...command.createCommentDTO,
+      userLogin: user.getLogin(),
+    });
     await this.commentsRepository.save(newComment);
     return newComment;
   }
