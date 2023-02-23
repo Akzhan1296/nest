@@ -1,6 +1,7 @@
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { ObjectId } from 'mongodb';
 import {
   Comment,
   CommentDocument,
@@ -53,15 +54,21 @@ export class CommentsQueryRepository {
     return this.getPaginatedPosts(pageParams, comments);
   }
   async getCommentById(id: string): Promise<CommentViewModel | null> {
-    const comment = await this.CommentModel.findById({ _id: id });
-    if (comment)
-      ({
+    const objId = new ObjectId(id);
+
+    const comment = await this.CommentModel.findById({ _id: objId });
+    // console.log(id);
+    // const all = await this.CommentModel.find();
+    // console.log(all);
+    if (comment) {
+      return {
         id: comment._id.toString(),
         content: comment.getContent(),
         userId: comment.userId.toString(),
         userLogin: 'userLogin',
         createdAt: comment.createdAt,
-      });
+      };
+    }
     return null;
   }
   async getCommentsByPostId(

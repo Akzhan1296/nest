@@ -69,11 +69,6 @@ export class PostsController {
     @Param() params: { postId: string },
     @Body() commentInputModel: CreateCommentInputModel,
   ): Promise<CommentViewModel> {
-    // const comment = await this.commentsService.createCommentForSelectedPost({
-    //   postId: params.postId,
-    //   userId: request.body.userId,
-    //   content: commentInputModel.content,
-    // });
     const comment = await this.commandBus.execute(
       new CreateCommentCommand({
         postId: params.postId,
@@ -82,8 +77,9 @@ export class PostsController {
       }),
     );
 
-    return await this.commentsQueryRepository.getCommentById(
+    const commentViewmodel = await this.commentsQueryRepository.getCommentById(
       comment._id.toString(),
     );
+    return commentViewmodel;
   }
 }
