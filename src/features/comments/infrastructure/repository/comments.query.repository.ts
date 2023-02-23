@@ -30,8 +30,10 @@ export class CommentsQueryRepository {
     return comments.map((comment) => ({
       id: comment._id.toString(),
       content: comment.getContent(),
-      userId: comment.userId.toString(),
-      userLogin: comment.userLogin,
+      commentatorInfo: {
+        userId: comment.userId.toString(),
+        userLogin: comment.userLogin,
+      },
       createdAt: comment.createdAt,
     }));
   }
@@ -57,15 +59,15 @@ export class CommentsQueryRepository {
     const objId = new ObjectId(id);
 
     const comment = await this.CommentModel.findById({ _id: objId });
-    // console.log(id);
-    // const all = await this.CommentModel.find();
-    // console.log(all);
     if (comment) {
       return {
         id: comment._id.toString(),
         content: comment.getContent(),
-        userId: comment.userId.toString(),
-        userLogin: 'userLogin',
+        commentatorInfo: {
+          userId: comment.userId.toString(),
+          userLogin: comment.userLogin,
+        },
+
         createdAt: comment.createdAt,
       };
     }

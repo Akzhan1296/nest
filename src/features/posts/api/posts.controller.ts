@@ -11,7 +11,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Request } from 'express';
-// import { CommentsService } from 'src/features/comments/application/comments.service';
 import { CommentsQueryRepository } from 'src/features/comments/infrastructure/repository/comments.query.repository';
 import { CommentViewModel } from 'src/features/comments/infrastructure/models/view.models';
 import { PostsService } from '../application/posts.service';
@@ -29,7 +28,6 @@ export class PostsController {
     @Inject(PostsService.name)
     protected postService: PostsService,
     protected postQuerysRepository: PostsQueryRepository,
-    // protected commentsService: CommentsService,
     protected commentsQueryRepository: CommentsQueryRepository,
     protected commandBus: CommandBus,
   ) {}
