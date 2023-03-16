@@ -1,10 +1,7 @@
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import {
-  Comment,
-  CommentDocument,
-} from 'src/features/comments/domain/entity/comments.schema';
+import { Comment, CommentDocument } from '../../domain/entity/comments.schema';
 
 @Injectable()
 export class CommentsRepository {
@@ -36,5 +33,37 @@ export class CommentsRepository {
         console.error(error);
         return false;
       });
+  }
+  async incLike(commentId: string) {
+    return await this.CommentModel.updateOne(
+      { _id: commentId },
+      {
+        $inc: { likeCount: 1 },
+      },
+    );
+  }
+  async decLike(commentId: string) {
+    return await this.CommentModel.updateOne(
+      { _id: commentId },
+      {
+        $inc: { likeCount: -1 },
+      },
+    );
+  }
+  async incDislike(commentId: string) {
+    return await this.CommentModel.updateOne(
+      { _id: commentId },
+      {
+        $inc: { dislikeCount: 1 },
+      },
+    );
+  }
+  async decDislike(commentId: string) {
+    return await this.CommentModel.updateOne(
+      { _id: commentId },
+      {
+        $inc: { dislikeCount: -1 },
+      },
+    );
   }
 }

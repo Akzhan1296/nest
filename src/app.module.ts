@@ -67,6 +67,10 @@ import { BlockIpsRepository } from './features/ips/infrastructure/ips.repository
 import { BlockIpsQueryRepository } from './features/ips/infrastructure/ips.query.repository';
 import { BlockIps, BlockIpsSchema } from './features/ips/domain/ips.schema';
 
+//likes
+import { LikesService } from './features/likes/application/likes.service';
+import { LikesRepository } from './features/likes/infrastructure/repository/likes.repository';
+
 //use-cases
 import { LoginUseCase } from './features/auth/application/use-cases/login-use-case';
 import { UpdateUserRefreshTokenUseCase } from './features/auth/application/use-cases/update-refresh-token-use-case';
@@ -85,6 +89,9 @@ import { UpdateCommentUseCase } from './features/comments/application/use-cases/
 import { UpdateRefreshTokenUseCase } from './features/jwt/application/use-cases/update-refresh-token-use-case';
 import { DeleteCurrentDeviceUseCase } from './features/devices/application/use-cases/delete-current-device-use-case';
 import { DeleteDevicesExceptOneUseCase } from './features/devices/application/use-cases/delete-all-device-use-case';
+import { Like, LikeSchema } from './features/likes/domain/likes.schema';
+import { CommentsQueryService } from './features/comments/api/query.service';
+import { LikesQueryRepository } from './features/likes/infrastructure/repository/likes.query.repository';
 
 const authUseCases = [
   LoginUseCase,
@@ -129,6 +136,7 @@ const devicesUseCases = [
       { name: Users.name, schema: UsersSchema },
       { name: JwtTokens.name, schema: JwtSchema },
       { name: BlockIps.name, schema: BlockIpsSchema },
+      { name: Like.name, schema: LikeSchema },
     ]),
   ],
   controllers: [
@@ -172,6 +180,11 @@ const devicesUseCases = [
     BlockIpsService,
     BlockIpsRepository,
     BlockIpsQueryRepository,
+    //likes
+    LikesService,
+    LikesRepository,
+    LikesQueryRepository,
+    CommentsQueryService,
     // use cases
     ...authUseCases,
     ...usersUseCases,

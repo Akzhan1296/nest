@@ -6,4 +6,8 @@ export type CommentViewModel = {
     userLogin: string;
   };
   createdAt: Date;
+  likesInfo: {
+    likesCount: number;
+    dislikesCount: number;
+  };
 };

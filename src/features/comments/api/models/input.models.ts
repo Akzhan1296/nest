@@ -5,3 +5,7 @@ export class CommentInputModelType {
   @MinLength(20)
   content: string;
 }
+
+export class CommentLikeStatus {
+  likeStatus: 'None' | 'Like' | 'Dislike';
+}

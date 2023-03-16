@@ -14,28 +14,39 @@ import { Request } from 'express';
 
 import { CommentsQueryRepository } from '../infrastructure/repository/comments.query.repository';
 import { CommentViewModel } from '../infrastructure/models/view.models';
-import { CommentInputModelType } from './models/input.models';
+import {
+  CommentInputModelType,
+  CommentLikeStatus,
+} from './models/input.models';
 import { AuthGuard } from '../../../guards/auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
 import { UpdateCommentCommand } from '../application/use-cases/update-comment-use-case';
 import { DeleteCommentCommand } from '../application/use-cases/delete-comment-use-case';
+import { LikesService } from '../../likes/application/likes.service';
+import { UserIdGuard } from '../../../guards/userId';
+import { CommentsQueryService } from './query.service';
 
 @Controller('comments')
 export class CommentsController {
   constructor(
     protected commandBus: CommandBus,
     protected commentsQueryRepository: CommentsQueryRepository,
+    protected likesService: LikesService,
+    protected commentsQueryService: CommentsQueryService,
   ) {}
 
+  @UseGuards(UserIdGuard)
+  // @UseGuards(AuthGuard)
   @Get(':commentId')
   async getCommentById(
+    @Req() request: Request,
     @Param() params: { commentId: string },
   ): Promise<CommentViewModel> {
-    const comment = await this.commentsQueryRepository.getCommentById(
+    console.log(777);
+    return await this.commentsQueryService.getCommentById(
       params.commentId,
+      request.body.userId,
     );
-    if (!comment) throw new NotFoundException('comment not found');
-    return this.commentsQueryRepository.getCommentById(params.commentId);
   }
 
   @Put(':commentId')
@@ -46,6 +57,7 @@ export class CommentsController {
     @Param() params: { commentId: string },
     @Body() commentInputModel: CommentInputModelType,
   ): Promise<boolean> {
+    // validate objectid
     return await this.commandBus.execute(
       new UpdateCommentCommand({
         commentId: params.commentId,
@@ -53,6 +65,19 @@ export class CommentsController {
         content: commentInputModel.content,
       }),
     );
+  }
+
+  @Put(':commentId/like-status')
+  @UseGuards(AuthGuard)
+  @HttpCode(204)
+  async likeStatus(
+    @Param() params: { commentId: string },
+    @Body() commentLikeStatus: CommentLikeStatus,
+  ) {
+    return await this.likesService.handleCommentLikeStatus({
+      commentId: params.commentId,
+      commentLikeStatus: commentLikeStatus.likeStatus,
+    });
   }
 
   @Delete(':commentId')

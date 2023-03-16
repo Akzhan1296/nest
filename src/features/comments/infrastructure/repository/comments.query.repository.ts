@@ -35,6 +35,10 @@ export class CommentsQueryRepository {
         userLogin: comment.userLogin,
       },
       createdAt: comment.createdAt,
+      likesInfo: {
+        likesCount: comment.getLikes(),
+        dislikesCount: comment.getDislikes(),
+      },
     }));
   }
   private async getPaginatedPosts(
@@ -67,8 +71,11 @@ export class CommentsQueryRepository {
           userId: comment.userId.toString(),
           userLogin: comment.userLogin,
         },
-
         createdAt: comment.createdAt,
+        likesInfo: {
+          likesCount: comment.getLikes(),
+          dislikesCount: comment.getDislikes(),
+        },
       };
     }
     return null;

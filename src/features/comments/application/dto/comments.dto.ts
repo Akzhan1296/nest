@@ -1,5 +1,6 @@
+import { ObjectId } from 'mongodb';
 export interface CreateCommentDTO {
-  userId: string;
+  userId: ObjectId;
   content: string;
   postId: string;
 }
@@ -17,4 +18,9 @@ export type UpdateCommentDTO = {
 export type DeleteCommentDTO = {
   userId: string;
   commentId: string;
+};
+
+export type HandleLikeCommentDTO = {
+  commentId: string;
+  commentLikeStatus: 'Like' | 'Dislike' | 'None';
 };
