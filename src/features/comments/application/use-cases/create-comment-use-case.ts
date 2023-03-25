@@ -62,9 +62,10 @@ export class CreateCommentUseCase
 
     //new like entity
     const newCommentLikeEntity = new this.LikeModel();
-    newCommentLikeEntity.setCommentId(newComment._id);
     newCommentLikeEntity.setLikeStatus('None');
+    newCommentLikeEntity.setCommentId(newComment._id);
     newCommentLikeEntity.setUserId(user._id);
+    newCommentLikeEntity.setPostId(post._id);
     await this.likesRepository.save(newCommentLikeEntity);
     return newComment;
   }

@@ -3,6 +3,7 @@ import { LikesQueryRepository } from '../../likes/infrastructure/repository/like
 import { CommentsQueryRepository } from '../infrastructure/repository/comments.query.repository';
 import { ObjectId } from 'mongodb';
 import { LikeModelView } from '../../likes/infrastructure/models/view.models';
+import { PostsQueryType } from '../../posts/api/models/input.models';
 
 @Injectable()
 export class CommentsQueryService {
@@ -31,8 +32,6 @@ export class CommentsQueryService {
     );
     if (!commentEntity) throw new NotFoundException('comment not found');
 
-    console.log(likeEntity);
-
     return {
       ...commentEntity,
       likesInfo: {
@@ -42,24 +41,55 @@ export class CommentsQueryService {
     };
   }
 
-  async getCommentAll(commentId: string, userId: ObjectId) {
-    // arr status
-    // const likeEntity = await this.likesQueryRepository.getLikeById(
-    //   commentId,
-    //   userId,
-    // );
-    // arr comments
-    // const comments = await this.commentsQueryRepository.getComments({
-    //   pageNumber: 1,
-    //   pageSize: 1,
-    // });
-    //lookup
-    // return {
-    //   ...commentEntity,
-    //   likesInfo: {
-    //     ...commentEntity.likesInfo,
-    //     ...likeEntity,
-    //   },
-    // };
+  async getCommentAll(
+    pageSize: PostsQueryType,
+    postId: string,
+    userId: string,
+  ) {
+    let _userId = null;
+
+    try {
+      _userId = new ObjectId(userId);
+    } catch (err) {
+      console.warn('can not change user id ');
+    }
+
+    const comments = await this.commentsQueryRepository.getCommentsByPostId(
+      pageSize,
+      postId,
+    );
+
+    const likes = await this.likesQueryRepository.getLikesByPostId(
+      postId,
+      _userId,
+    );
+    if (!likes.length) {
+      return {
+        ...comments,
+        items: comments.items.map((c) => ({
+          ...c,
+          likesInfo: { ...c.likesInfo, myStatus: 'None' },
+        })),
+      };
+    }
+
+    return {
+      ...comments,
+      items: comments.items.map((c) => {
+        let myStatus = 'None';
+        const findedLike = likes.find(
+          (l) => l.getCommentId().toString() === c.id,
+        );
+        if (findedLike) myStatus = findedLike.getLikeStatus();
+
+        return {
+          ...c,
+          likesInfo: {
+            ...c.likesInfo,
+            myStatus,
+          },
+        };
+      }),
+    };
   }
 }

@@ -36,13 +36,11 @@ export class CommentsController {
   ) {}
 
   @UseGuards(UserIdGuard)
-  // @UseGuards(AuthGuard)
   @Get(':commentId')
   async getCommentById(
     @Req() request: Request,
     @Param() params: { commentId: string },
   ): Promise<CommentViewModel> {
-    console.log(777);
     return await this.commentsQueryService.getCommentById(
       params.commentId,
       request.body.userId,

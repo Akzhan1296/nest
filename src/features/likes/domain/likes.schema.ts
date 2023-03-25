@@ -11,6 +11,8 @@ export class Like {
   @Prop()
   private commentId: ObjectId;
   @Prop()
+  private postId: ObjectId;
+  @Prop()
   private userId: ObjectId;
 
   setLikeStatus(likeStatus: string) {
@@ -37,6 +39,12 @@ export class Like {
   getCommentId() {
     return this.commentId;
   }
+  setPostId(postId: ObjectId) {
+    this.postId = postId;
+  }
+  getPostId() {
+    return this.postId;
+  }
 
   setUserId(userId: ObjectId) {
     this.userId = userId;
@@ -53,3 +61,4 @@ LikeSchema.methods.setCommentId = Like.prototype.setCommentId;
 LikeSchema.methods.getCommentId = Like.prototype.getCommentId;
 LikeSchema.methods.setUserId = Like.prototype.setUserId;
 LikeSchema.methods.getUserId = Like.prototype.getUserId;
+LikeSchema.methods.setPostId = Like.prototype.setPostId;

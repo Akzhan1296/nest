@@ -75,6 +75,7 @@ export class CommentsQueryRepository {
         likesInfo: {
           likesCount: comment.getLikes(),
           dislikesCount: comment.getDislikes(),
+          myStatus: 'None',
         },
       };
     }

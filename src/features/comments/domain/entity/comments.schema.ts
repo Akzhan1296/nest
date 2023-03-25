@@ -37,6 +37,9 @@ export class Comment {
   getDislikes() {
     return this.dislikeCount;
   }
+  getPostId() {
+    return this.postId;
+  }
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);
@@ -44,3 +47,4 @@ CommentSchema.methods.setContent = Comment.prototype.setContent;
 CommentSchema.methods.getContent = Comment.prototype.getContent;
 CommentSchema.methods.getLikes = Comment.prototype.getLikes;
 CommentSchema.methods.getDislikes = Comment.prototype.getDislikes;
+CommentSchema.methods.getPostId = Comment.prototype.getPostId;

@@ -27,6 +27,19 @@ export class LikesQueryRepository {
     };
   }
 
+  async getLikesByPostId(
+    postId: string,
+    userId: ObjectId,
+  ): Promise<LikeDocument[]> {
+    const _postId = new ObjectId(postId);
+    const likes = await this.LikeModel.find({
+      postId: _postId,
+      userId,
+    });
+
+    return likes;
+  }
+
   async dropLikes() {
     return this.LikeModel.deleteMany({});
   }
