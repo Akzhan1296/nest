@@ -1,4 +1,7 @@
-import { MinLength, MaxLength } from 'class-validator';
+import { MinLength, MaxLength, IsIn } from 'class-validator';
+
+const likes = ['None', 'Like', 'Dislike'] as const;
+export type Likes = typeof likes[number];
 
 export class CommentInputModelType {
   @MaxLength(100)
@@ -7,5 +10,6 @@ export class CommentInputModelType {
 }
 
 export class CommentLikeStatus {
-  likeStatus: 'None' | 'Like' | 'Dislike';
+  @IsIn(likes)
+  likeStatus: Likes;
 }

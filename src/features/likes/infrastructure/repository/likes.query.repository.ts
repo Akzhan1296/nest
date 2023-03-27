@@ -21,7 +21,6 @@ export class LikesQueryRepository {
       commentId: _commentId,
       userId,
     });
-    console.log(like);
 
     return {
       myStatus: like ? like.getLikeStatus() : 'None',
