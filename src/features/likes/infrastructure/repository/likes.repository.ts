@@ -12,10 +12,14 @@ export class LikesRepository {
   ) {}
   async findLikeByCommentId(
     commentId: string,
-    userId: ObjectId,
+    userId: string,
   ): Promise<LikeDocument> {
     const _commentId = new ObjectId(commentId);
-    return await this.LikeModel.findOne({ commentId: _commentId, userId });
+    const _userId = new ObjectId(userId);
+    return await this.LikeModel.findOne({
+      commentId: _commentId,
+      userId: _userId,
+    });
   }
   async save(like: LikeDocument): Promise<boolean> {
     return like

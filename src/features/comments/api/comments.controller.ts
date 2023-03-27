@@ -69,12 +69,14 @@ export class CommentsController {
   @UseGuards(AuthGuard)
   @HttpCode(204)
   async likeStatus(
+    @Req() request: Request,
     @Param() params: { commentId: string },
     @Body() commentLikeStatus: CommentLikeStatus,
   ) {
     return await this.likesService.handleCommentLikeStatus({
       commentId: params.commentId,
       commentLikeStatus: commentLikeStatus.likeStatus,
+      userId: request.body.userId,
     });
   }
 

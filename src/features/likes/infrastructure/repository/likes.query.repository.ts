@@ -21,9 +21,10 @@ export class LikesQueryRepository {
       commentId: _commentId,
       userId,
     });
+    console.log(like);
 
     return {
-      myStatus: like.getLikeStatus(),
+      myStatus: like ? like.getLikeStatus() : 'None',
     };
   }
 
@@ -31,9 +32,9 @@ export class LikesQueryRepository {
     postId: string,
     userId: ObjectId,
   ): Promise<LikeDocument[]> {
-    const _postId = new ObjectId(postId);
+    // const _postId = new ObjectId(postId);
     const likes = await this.LikeModel.find({
-      postId: _postId,
+      postId,
       userId,
     });
 

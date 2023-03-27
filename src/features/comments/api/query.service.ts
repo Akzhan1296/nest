@@ -18,7 +18,7 @@ export class CommentsQueryService {
     try {
       _userId = new ObjectId(userId);
     } catch (err) {
-      console.warn('');
+      console.warn('could not transfer id');
     }
 
     if (_userId) {
@@ -63,6 +63,7 @@ export class CommentsQueryService {
       postId,
       _userId,
     );
+    console.log(likes);
     if (!likes.length) {
       return {
         ...comments,

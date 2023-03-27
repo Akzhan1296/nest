@@ -11,8 +11,8 @@ import { CommentsRepository } from '../../infrastructure/repository/comments.rep
 import { PostsRepository } from '../../../posts/infrastructure/repository/posts.repository';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UsersRepository } from '../../../users/infrastructure/repository/users.repository';
-import { Like, LikeDocument } from '../../../likes/domain/likes.schema';
-import { LikesRepository } from '../../../likes/infrastructure/repository/likes.repository';
+// import { Like, LikeDocument } from '../../../likes/domain/likes.schema';
+// import { LikesRepository } from '../../../likes/infrastructure/repository/likes.repository';
 
 export class CreateCommentCommand {
   constructor(public createCommentDTO: CreateCommentDTO) {}
@@ -24,12 +24,11 @@ export class CreateCommentUseCase
   constructor(
     @InjectModel(Comment.name)
     private CommentModel: Model<CommentDocument>,
-    @InjectModel(Like.name)
-    private LikeModel: Model<LikeDocument>,
+    // @InjectModel(Like.name)
+    // private LikeModel: Model<LikeDocument>,
     protected commentsRepository: CommentsRepository,
     protected postsRepository: PostsRepository,
-    protected usersRepository: UsersRepository,
-    protected likesRepository: LikesRepository,
+    protected usersRepository: UsersRepository, // protected likesRepository: LikesRepository,
   ) {}
 
   // domain factory
@@ -61,12 +60,12 @@ export class CreateCommentUseCase
     await this.commentsRepository.save(newComment);
 
     //new like entity
-    const newCommentLikeEntity = new this.LikeModel();
-    newCommentLikeEntity.setLikeStatus('None');
-    newCommentLikeEntity.setCommentId(newComment._id);
-    newCommentLikeEntity.setUserId(user._id);
-    newCommentLikeEntity.setPostId(post._id);
-    await this.likesRepository.save(newCommentLikeEntity);
+    // const newCommentLikeEntity = new this.LikeModel();
+    // newCommentLikeEntity.setLikeStatus('None');
+    // newCommentLikeEntity.setCommentId(newComment._id);
+    // newCommentLikeEntity.setUserId(user._id);
+    // newCommentLikeEntity.setPostId(post._id);
+    // await this.likesRepository.save(newCommentLikeEntity);
     return newComment;
   }
 }
