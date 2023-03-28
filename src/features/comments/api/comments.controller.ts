@@ -22,16 +22,17 @@ import { AuthGuard } from '../../../guards/auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
 import { UpdateCommentCommand } from '../application/use-cases/update-comment-use-case';
 import { DeleteCommentCommand } from '../application/use-cases/delete-comment-use-case';
-import { LikesService } from '../../likes/application/likes.service';
+// import { LikesService } from '../../likes/application/likes.service';
 import { UserIdGuard } from '../../../guards/userId';
 import { CommentsQueryService } from './query.service';
+import { HandleCommentsLikesCommand } from '../../likes/application/use-cases/handle-comments-likes';
 
 @Controller('comments')
 export class CommentsController {
   constructor(
     protected commandBus: CommandBus,
     protected commentsQueryRepository: CommentsQueryRepository,
-    protected likesService: LikesService,
+    // protected likesService: LikesService,
     protected commentsQueryService: CommentsQueryService,
   ) {}
 
@@ -73,11 +74,19 @@ export class CommentsController {
     @Param() params: { commentId: string },
     @Body() commentLikeStatus: CommentLikeStatus,
   ) {
-    return await this.likesService.handleCommentLikeStatus({
-      commentId: params.commentId,
-      commentLikeStatus: commentLikeStatus.likeStatus,
-      userId: request.body.userId,
-    });
+    this.commandBus.execute(
+      new HandleCommentsLikesCommand({
+        commentId: params.commentId,
+        commentLikeStatus: commentLikeStatus.likeStatus,
+        userId: request.body.userId,
+      }),
+    );
+
+    // return await this.likesService.handleCommentLikeStatus({
+    //   commentId: params.commentId,
+    //   commentLikeStatus: commentLikeStatus.likeStatus,
+    //   userId: request.body.userId,
+    // });
   }
 
   @Delete(':commentId')

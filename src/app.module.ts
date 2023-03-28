@@ -68,7 +68,7 @@ import { BlockIpsQueryRepository } from './features/ips/infrastructure/ips.query
 import { BlockIps, BlockIpsSchema } from './features/ips/domain/ips.schema';
 
 //likes
-import { LikesService } from './features/likes/application/likes.service';
+// import { LikesService } from './features/likes/application/likes.service';
 import { LikesRepository } from './features/likes/infrastructure/repository/likes.repository';
 
 //use-cases
@@ -92,6 +92,7 @@ import { DeleteDevicesExceptOneUseCase } from './features/devices/application/us
 import { Like, LikeSchema } from './features/likes/domain/likes.schema';
 import { CommentsQueryService } from './features/comments/api/query.service';
 import { LikesQueryRepository } from './features/likes/infrastructure/repository/likes.query.repository';
+import { HandleCommentsLikesUseCase } from './features/likes/application/use-cases/handle-comments-likes';
 
 const authUseCases = [
   LoginUseCase,
@@ -117,6 +118,7 @@ const devicesUseCases = [
   DeleteCurrentDeviceUseCase,
   DeleteDevicesExceptOneUseCase,
 ];
+const likesUseCases = [HandleCommentsLikesUseCase];
 
 @Module({
   imports: [
@@ -181,7 +183,7 @@ const devicesUseCases = [
     BlockIpsRepository,
     BlockIpsQueryRepository,
     //likes
-    LikesService,
+    // LikesService,
     LikesRepository,
     LikesQueryRepository,
     CommentsQueryService,
@@ -191,6 +193,7 @@ const devicesUseCases = [
     ...commentsUseCases,
     ...jwtUseCases,
     ...devicesUseCases,
+    ...likesUseCases,
   ],
 })
 export class AppModule {}

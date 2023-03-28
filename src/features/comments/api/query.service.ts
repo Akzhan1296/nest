@@ -63,7 +63,6 @@ export class CommentsQueryService {
       postId,
       _userId,
     );
-    console.log(likes);
     if (!likes.length) {
       return {
         ...comments,
