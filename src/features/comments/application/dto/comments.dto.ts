@@ -19,10 +19,3 @@ export type DeleteCommentDTO = {
   userId: string;
   commentId: string;
 };
-
-
-// check
-export type HandleLikeCommentDTO = {
-  commentId: string;
-  commentLikeStatus: 'Like' | 'Dislike' | 'None';
-};

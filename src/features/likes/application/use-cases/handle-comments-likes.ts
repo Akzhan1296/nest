@@ -49,6 +49,7 @@ export class HandleCommentsLikesUseCase
       const newCommentLikeEntity = new this.LikeModel();
       newCommentLikeEntity.setLikeStatus(commentLikeStatus);
       newCommentLikeEntity.setCommentId(commentEntity._id);
+      newCommentLikeEntity.setLikeType('comment');
       newCommentLikeEntity.setUserId(
         new ObjectId(command.likeCommentDto.userId),
       );

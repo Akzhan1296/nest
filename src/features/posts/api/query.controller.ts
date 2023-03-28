@@ -49,17 +49,10 @@ export class PostsQueryController {
     const post = await this.postsQueryRepository.getPostById(params.postId);
     if (!post) throw new NotFoundException('post not found');
 
-    const newResponse = await this.commentsQueryService.getCommentAll(
+    return await this.commentsQueryService.getCommentAll(
       pageSize,
       params.postId,
       request.body.userId,
     );
-
-    return newResponse;
-
-    // return await this.commentsQueryRepository.getCommentsByPostId(
-    //   pageSize,
-    //   params.postId,
-    // );
   }
 }

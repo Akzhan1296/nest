@@ -28,6 +28,7 @@ import { PostsSchema } from './features/posts/schema/posts.schema';
 
 // comments
 import { CommentsController } from './features/comments/api/comments.controller';
+import { CommentsQueryService } from './features/comments/api/query.service';
 import { CommentsRepository } from './features/comments/infrastructure/repository/comments.repository';
 import { CommentsQueryRepository } from './features/comments/infrastructure/repository/comments.query.repository';
 import {
@@ -68,8 +69,9 @@ import { BlockIpsQueryRepository } from './features/ips/infrastructure/ips.query
 import { BlockIps, BlockIpsSchema } from './features/ips/domain/ips.schema';
 
 //likes
-// import { LikesService } from './features/likes/application/likes.service';
 import { LikesRepository } from './features/likes/infrastructure/repository/likes.repository';
+import { LikesQueryRepository } from './features/likes/infrastructure/repository/likes.query.repository';
+import { Like, LikeSchema } from './features/likes/domain/likes.schema';
 
 //use-cases
 import { LoginUseCase } from './features/auth/application/use-cases/login-use-case';
@@ -89,9 +91,6 @@ import { UpdateCommentUseCase } from './features/comments/application/use-cases/
 import { UpdateRefreshTokenUseCase } from './features/jwt/application/use-cases/update-refresh-token-use-case';
 import { DeleteCurrentDeviceUseCase } from './features/devices/application/use-cases/delete-current-device-use-case';
 import { DeleteDevicesExceptOneUseCase } from './features/devices/application/use-cases/delete-all-device-use-case';
-import { Like, LikeSchema } from './features/likes/domain/likes.schema';
-import { CommentsQueryService } from './features/comments/api/query.service';
-import { LikesQueryRepository } from './features/likes/infrastructure/repository/likes.query.repository';
 import { HandleCommentsLikesUseCase } from './features/likes/application/use-cases/handle-comments-likes';
 
 const authUseCases = [
@@ -164,7 +163,6 @@ const likesUseCases = [HandleCommentsLikesUseCase];
     PostsRepository,
     PostsQueryRepository,
     //comments
-    // CommentsService,
     CommentsRepository,
     CommentsQueryRepository,
     //users
@@ -175,7 +173,6 @@ const likesUseCases = [HandleCommentsLikesUseCase];
     AuthService,
     JwtService, //from nest
     //jwt
-    // AuthJwtService,
     JwtTokensRepository,
     JwtTokensQueryRepository,
     //ips
@@ -183,7 +180,6 @@ const likesUseCases = [HandleCommentsLikesUseCase];
     BlockIpsRepository,
     BlockIpsQueryRepository,
     //likes
-    // LikesService,
     LikesRepository,
     LikesQueryRepository,
     CommentsQueryService,

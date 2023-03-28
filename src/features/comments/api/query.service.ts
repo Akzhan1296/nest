@@ -25,6 +25,7 @@ export class CommentsQueryService {
       likeEntity = await this.likesQueryRepository.getLikeById(
         commentId,
         _userId,
+        'comment',
       );
     }
     const commentEntity = await this.commentsQueryRepository.getCommentById(
@@ -62,6 +63,7 @@ export class CommentsQueryService {
     const likes = await this.likesQueryRepository.getLikesByPostId(
       postId,
       _userId,
+      'comment',
     );
     if (!likes.length) {
       return {
