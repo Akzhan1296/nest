@@ -72,7 +72,7 @@ export class CommentsController {
     @Param() params: { commentId: string },
     @Body() commentLikeStatus: CommentLikeStatus,
   ) {
-    this.commandBus.execute(
+    return this.commandBus.execute(
       new HandleCommentsLikesCommand({
         commentId: params.commentId,
         commentLikeStatus: commentLikeStatus.likeStatus,

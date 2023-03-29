@@ -9,10 +9,7 @@ import { HandleLikeCommentDTO } from '../dto/likes.dto';
 import { ObjectId } from 'mongodb';
 
 export class HandleCommentsLikesCommand {
-  public likeCommentDto: HandleLikeCommentDTO;
-  constructor(likeCommentDto: HandleLikeCommentDTO) {
-    this.likeCommentDto = likeCommentDto;
-  }
+  constructor(public likeCommentDto: HandleLikeCommentDTO) {}
 }
 
 @CommandHandler(HandleCommentsLikesCommand)

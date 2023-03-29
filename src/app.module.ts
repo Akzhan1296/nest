@@ -163,6 +163,7 @@ const likesUseCases = [HandleCommentsLikesUseCase];
     PostsRepository,
     PostsQueryRepository,
     //comments
+    CommentsQueryService,
     CommentsRepository,
     CommentsQueryRepository,
     //users
@@ -182,7 +183,6 @@ const likesUseCases = [HandleCommentsLikesUseCase];
     //likes
     LikesRepository,
     LikesQueryRepository,
-    CommentsQueryService,
     // use cases
     ...authUseCases,
     ...usersUseCases,
