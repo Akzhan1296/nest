@@ -6,7 +6,7 @@ import { UsersQueryRepository } from 'src/features/users/infrastructure/reposito
 import { BlockIpsQueryRepository } from '../ips/infrastructure/ips.query.repository';
 import { JwtTokensQueryRepository } from '../jwt/infrastructura/repository/jwt.query.repository';
 import { LikesQueryRepository } from '../likes/infrastructure/repository/likes.query.repository';
-
+import { PostLikesRepository } from '../likes/infrastructure/repository/post.likes.repository';
 
 @Controller('testing/all-data')
 export class DeleteController {
@@ -18,6 +18,7 @@ export class DeleteController {
     protected jwtTokensQueryRepository: JwtTokensQueryRepository,
     protected blockIpsQueryRepository: BlockIpsQueryRepository,
     protected likesQueryRepository: LikesQueryRepository,
+    protected postLikesRepository: PostLikesRepository,
   ) {}
 
   @Delete()
@@ -30,6 +31,7 @@ export class DeleteController {
     await this.jwtTokensQueryRepository.dropJwts();
     await this.blockIpsQueryRepository.dropIps();
     await this.likesQueryRepository.dropLikes();
+    await this.postLikesRepository.dropPostLikes();
     return;
   }
 }

@@ -2,20 +2,21 @@ import { Injectable } from '@nestjs/common';
 import { PostsStateRepository } from 'src/features/posts/application/posts.interface';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
-import { PostItemDBType, PostItemType } from '../posts.type';
+import { PostItemType } from '../posts.type';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreatePostDTO } from 'src/features/posts/application/dto/posts.dto';
+import { Post, PostDocument } from '../../schema/posts.schema';
 
 @Injectable()
 export class PostsRepository implements PostsStateRepository {
   constructor(
-    @InjectModel(PostItemType.name)
-    private postModel: Model<PostItemType>,
+    @InjectModel(Post.name)
+    private postModel: Model<PostDocument>,
   ) {}
-  async getPostById(id: string): Promise<PostItemDBType | null> {
+  async getPostById(id: string): Promise<PostDocument | null> {
     return await this.postModel.findOne({ _id: id });
   }
-  async createPost(postItem: PostItemType): Promise<PostItemDBType> {
+  async createPost(postItem: PostItemType): Promise<PostDocument> {
     const result = await this.postModel.create(postItem);
     return result;
   }
@@ -49,5 +50,37 @@ export class PostsRepository implements PostsStateRepository {
         return false;
       });
     return isPostDeleted;
+  }
+  async incLike(postId: string) {
+    return await this.postModel.updateOne(
+      { _id: postId },
+      {
+        $inc: { likeCount: 1 },
+      },
+    );
+  }
+  async decLike(postId: string) {
+    return await this.postModel.updateOne(
+      { _id: postId },
+      {
+        $inc: { likeCount: -1 },
+      },
+    );
+  }
+  async incDislike(postId: string) {
+    return await this.postModel.updateOne(
+      { _id: postId },
+      {
+        $inc: { dislikeCount: 1 },
+      },
+    );
+  }
+  async decDislike(postId: string) {
+    return await this.postModel.updateOne(
+      { _id: postId },
+      {
+        $inc: { dislikeCount: -1 },
+      },
+    );
   }
 }

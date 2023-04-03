@@ -16,11 +16,16 @@ import { CommentViewModel } from 'src/features/comments/infrastructure/models/vi
 import { PostsService } from '../application/posts.service';
 import { PostViewModel } from '../infrastructure/repository/models/view.models';
 import { PostsQueryRepository } from '../infrastructure/repository/posts.query.repository';
-import { CreateCommentInputModel, PostInputModel } from './models/input.models';
+import {
+  CreateCommentInputModel,
+  PostInputModel,
+  PostLikeStatus,
+} from './models/input.models';
 import { AuthGuard } from '../../../guards/auth.guard';
 import { AuthBasicGuard } from '../../../guards/authBasic.guard';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateCommentCommand } from '../../comments/application/use-cases/create-comment-use-case';
+import { HandlePostsLikesCommand } from '../../likes/application/use-cases/handle-posts-likes';
 
 @Controller('posts')
 export class PostsController {
@@ -75,9 +80,26 @@ export class PostsController {
       }),
     );
 
-    const commentViewmodel = await this.commentsQueryRepository.getCommentById(
+    const commentViewModel = await this.commentsQueryRepository.getCommentById(
       comment._id.toString(),
     );
-    return commentViewmodel;
+    return commentViewModel;
+  }
+
+  @Put(':postId/like-status')
+  @UseGuards(AuthGuard)
+  @HttpCode(204)
+  async postStatus(
+    @Req() request: Request,
+    @Param() params: { postId: string },
+    @Body() postLikeStatus: PostLikeStatus,
+  ) {
+    return this.commandBus.execute(
+      new HandlePostsLikesCommand({
+        postId: params.postId,
+        postLikeStatus: postLikeStatus.likeStatus,
+        userId: request.body.userId,
+      }),
+    );
   }
 }

@@ -2,13 +2,12 @@ import { ObjectId } from 'mongodb';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
-export type LikeDocument = HydratedDocument<Like>;
+export type PostLikeDocument = HydratedDocument<PostLike>;
+
 @Schema({ timestamps: true })
-export class Like {
+export class PostLike {
   @Prop()
   private likeStatus: string;
-  @Prop()
-  private commentId: ObjectId;
   @Prop()
   private postId: ObjectId;
   @Prop()
@@ -31,20 +30,12 @@ export class Like {
   getLikeStatus() {
     return this.likeStatus;
   }
-
-  setCommentId(commentId: ObjectId) {
-    this.commentId = commentId;
-  }
-  getCommentId() {
-    return this.commentId;
-  }
   setPostId(postId: ObjectId) {
     this.postId = postId;
   }
   getPostId() {
     return this.postId;
   }
-
   setUserId(userId: ObjectId) {
     this.userId = userId;
   }
@@ -53,11 +44,9 @@ export class Like {
   }
 }
 
-export const LikeSchema = SchemaFactory.createForClass(Like);
-LikeSchema.methods.setLikeStatus = Like.prototype.setLikeStatus;
-LikeSchema.methods.getLikeStatus = Like.prototype.getLikeStatus;
-LikeSchema.methods.setCommentId = Like.prototype.setCommentId;
-LikeSchema.methods.getCommentId = Like.prototype.getCommentId;
-LikeSchema.methods.setUserId = Like.prototype.setUserId;
-LikeSchema.methods.getUserId = Like.prototype.getUserId;
-LikeSchema.methods.setPostId = Like.prototype.setPostId;
+export const PostLikeSchema = SchemaFactory.createForClass(PostLike);
+PostLikeSchema.methods.setLikeStatus = PostLike.prototype.setLikeStatus;
+PostLikeSchema.methods.getLikeStatus = PostLike.prototype.getLikeStatus;
+PostLikeSchema.methods.setUserId = PostLike.prototype.setUserId;
+PostLikeSchema.methods.getUserId = PostLike.prototype.getUserId;
+PostLikeSchema.methods.setPostId = PostLike.prototype.setPostId;

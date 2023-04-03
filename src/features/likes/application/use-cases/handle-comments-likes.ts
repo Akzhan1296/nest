@@ -46,7 +46,6 @@ export class HandleCommentsLikesUseCase
       const newCommentLikeEntity = new this.LikeModel();
       newCommentLikeEntity.setLikeStatus(commentLikeStatus);
       newCommentLikeEntity.setCommentId(commentEntity._id);
-      newCommentLikeEntity.setLikeType('comment');
       newCommentLikeEntity.setUserId(
         new ObjectId(command.likeCommentDto.userId),
       );
@@ -58,6 +57,7 @@ export class HandleCommentsLikesUseCase
       return;
     }
 
+    // comment repo
     if (commentLikeStatus === 'Like') {
       this.commentsRepository.incLike(commentId);
       if (likeStatus === 'Dislike') {

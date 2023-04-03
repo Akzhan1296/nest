@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { BlogsStateRepository } from '../../blogs/application/blogs.interface';
-import { PostItemDBType, PostItemType } from '../infrastructure/posts.type';
+import { PostItemType } from '../infrastructure/posts.type';
+import { PostDocument } from '../schema/posts.schema';
 import { CreatePostDTO } from './dto/posts.dto';
 import { PostsStateRepository } from './posts.interface';
 
@@ -11,7 +12,7 @@ export class PostsService {
     protected postsRepository: PostsStateRepository,
     protected blogsRepository: BlogsStateRepository,
   ) {}
-  async createPost(dto: CreatePostDTO): Promise<PostItemDBType> {
+  async createPost(dto: CreatePostDTO): Promise<PostDocument> {
     const blog = await this.blogsRepository.getBlogById(dto.blogId);
     if (!blog) throw new NotFoundException('blog not found');
     const newPost = new PostItemType(
@@ -21,6 +22,8 @@ export class PostsService {
       new ObjectId(dto.blogId),
       blog.name,
       new Date(),
+      0,
+      0,
     );
     return this.postsRepository.createPost(newPost);
   }

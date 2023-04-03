@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PostsQueryStateRepository } from 'src/features/posts/application/posts.query.interface';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
-import { PostItemDBType, PostItemType } from '../posts.type';
 import { InjectModel } from '@nestjs/mongoose';
 import { PostViewModel } from './models/view.models';
 import { Paginated } from '../../../../common/utils';
@@ -10,18 +9,19 @@ import {
   PageSizeQueryModel,
   PaginationViewModel,
 } from '../../../../common/common-types';
+import { Post, PostDocument } from '../../schema/posts.schema';
 
 @Injectable()
 export class PostsQueryRepository implements PostsQueryStateRepository {
   constructor(
-    @InjectModel(PostItemType.name)
-    private postModel: Model<PostItemType>,
+    @InjectModel(Post.name)
+    private postModel: Model<PostDocument>,
   ) {}
 
   private async getPostsCount(): Promise<number> {
     return this.postModel.count();
   }
-  private getPostsViewModel(posts: PostItemDBType[]): PostViewModel[] {
+  private getPostsViewModel(posts: PostDocument[]): PostViewModel[] {
     return posts.map((post) => ({
       blogId: post.blogId.toString(),
       blogName: post.blogName,
@@ -30,11 +30,17 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
       createdAt: post.createdAt,
       shortDescription: post.shortDescription,
       title: post.title,
+      extendedLikesinfo: {
+        dislikesCount: post.dislikeCount,
+        likesCount: post.likeCount,
+        myStatus: 'None',
+        newestLikes: [],
+      },
     }));
   }
   private async getPaginatedPosts(
     pageParams: PageSizeQueryModel,
-    posts: PostItemDBType[],
+    posts: PostDocument[],
   ): Promise<PaginationViewModel<PostViewModel>> {
     return Paginated.transformPagination<PostViewModel>(
       { ...pageParams, totalCount: await this.getPostsCount() },
@@ -81,6 +87,12 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
         createdAt: post.createdAt,
         shortDescription: post.shortDescription,
         title: post.title,
+        extendedLikesinfo: {
+          dislikesCount: post.dislikeCount,
+          likesCount: post.likeCount,
+          myStatus: 'None',
+          newestLikes: [],
+        },
       };
     }
     return null;

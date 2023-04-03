@@ -15,12 +15,10 @@ export class LikesQueryRepository {
   async getLikeById(
     commentId: string,
     userId: ObjectId,
-    likeType: string,
   ): Promise<LikeModelView | null> {
     const _commentId = new ObjectId(commentId);
     const like = await this.LikeModel.findOne({
       commentId: _commentId,
-      likeType,
       userId,
     });
 
@@ -32,11 +30,9 @@ export class LikesQueryRepository {
   async getLikesByPostId(
     postId: string,
     userId: ObjectId,
-    likeType: string,
   ): Promise<LikeDocument[]> {
     // const _postId = new ObjectId(postId);
     const likes = await this.LikeModel.find({
-      likeType,
       postId,
       userId,
     });

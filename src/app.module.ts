@@ -23,8 +23,7 @@ import { PostsQueryController } from './features/posts/api/query.controller';
 import { factoryPostService } from './features/posts/factory/posts.factory';
 import { PostsRepository } from './features/posts/infrastructure/repository/posts.repository';
 import { PostsQueryRepository } from './features/posts/infrastructure/repository/posts.query.repository';
-import { PostItemType } from './features/posts/infrastructure/posts.type';
-import { PostsSchema } from './features/posts/schema/posts.schema';
+import { Post, PostsSchema } from './features/posts/schema/posts.schema';
 
 // comments
 import { CommentsController } from './features/comments/api/comments.controller';
@@ -92,6 +91,15 @@ import { UpdateRefreshTokenUseCase } from './features/jwt/application/use-cases/
 import { DeleteCurrentDeviceUseCase } from './features/devices/application/use-cases/delete-current-device-use-case';
 import { DeleteDevicesExceptOneUseCase } from './features/devices/application/use-cases/delete-all-device-use-case';
 import { HandleCommentsLikesUseCase } from './features/likes/application/use-cases/handle-comments-likes';
+import { HandlePostsLikesUseCase } from './features/likes/application/use-cases/handle-posts-likes';
+
+//post likes
+import { PostsQueryService } from './features/posts/api/posts.query.service';
+import {
+  PostLike,
+  PostLikeSchema,
+} from './features/likes/domain/posts.likes.schema';
+import { PostLikesRepository } from './features/likes/infrastructure/repository/post.likes.repository';
 
 const authUseCases = [
   LoginUseCase,
@@ -117,7 +125,7 @@ const devicesUseCases = [
   DeleteCurrentDeviceUseCase,
   DeleteDevicesExceptOneUseCase,
 ];
-const likesUseCases = [HandleCommentsLikesUseCase];
+const likesUseCases = [HandleCommentsLikesUseCase, HandlePostsLikesUseCase];
 
 @Module({
   imports: [
@@ -132,12 +140,13 @@ const likesUseCases = [HandleCommentsLikesUseCase];
     ),
     MongooseModule.forFeature([
       { name: BlogItemType.name, schema: BlogsSchema },
-      { name: PostItemType.name, schema: PostsSchema },
+      { name: Post.name, schema: PostsSchema },
       { name: Comment.name, schema: CommentSchema },
       { name: Users.name, schema: UsersSchema },
       { name: JwtTokens.name, schema: JwtSchema },
       { name: BlockIps.name, schema: BlockIpsSchema },
       { name: Like.name, schema: LikeSchema },
+      { name: PostLike.name, schema: PostLikeSchema },
     ]),
   ],
   controllers: [
@@ -183,6 +192,9 @@ const likesUseCases = [HandleCommentsLikesUseCase];
     //likes
     LikesRepository,
     LikesQueryRepository,
+    //post likes
+    PostLikesRepository,
+    PostsQueryService,
     // use cases
     ...authUseCases,
     ...usersUseCases,

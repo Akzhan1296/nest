@@ -34,7 +34,7 @@ export class PostsQueryController {
 
   @Get(':id')
   async getPostById(@Param() params: { id: string }): Promise<PostViewModel> {
-    const post = this.postsQueryRepository.getPostById(params.id);
+    const post = await this.postsQueryRepository.getPostById(params.id);
     if (!post) throw new NotFoundException('post not found');
     return await this.postsQueryRepository.getPostById(params.id);
   }

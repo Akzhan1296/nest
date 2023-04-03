@@ -8,14 +8,13 @@ export class PostItemType {
     public blogId: ObjectId,
     public blogName: string,
     public createdAt: Date,
+    public dislikeCount: number,
+    public likeCount: number,
   ) {}
 }
-export class PostItemDBType {
-  public title: string;
-  public shortDescription: string;
-  public content: string;
-  public blogId: ObjectId;
-  public blogName: string;
-  public _id: ObjectId;
-  public createdAt: Date;
-}
+
+export type NewestUser = {
+  userId: string;
+  login: string;
+  addedAt: Date;
+};

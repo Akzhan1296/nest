@@ -25,7 +25,6 @@ export class CommentsQueryService {
       likeEntity = await this.likesQueryRepository.getLikeById(
         commentId,
         _userId,
-        'comment',
       );
     }
     const commentEntity = await this.commentsQueryRepository.getCommentById(
@@ -63,7 +62,6 @@ export class CommentsQueryService {
     const likes = await this.likesQueryRepository.getLikesByPostId(
       postId,
       _userId,
-      'comment',
     );
     if (!likes.length) {
       return {
@@ -79,10 +77,10 @@ export class CommentsQueryService {
       ...comments,
       items: comments.items.map((c) => {
         let myStatus = 'None';
-        const findedLike = likes.find(
+        const foundLike = likes.find(
           (l) => l.getCommentId().toString() === c.id,
         );
-        if (findedLike) myStatus = findedLike.getLikeStatus();
+        if (foundLike) myStatus = foundLike.getLikeStatus();
 
         return {
           ...c,
