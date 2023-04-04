@@ -28,10 +28,11 @@ export class HandlePostsLikesUseCase
     if (!postsEntity) {
       throw new NotFoundException({ message: 'Post not found' });
     }
-    const postLikeEntity = await this.postLikesRepository.findLikeByPostId(
-      postId,
-      userId,
-    );
+    const postLikeEntity =
+      await this.postLikesRepository.findLikeByUserAndPostId(
+        postId,
+        new ObjectId(userId),
+      );
     //current like status, before update
     let likeStatus = 'None';
     if (postLikeEntity) {

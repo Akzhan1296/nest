@@ -10,15 +10,31 @@ export class PostLikesRepository {
     @InjectModel(PostLike.name)
     private PostLikeModel: Model<PostLikeDocument>,
   ) {}
-  async findLikeByPostId(
+  async findLikeByUserAndPostId(
     postId: string,
-    userId: string,
+    userId: ObjectId,
   ): Promise<PostLikeDocument> {
     const _postId = new ObjectId(postId);
-    const _userId = new ObjectId(userId);
+
     return await this.PostLikeModel.findOne({
       postId: _postId,
-      userId: _userId,
+      userId,
+    });
+  }
+  // async findLikeByPostId(
+  //   postId: string,
+  //   userId: string,
+  // ): Promise<PostLikeDocument> {
+  //   const _postId = new ObjectId(postId);
+  //   const _userId = new ObjectId(userId);
+  //   return await this.PostLikeModel.findOne({
+  //     postId: _postId,
+  //     userId: _userId,
+  //   });
+  // }
+  async findPostLikesByUserId(userId: ObjectId): Promise<PostLikeDocument[]> {
+    return await this.PostLikeModel.find({
+      userId,
     });
   }
   async save(like: PostLikeDocument): Promise<boolean> {

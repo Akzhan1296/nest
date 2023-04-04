@@ -195,6 +195,7 @@ const likesUseCases = [HandleCommentsLikesUseCase, HandlePostsLikesUseCase];
     //post likes
     PostLikesRepository,
     PostsQueryService,
+
     // use cases
     ...authUseCases,
     ...usersUseCases,

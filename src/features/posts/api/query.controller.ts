@@ -8,7 +8,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { CommentsQueryRepository } from 'src/features/comments/infrastructure/repository/comments.query.repository';
 import { PaginationViewModel } from '../../../common/common-types';
 import { UserIdGuard } from '../../../guards/userId';
 import { CommentsQueryService } from '../../comments/api/query.service';
@@ -16,27 +15,36 @@ import { CommentViewModel } from '../../comments/infrastructure/models/view.mode
 import { PostViewModel } from '../infrastructure/repository/models/view.models';
 import { PostsQueryRepository } from '../infrastructure/repository/posts.query.repository';
 import { PostsQueryType } from './models/input.models';
+import { PostsQueryService } from './posts.query.service';
 
 @Controller('posts')
 export class PostsQueryController {
   constructor(
     protected postsQueryRepository: PostsQueryRepository,
-    protected commentsQueryRepository: CommentsQueryRepository,
+    protected postsQueryService: PostsQueryService,
     protected commentsQueryService: CommentsQueryService,
   ) {}
 
+  @UseGuards(UserIdGuard)
   @Get()
-  async getPosts(
-    @Query() pageSize: PostsQueryType,
-  ): Promise<PaginationViewModel<PostViewModel>> {
-    return await this.postsQueryRepository.getPosts(pageSize);
+  // : Promise<PaginationViewModel<PostViewModel>>
+  async getPosts(@Req() request: Request, @Query() pageSize: PostsQueryType) {
+    return await this.postsQueryService.getAllPostsWithLike(
+      pageSize,
+      request.body.userId,
+    );
   }
 
+  @UseGuards(UserIdGuard)
   @Get(':id')
-  async getPostById(@Param() params: { id: string }): Promise<PostViewModel> {
+  // : Promise<PostViewModel>
+  async getPostById(@Req() request: Request, @Param() params: { id: string }) {
     const post = await this.postsQueryRepository.getPostById(params.id);
     if (!post) throw new NotFoundException('post not found');
-    return await this.postsQueryRepository.getPostById(params.id);
+    return await this.postsQueryService.getPostWithLikeById(
+      params.id,
+      request.body.userId,
+    );
   }
 
   @UseGuards(UserIdGuard)

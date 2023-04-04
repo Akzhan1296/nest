@@ -50,3 +50,5 @@ PostLikeSchema.methods.getLikeStatus = PostLike.prototype.getLikeStatus;
 PostLikeSchema.methods.setUserId = PostLike.prototype.setUserId;
 PostLikeSchema.methods.getUserId = PostLike.prototype.getUserId;
 PostLikeSchema.methods.setPostId = PostLike.prototype.setPostId;
+PostLikeSchema.methods.getPostId = PostLike.prototype.getPostId;
+

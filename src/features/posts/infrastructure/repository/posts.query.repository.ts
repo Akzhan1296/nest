@@ -34,7 +34,7 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
         dislikesCount: post.dislikeCount,
         likesCount: post.likeCount,
         myStatus: 'None',
-        newestLikes: [],
+        newestLikes: post.getNewestLikes(),
       },
     }));
   }
@@ -76,7 +76,7 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
     return this.getPaginatedPosts(pageParams, posts);
   }
   async getPostById(id: string): Promise<PostViewModel | null> {
-    const post = await this.postModel.findById(id).lean();
+    const post = await this.postModel.findById(id);
 
     if (post) {
       return {
@@ -91,7 +91,7 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
           dislikesCount: post.dislikeCount,
           likesCount: post.likeCount,
           myStatus: 'None',
-          newestLikes: [],
+          newestLikes: post.getNewestLikes(),
         },
       };
     }
