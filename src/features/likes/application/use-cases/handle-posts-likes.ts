@@ -47,7 +47,9 @@ export class HandlePostsLikesUseCase
       newPostLikeEntity.setPostId(postsEntity._id);
       newPostLikeEntity.setUserId(new ObjectId(userId));
       postsEntity.setLikedUsers(userId);
-      postsEntity.setNewestUser({ userId, login, addedAt: new Date() });
+      if (postLikeStatus === 'Like') {
+        postsEntity.setNewestUser({ userId, login, addedAt: new Date() });
+      }
       postsEntity.save();
       await this.postLikesRepository.save(newPostLikeEntity);
     }
@@ -56,6 +58,7 @@ export class HandlePostsLikesUseCase
     }
     // posts repo
     if (postLikeStatus === 'Like') {
+      console.log('000');
       this.postsRepository.incLike(postId);
       const users = new Set(postsEntity.getLikedUsers());
       if (!users.has(userId)) {
