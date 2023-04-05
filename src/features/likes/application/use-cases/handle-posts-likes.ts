@@ -23,7 +23,8 @@ export class HandlePostsLikesUseCase
     protected postsRepository: PostsRepository,
   ) {}
   async execute(command: HandlePostsLikesCommand) {
-    const { postId, postLikeStatus, userId } = command.postLikeCommentDto;
+    const { postId, postLikeStatus, userId, login } =
+      command.postLikeCommentDto;
     const postsEntity = await this.postsRepository.getPostById(postId);
     if (!postsEntity) {
       throw new NotFoundException({ message: 'Post not found' });
@@ -46,7 +47,7 @@ export class HandlePostsLikesUseCase
       newPostLikeEntity.setPostId(postsEntity._id);
       newPostLikeEntity.setUserId(new ObjectId(userId));
       postsEntity.setLikedUsers(userId);
-      postsEntity.setNewestUser({ userId, login: '132', addedAt: new Date() });
+      postsEntity.setNewestUser({ userId, login, addedAt: new Date() });
       postsEntity.save();
       await this.postLikesRepository.save(newPostLikeEntity);
     }
@@ -60,7 +61,7 @@ export class HandlePostsLikesUseCase
       if (!users.has(userId)) {
         postsEntity.setNewestUser({
           userId,
-          login: '132',
+          login,
           addedAt: new Date(),
         });
         postsEntity.save();

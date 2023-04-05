@@ -99,6 +99,7 @@ export class PostsController {
         postId: params.postId,
         postLikeStatus: postLikeStatus.likeStatus,
         userId: request.body.userId,
+        login: request.body.login,
       }),
     );
   }

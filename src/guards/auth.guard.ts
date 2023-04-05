@@ -38,6 +38,8 @@ export class AuthGuard implements CanActivate {
     }
     if (user) {
       request.body.userId = payload.userId;
+      request.body.login = payload.login;
+
       return true;
     }
     throw new UnauthorizedException();

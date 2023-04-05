@@ -8,4 +8,5 @@ export type HandlePostLikeCommentDTO = {
   postId: string;
   postLikeStatus: 'Like' | 'Dislike' | 'None';
   userId: string;
+  login: string;
 };
