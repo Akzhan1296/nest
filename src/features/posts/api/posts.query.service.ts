@@ -29,8 +29,8 @@ export class PostsQueryService {
 
     const a = {
       ...post,
-      extendedLikesinfo: {
-        ...post.extendedLikesinfo,
+      extendedLikesInfo: {
+        ...post.extendedLikesInfo,
         myStatus: postLikeEntity ? postLikeEntity.getLikeStatus() : 'None',
       },
     };
@@ -55,7 +55,7 @@ export class PostsQueryService {
         ...posts,
         items: posts.items.map((post) => ({
           ...post,
-          extendedLikesInfo: { ...post.extendedLikesinfo, myStatus: 'None' },
+          extendedLikesInfo: { ...post.extendedLikesInfo, myStatus: 'None' },
         })),
       };
     }
@@ -71,8 +71,8 @@ export class PostsQueryService {
 
         return {
           ...post,
-          extendedLikesinfo: {
-            ...post.extendedLikesinfo,
+          extendedLikesInfo: {
+            ...post.extendedLikesInfo,
             myStatus,
           },
         };

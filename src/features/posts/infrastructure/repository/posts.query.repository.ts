@@ -30,7 +30,7 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
       createdAt: post.createdAt,
       shortDescription: post.shortDescription,
       title: post.title,
-      extendedLikesinfo: {
+      extendedLikesInfo: {
         dislikesCount: post.dislikeCount,
         likesCount: post.likeCount,
         myStatus: 'None',
@@ -87,7 +87,7 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
         createdAt: post.createdAt,
         shortDescription: post.shortDescription,
         title: post.title,
-        extendedLikesinfo: {
+        extendedLikesInfo: {
           dislikesCount: post.dislikeCount,
           likesCount: post.likeCount,
           myStatus: 'None',
