@@ -23,7 +23,7 @@ import { AddUserInputModel, UsersQueryType } from './models/users.models';
 import { UsersQueryRepository } from '../infrastructure/repository/users.query.repository';
 
 @Controller('users')
-@UseGuards(AuthBasicGuard)
+//@UseGuards(AuthBasicGuard)
 export class UsersController {
   constructor(
     private commandBus: CommandBus,
