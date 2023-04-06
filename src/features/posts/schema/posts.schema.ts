@@ -38,8 +38,8 @@ export class Post {
   setNewestUser(user: NewestUser) {
     const users = [...this.newestLikes];
     if (users.length >= 3) {
-      users.pop();
-      users.unshift(user);
+      users.shift();
+      users.push(user);
     }
     if (users.length < 3) {
       users.push(user);
@@ -50,7 +50,6 @@ export class Post {
     const filteredLikes = this.newestLikes.filter(
       (like) => like.userId !== userId,
     );
-    console.log(filteredLikes);
     this.newestLikes = filteredLikes;
   }
 }
