@@ -33,7 +33,7 @@ export class Post {
     this.likedUsers = [...this.likedUsers, id];
   }
   getNewestLikes() {
-    return this.newestLikes;
+    return this.newestLikes.reverse();
   }
   setNewestUser(user: NewestUser) {
     const users = [...this.newestLikes];
@@ -44,7 +44,7 @@ export class Post {
     if (users.length < 3) {
       users.push(user);
     }
-    this.newestLikes = users.sort().reverse();
+    this.newestLikes = users;
   }
   removeNewestUser(userId: string) {
     const filteredLikes = this.newestLikes.filter(
