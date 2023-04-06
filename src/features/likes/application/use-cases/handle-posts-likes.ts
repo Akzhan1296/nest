@@ -50,7 +50,7 @@ export class HandlePostsLikesUseCase
       if (postLikeStatus === 'Like') {
         postsEntity.setNewestUser({ userId, login, addedAt: new Date() });
       }
-      postsEntity.save();
+      await postsEntity.save();
       await this.postLikesRepository.save(newPostLikeEntity);
     }
     if (postLikeStatus === likeStatus) {
@@ -66,7 +66,7 @@ export class HandlePostsLikesUseCase
           login,
           addedAt: new Date(),
         });
-        postsEntity.save();
+        await postsEntity.save();
       }
       if (likeStatus === 'Dislike') {
         this.postsRepository.decDislike(postId);
@@ -74,7 +74,7 @@ export class HandlePostsLikesUseCase
     }
     if (postLikeStatus === 'Dislike') {
       postsEntity.removeNewestUser(userId);
-      postsEntity.save();
+      await postsEntity.save();
       this.postsRepository.incDislike(postId);
       if (likeStatus === 'Like') {
         this.postsRepository.decLike(postId);
@@ -82,7 +82,7 @@ export class HandlePostsLikesUseCase
     }
     if (postLikeStatus === 'None') {
       postsEntity.removeNewestUser(userId);
-      postsEntity.save();
+      await postsEntity.save();
       if (likeStatus === 'Like') {
         this.postsRepository.decLike(postId);
       }
