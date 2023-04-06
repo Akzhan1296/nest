@@ -46,6 +46,13 @@ export class Post {
     }
     this.newestLikes = users;
   }
+  removeNewestUser(userId: string) {
+    const filteredLikes = this.newestLikes.filter(
+      (like) => like.userId !== userId,
+    );
+    console.log(filteredLikes);
+    this.newestLikes = filteredLikes;
+  }
 }
 
 export const PostsSchema = SchemaFactory.createForClass(Post);
@@ -53,3 +60,4 @@ PostsSchema.methods.setNewestUser = Post.prototype.setNewestUser;
 PostsSchema.methods.setLikedUsers = Post.prototype.setLikedUsers;
 PostsSchema.methods.getNewestLikes = Post.prototype.getNewestLikes;
 PostsSchema.methods.getLikedUsers = Post.prototype.getLikedUsers;
+PostsSchema.methods.removeNewestUser = Post.prototype.removeNewestUser;

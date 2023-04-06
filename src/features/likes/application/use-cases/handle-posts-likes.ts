@@ -58,7 +58,6 @@ export class HandlePostsLikesUseCase
     }
     // posts repo
     if (postLikeStatus === 'Like') {
-      console.log('000');
       this.postsRepository.incLike(postId);
       const users = new Set(postsEntity.getLikedUsers());
       if (!users.has(userId)) {
@@ -74,12 +73,16 @@ export class HandlePostsLikesUseCase
       }
     }
     if (postLikeStatus === 'Dislike') {
+      postsEntity.removeNewestUser(userId);
+      postsEntity.save();
       this.postsRepository.incDislike(postId);
       if (likeStatus === 'Like') {
         this.postsRepository.decLike(postId);
       }
     }
     if (postLikeStatus === 'None') {
+      postsEntity.removeNewestUser(userId);
+      postsEntity.save();
       if (likeStatus === 'Like') {
         this.postsRepository.decLike(postId);
       }
