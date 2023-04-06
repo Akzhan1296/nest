@@ -44,7 +44,7 @@ export class Post {
     if (users.length < 3) {
       users.push(user);
     }
-    this.newestLikes = users;
+    this.newestLikes = users.reverse();
   }
   removeNewestUser(userId: string) {
     const filteredLikes = this.newestLikes.filter(
