@@ -69,8 +69,8 @@ export class UsersQueryRepository {
 
     const filter = {
       $or: [
-        { email: new RegExp(searchEmailTerm) },
         { login: new RegExp(searchLoginTerm) },
+        { email: new RegExp(searchEmailTerm) },
       ],
     };
 
