@@ -33,7 +33,7 @@ export class BlogsController {
   ) {}
 
   @Post()
-  // @UseGuards(AuthBasicGuard)
+  @UseGuards(AuthBasicGuard)
   @HttpCode(201)
   async createBlog(
     @Body() blogInputModel: BlogInputModelType,
@@ -43,7 +43,7 @@ export class BlogsController {
   }
 
   @Put(':id')
-  // @UseGuards(AuthBasicGuard)
+  @UseGuards(AuthBasicGuard)
   @HttpCode(204)
   async updateBlog(
     @Param() params: { id: string },
@@ -53,14 +53,14 @@ export class BlogsController {
   }
 
   @Delete(':id')
-  // @UseGuards(AuthBasicGuard)
+  @UseGuards(AuthBasicGuard)
   @HttpCode(204)
   async deleteBlog(@Param() params: { id: string }): Promise<boolean> {
     return await this.blogsService.deleteBlog(params.id);
   }
 
   @Post(':blogId/posts')
-  // @UseGuards(AuthBasicGuard)
+  @UseGuards(AuthBasicGuard)
   @HttpCode(201)
   async createPostByBlogId(
     @Param() params: { blogId: string },
