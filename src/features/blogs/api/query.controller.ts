@@ -58,10 +58,5 @@ export class BlogsQueryController {
       request.body.userId,
       params.blogId,
     );
-
-    // return await this.postsQueryRepository.getPostsByBlogId(
-    //   pageSize,
-    //   params.blogId,
-    // );
   }
 }

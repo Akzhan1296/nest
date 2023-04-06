@@ -38,7 +38,7 @@ export class PostsController {
   ) {}
 
   @Post()
-  @UseGuards(AuthBasicGuard)
+  // @UseGuards(AuthBasicGuard)
   @HttpCode(201)
   async createPost(
     @Body() postsInputModel: PostInputModel,
@@ -48,7 +48,7 @@ export class PostsController {
   }
 
   @Put(':id')
-  @UseGuards(AuthBasicGuard)
+  // @UseGuards(AuthBasicGuard)
   @HttpCode(204)
   async updatePost(
     @Param() params: { id: string },
@@ -58,7 +58,7 @@ export class PostsController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthBasicGuard)
+  // @UseGuards(AuthBasicGuard)
   @HttpCode(204)
   async deletePost(@Param() params: { id: string }): Promise<boolean> {
     return this.postService.deletePost(params.id);
