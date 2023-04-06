@@ -18,8 +18,8 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
     private postModel: Model<PostDocument>,
   ) {}
 
-  private async getPostsCount(): Promise<number> {
-    return this.postModel.count();
+  private async getPostsCount(filter: any = {}): Promise<number> {
+    return this.postModel.count(filter);
   }
   private getPostsViewModel(posts: PostDocument[]): PostViewModel[] {
     return posts.map((post) => ({
@@ -41,9 +41,10 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
   private async getPaginatedPosts(
     pageParams: PageSizeQueryModel,
     posts: PostDocument[],
+    filter: any = {},
   ): Promise<PaginationViewModel<PostViewModel>> {
     return Paginated.transformPagination<PostViewModel>(
-      { ...pageParams, totalCount: await this.getPostsCount() },
+      { ...pageParams, totalCount: await this.getPostsCount(filter) },
       this.getPostsViewModel(posts),
     );
   }
@@ -61,7 +62,7 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
       .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
       .limit(pageSize);
 
-    return this.getPaginatedPosts(pageParams, postsByBlogId);
+    return this.getPaginatedPosts(pageParams, postsByBlogId, filter);
   }
   async getPosts(
     pageParams: PageSizeQueryModel,
