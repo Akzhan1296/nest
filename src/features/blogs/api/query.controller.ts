@@ -4,9 +4,14 @@ import {
   Param,
   NotFoundException,
   Query,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { PostsQueryRepository } from 'src/features/posts/infrastructure/repository/posts.query.repository';
 import { PaginationViewModel } from '../../../common/common-types';
+import { UserIdGuard } from '../../../guards/userId';
+import { PostsQueryService } from '../../posts/api/posts.query.service';
 import { PostViewModel } from '../../posts/infrastructure/repository/models/view.models';
 import { BlogsQueryRepository } from '../infrastructure/repository/blogs.query.repository';
 import { BlogViewModel } from '../infrastructure/repository/models/view.models';
@@ -17,6 +22,7 @@ export class BlogsQueryController {
   constructor(
     protected blogsQueryRepository: BlogsQueryRepository,
     protected postsQueryRepository: PostsQueryRepository,
+    protected postsQueryService: PostsQueryService,
   ) {}
   @Get()
   async getBlogs(
@@ -36,8 +42,10 @@ export class BlogsQueryController {
     return blog;
   }
 
+  @UseGuards(UserIdGuard)
   @Get(':blogId/posts')
   async getBlogPosts(
+    @Req() request: Request,
     @Query() pageSize: BlogsQueryType,
     @Param() params: { blogId: string },
   ): Promise<PaginationViewModel<PostViewModel>> {
@@ -45,9 +53,15 @@ export class BlogsQueryController {
     if (!blog) {
       throw new NotFoundException('posts by blogid not found');
     }
-    return await this.postsQueryRepository.getPostsByBlogId(
+    return await this.postsQueryService.getPostsWithLikeByblogId(
       pageSize,
+      request.body.userId,
       params.blogId,
     );
+
+    // return await this.postsQueryRepository.getPostsByBlogId(
+    //   pageSize,
+    //   params.blogId,
+    // );
   }
 }

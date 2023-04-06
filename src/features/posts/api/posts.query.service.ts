@@ -79,4 +79,54 @@ export class PostsQueryService {
       }),
     };
   }
+
+  async getPostsWithLikeByblogId(
+    pageParams: PageSizeQueryModel,
+    userId: string,
+    blogId: string,
+  ) {
+    let _userId = null;
+
+    try {
+      _userId = new ObjectId(userId);
+    } catch (err) {
+      console.warn('can not change user id ');
+    }
+    const posts = await this.postQuerysRepository.getPostsByBlogId(
+      pageParams,
+      blogId,
+    );
+    const likes = await this.postLikesQueryRepository.findPostLikesByUserId(
+      _userId,
+    );
+
+    if (!likes.length) {
+      return {
+        ...posts,
+        items: posts.items.map((post) => ({
+          ...post,
+          extendedLikesInfo: { ...post.extendedLikesInfo, myStatus: 'None' },
+        })),
+      };
+    }
+
+    return {
+      ...posts,
+      items: posts.items.map((post) => {
+        let myStatus = 'None';
+        const foundLike = likes.find(
+          (l) => l.getPostId().toString() === post.id,
+        );
+        if (foundLike) myStatus = foundLike.getLikeStatus();
+
+        return {
+          ...post,
+          extendedLikesInfo: {
+            ...post.extendedLikesInfo,
+            myStatus,
+          },
+        };
+      }),
+    };
+  }
 }

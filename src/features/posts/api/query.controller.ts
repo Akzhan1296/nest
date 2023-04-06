@@ -12,7 +12,6 @@ import { PaginationViewModel } from '../../../common/common-types';
 import { UserIdGuard } from '../../../guards/userId';
 import { CommentsQueryService } from '../../comments/api/query.service';
 import { CommentViewModel } from '../../comments/infrastructure/models/view.models';
-import { PostViewModel } from '../infrastructure/repository/models/view.models';
 import { PostsQueryRepository } from '../infrastructure/repository/posts.query.repository';
 import { PostsQueryType } from './models/input.models';
 import { PostsQueryService } from './posts.query.service';
