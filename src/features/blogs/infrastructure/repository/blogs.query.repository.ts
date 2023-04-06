@@ -29,6 +29,7 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
       id: blog._id.toString(),
       createdAt: blog.createdAt,
       description: blog.description,
+      isMembership: false,
     }));
   }
   async getBlogs(
@@ -62,6 +63,7 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
         id: blog._id.toString(),
         createdAt: blog.createdAt,
         description: blog.description,
+        isMembership: false,
       };
     }
     return null;
