@@ -40,7 +40,7 @@ export class UpdateRefreshTokenUseCase
     if (isTokenSaved) {
       updatedRefreshToken = this.jwtService.sign(payload, {
         secret: settings.JWT_SECRET,
-        expiresIn: '15sec',
+        expiresIn: '20 seconds',
       });
     } else {
       throw new BadGatewayException('token not saved');
