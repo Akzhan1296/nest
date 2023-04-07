@@ -1,12 +1,10 @@
 import { Transform } from 'class-transformer';
-import { Matches, MaxLength, MinLength } from 'class-validator';
+import { IsNotEmpty, Matches, MaxLength } from 'class-validator';
 import { PageSizeDTO } from '../../../../common/common-types';
 
 export class BlogInputModelType {
-  @Transform((value: any) => {
-    return value.trim();
-  })
-  @MinLength(1)
+  @IsNotEmpty()
+  @Transform(({ value }) => value.trim())
   @MaxLength(15)
   name: string;
   @Matches('^https://([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(/[a-zA-Z0-9_-]+)*/?$')
