@@ -30,6 +30,6 @@ export class DeleteCurrentDeviceUseCase
     if (user._id.toString() !== device.getUserId().toString()) {
       throw new ForbiddenException();
     }
-    return this.jwtTokensRepository.delete(device);
+    return await this.jwtTokensRepository.delete(device);
   }
 }

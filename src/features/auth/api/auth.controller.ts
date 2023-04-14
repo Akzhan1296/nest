@@ -67,8 +67,8 @@ export class AuthController {
 
     response.cookie('refreshToken', tokens.refreshToken, {
       httpOnly: true,
-      secure: true,
-      expires: addSeconds(new Date(), 20),
+      secure: false,
+      // expires: addSeconds(new Date(), 20),
     });
     response.status(200).send({ accessToken: tokens.accessToken });
     return;
@@ -89,8 +89,8 @@ export class AuthController {
     );
     response.cookie('refreshToken', `${tokens.refreshToken}`, {
       httpOnly: true,
-      secure: true,
-      expires: addSeconds(new Date(), 20),
+      secure: false,
+      // expires: addSeconds(new Date(), 20),
     });
     response.status(200).send({ accessToken: tokens.accessToken });
     return;
@@ -99,13 +99,20 @@ export class AuthController {
   @Post('logout')
   @UseGuards(RefreshTokenGuard)
   @HttpCode(204)
-  async logOut(@Req() request: Request): Promise<boolean> {
-    return this.commandBus.execute(
+  async logOut(@Req() request: Request, @Res() response: Response) {
+    return await this.commandBus.execute(
       new DeleteCurrentDeviceCommand({
         deviceId: request.body.deviceId,
         userId: request.body.userId,
       }),
     );
+    // return response
+    //   .cookie('refreshToken', ``, {
+    //     httpOnly: true,
+    //     secure: false,
+    //     // expires: new Date(),
+    //   })
+    //   .send();
   }
 
   @Post('registration-confirmation')
