@@ -39,6 +39,7 @@ import {
   AuthRegistrationInputModal,
   NewPasswordInputModal,
 } from './models/auth.models';
+import { addSeconds } from 'date-fns';
 
 @Controller('auth')
 export class AuthController {
@@ -64,9 +65,10 @@ export class AuthController {
       }),
     );
 
-    response.cookie('refreshToken', `${tokens.refreshToken}`, {
+    response.cookie('refreshToken', tokens.refreshToken, {
       httpOnly: true,
       secure: true,
+      expires: addSeconds(new Date(), 20),
     });
     response.status(200).send({ accessToken: tokens.accessToken });
     return;
@@ -88,6 +90,7 @@ export class AuthController {
     response.cookie('refreshToken', `${tokens.refreshToken}`, {
       httpOnly: true,
       secure: true,
+      expires: addSeconds(new Date(), 20),
     });
     response.status(200).send({ accessToken: tokens.accessToken });
     return;
