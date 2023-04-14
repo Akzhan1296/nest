@@ -3,11 +3,13 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './exception.filter';
 import cookieParser from 'cookie-parser';
+import { useContainer } from 'class-validator';
 
 const PORT = process.env.PORT || 5005;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.enableCors();
   app.use(cookieParser());
   app.useGlobalPipes(

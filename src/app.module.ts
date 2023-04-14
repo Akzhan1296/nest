@@ -101,6 +101,9 @@ import {
 } from './features/likes/domain/posts.likes.schema';
 import { PostLikesRepository } from './features/likes/infrastructure/repository/post.likes.repository';
 
+//decorators
+import { IsValidBlog } from './features/posts/api/models/post.decorator';
+
 const authUseCases = [
   LoginUseCase,
   NewPasswordUseCase,
@@ -195,6 +198,8 @@ const likesUseCases = [HandleCommentsLikesUseCase, HandlePostsLikesUseCase];
     //post likes
     PostLikesRepository,
     PostsQueryService,
+    //decorators
+    IsValidBlog,
 
     // use cases
     ...authUseCases,

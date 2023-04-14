@@ -1,14 +1,31 @@
-import { IsIn, MaxLength, MinLength } from 'class-validator';
+import { IsIn, IsNotEmpty, MaxLength, MinLength } from 'class-validator';
 import { PageSizeDTO } from '../../../../common/common-types';
+import { Transform } from 'class-transformer';
+import { IsBlogExist } from './post.decorator';
+
 
 export class PostInputModel {
+  // @MaxLength(30)
+  // public title: string;
+  // @MaxLength(100)
+  // public shortDescription: string;
+  // @MaxLength(1000)
+  // public content: string;
+  // public blogId: string;
+  @Transform(({ value }) => value.trim())
+  @IsNotEmpty()
   @MaxLength(30)
-  public title: string;
+  title: string;
+  @Transform(({ value }) => value.trim())
+  @IsNotEmpty()
   @MaxLength(100)
-  public shortDescription: string;
+  shortDescription: string;
+  @Transform(({ value }) => value.trim())
+  @IsNotEmpty()
   @MaxLength(1000)
-  public content: string;
-  public blogId: string;
+  content: string;
+  @IsBlogExist()
+  blogId: string;
 }
 
 export class CreateCommentInputModel {
