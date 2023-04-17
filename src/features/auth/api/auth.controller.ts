@@ -99,7 +99,7 @@ export class AuthController {
   @Post('logout')
   @UseGuards(RefreshTokenGuard)
   @HttpCode(204)
-  async logOut(@Req() request: Request, @Res() response: Response) {
+  async logOut(@Req() request: Request) {
     return await this.commandBus.execute(
       new DeleteCurrentDeviceCommand({
         deviceId: request.body.deviceId,
