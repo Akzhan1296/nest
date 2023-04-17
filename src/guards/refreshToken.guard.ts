@@ -24,6 +24,7 @@ export class RefreshTokenGuard implements CanActivate {
     }
     let payload = null;
     let devices = null;
+    let jwtTokenByIds = null;
 
     try {
       payload = this.jwtService.verify(refreshToken, {
@@ -41,6 +42,17 @@ export class RefreshTokenGuard implements CanActivate {
     }
 
     if (!devices) throw new UnauthorizedException();
+
+    if (payload && devices) {
+      jwtTokenByIds =
+        await this.jwtTokensQueryRepository.getJwtByUserAndDeviceId(
+          payload.userId,
+          payload.deviceId,
+        );
+      if (jwtTokenByIds.createdAt !== payload.createdAt) {
+        throw new UnauthorizedException();
+      }
+    }
 
     request.body.userId = payload.userId; // from jwt payload
     request.body.deviceId = payload.deviceId; // from jwt payload

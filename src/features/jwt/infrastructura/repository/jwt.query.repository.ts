@@ -23,6 +23,14 @@ export class JwtTokensQueryRepository {
       deviceId: tokenData.getDeviceId().toString(),
     }));
   }
+  async getJwtByUserAndDeviceId(userId: string, deviceId: string) {
+    const userObjectId = new ObjectId(userId);
+    const deviceObjectId = new ObjectId(deviceId);
+    return await this.JwtTokenModel.findOne({
+      userId: userObjectId,
+      deviceId: deviceObjectId,
+    }).lean();
+  }
   async dropJwts() {
     return this.JwtTokenModel.deleteMany({});
   }
