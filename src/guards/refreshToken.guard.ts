@@ -49,7 +49,14 @@ export class RefreshTokenGuard implements CanActivate {
           payload.userId,
           payload.deviceId,
         );
-      if (jwtTokenByIds.createdAt !== payload.createdAt) {
+      console.log(
+        jwtTokenByIds.createdAt.getTime() !==
+          new Date(payload.createdAt).getTime(),
+      );
+      if (
+        jwtTokenByIds.createdAt.getTime() !==
+        new Date(payload.createdAt).getTime()
+      ) {
         throw new UnauthorizedException();
       }
     }
