@@ -99,20 +99,20 @@ export class AuthController {
   @Post('logout')
   @UseGuards(RefreshTokenGuard)
   @HttpCode(204)
-  async logOut(@Req() request: Request) {
-    return await this.commandBus.execute(
+  async logOut(@Req() request: Request, @Res() response: Response) {
+    await this.commandBus.execute(
       new DeleteCurrentDeviceCommand({
         deviceId: request.body.deviceId,
         userId: request.body.userId,
       }),
     );
-    // return response
-    //   .cookie('refreshToken', ``, {
-    //     httpOnly: true,
-    //     secure: false,
-    //     expires: new Date(),
-    //   })
-    //   .send();
+    return response
+      .cookie('refreshToken', ``, {
+        httpOnly: true,
+        secure: true,
+        expires: new Date(),
+      })
+      .send();
   }
 
   @Post('registration-confirmation')
