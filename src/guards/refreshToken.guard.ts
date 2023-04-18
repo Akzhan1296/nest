@@ -51,14 +51,17 @@ export class RefreshTokenGuard implements CanActivate {
         );
       if (!jwtTokenByIds) throw new UnauthorizedException();
 
-      console.log(jwtTokenByIds);
-      console.log(payload);
-      // if (
-      //   jwtTokenByIds.createdAt.getTime() !==
-      //   new Date(payload.createdAt).getTime()
-      // ) {
-      //   throw new UnauthorizedException();
-      // }
+      console.log(
+        jwtTokenByIds.createdAt.getTime() !==
+          new Date(payload.createdAt).getTime(),
+      );
+
+      if (
+        jwtTokenByIds.createdAt.getTime() !==
+        new Date(payload.createdAt).getTime()
+      ) {
+        throw new UnauthorizedException();
+      }
     }
 
     request.body.userId = payload.userId; // from jwt payload
