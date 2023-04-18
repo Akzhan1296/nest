@@ -23,7 +23,6 @@ export class RefreshTokenGuard implements CanActivate {
       throw new UnauthorizedException();
     }
     let payload = null;
-    // let devices = null;
     let jwtTokenByIds = null;
 
     try {
@@ -33,35 +32,20 @@ export class RefreshTokenGuard implements CanActivate {
     } catch (err) {
       throw new UnauthorizedException();
     }
-    // if (payload) {
-    //   devices = await this.jwtTokensQueryRepository.getDevicesByUserId(
-    //     payload.userId,
-    //   );
-    // } else {
-    //   throw new UnauthorizedException();
-    // }
-
-    // if (!devices) throw new UnauthorizedException();
-
     if (payload) {
       jwtTokenByIds =
         await this.jwtTokensQueryRepository.getJwtByUserAndDeviceId(
           payload.userId,
           payload.deviceId,
         );
-      if (!jwtTokenByIds) throw new UnauthorizedException();
+    }
 
-      console.log(
-        jwtTokenByIds.createdAt.getTime() !==
-          new Date(payload.createdAt).getTime(),
-      );
-
-      if (
-        jwtTokenByIds.createdAt.getTime() !==
-        new Date(payload.createdAt).getTime()
-      ) {
-        throw new UnauthorizedException();
-      }
+    if (!jwtTokenByIds) throw new UnauthorizedException();
+    if (
+      jwtTokenByIds.createdAt.getTime() !==
+      new Date(payload.createdAt).getTime()
+    ) {
+      throw new UnauthorizedException();
     }
 
     request.body.userId = payload.userId; // from jwt payload
