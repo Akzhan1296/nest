@@ -3,13 +3,16 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { JwtTokens, JwtTokensDocument } from '../../domain/jwt.schema';
+import { Repository } from '../../../../common/common-repository-types';
 
 @Injectable()
-export class JwtTokensRepository {
+export class JwtTokensRepository extends Repository<JwtTokensDocument> {
   constructor(
     @InjectModel(JwtTokens.name)
     private JwtTokenModel: Model<JwtTokensDocument>,
-  ) {}
+  ) {
+    super();
+  }
   async getJwtByDeviceId(deviceId: string) {
     const deviceIdObject = new ObjectId(deviceId);
     return await this.JwtTokenModel.findOne({ deviceId: deviceIdObject });
@@ -26,27 +29,5 @@ export class JwtTokensRepository {
     return await this.JwtTokenModel.remove({
       deviceId: { $ne: deviceIdObject },
     });
-  }
-  async save(token: JwtTokensDocument): Promise<boolean> {
-    return token
-      .save()
-      .then((savedDoc) => {
-        return savedDoc === token;
-      })
-      .catch((error) => {
-        console.error(error);
-        return false;
-      });
-  }
-  async delete(token: JwtTokensDocument): Promise<boolean> {
-    return token
-      .delete()
-      .then((deletedDoc) => {
-        return deletedDoc === token;
-      })
-      .catch((error) => {
-        console.error(error);
-        return false;
-      });
   }
 }

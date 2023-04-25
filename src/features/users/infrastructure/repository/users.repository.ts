@@ -6,12 +6,15 @@ import {
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { Injectable } from '@nestjs/common';
+import { Repository } from '../../../../common/common-repository-types';
 @Injectable()
-export class UsersRepository {
+export class UsersRepository extends Repository<UsersDocument> {
   constructor(
     @InjectModel(Users.name)
     private UserModel: Model<UsersDocument>,
-  ) {}
+  ) {
+    super();
+  }
   async findUserById(id: string): Promise<UsersDocument> {
     const idObject = new ObjectId(id);
     return await this.UserModel.findOne({ _id: idObject });
@@ -26,27 +29,5 @@ export class UsersRepository {
     return await this.UserModel.findOne({
       $or: [{ email: emailOrLogin }, { login: emailOrLogin }],
     });
-  }
-  async save(user: UsersDocument): Promise<boolean> {
-    return user
-      .save()
-      .then((savedDoc) => {
-        return savedDoc === user;
-      })
-      .catch((error) => {
-        console.error(error);
-        return false;
-      });
-  }
-  async delete(user: UsersDocument): Promise<boolean> {
-    return user
-      .delete()
-      .then((deletedDoc) => {
-        return deletedDoc === user;
-      })
-      .catch((error) => {
-        console.error(error);
-        return false;
-      });
   }
 }

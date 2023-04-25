@@ -3,13 +3,16 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import { Like, LikeDocument } from '../../domain/likes.schema';
+import { Repository } from '../../../../common/common-repository-types';
 
 @Injectable()
-export class LikesRepository {
+export class LikesRepository extends Repository<LikeDocument> {
   constructor(
     @InjectModel(Like.name)
     private LikeModel: Model<LikeDocument>,
-  ) {}
+  ) {
+    super();
+  }
   async findLikeByCommentId(
     commentId: string,
     userId: string,
@@ -20,27 +23,5 @@ export class LikesRepository {
       commentId: _commentId,
       userId: _userId,
     });
-  }
-  async save(like: LikeDocument): Promise<boolean> {
-    return like
-      .save()
-      .then((savedDoc) => {
-        return savedDoc === like;
-      })
-      .catch((error) => {
-        console.error(error);
-        return false;
-      });
-  }
-  async delete(like: LikeDocument): Promise<boolean> {
-    return like
-      .delete()
-      .then((deletedDoc) => {
-        return deletedDoc === like;
-      })
-      .catch((error) => {
-        console.error(error);
-        return false;
-      });
   }
 }
