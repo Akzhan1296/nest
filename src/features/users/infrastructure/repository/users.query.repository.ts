@@ -16,7 +16,7 @@ import { Injectable } from '@nestjs/common';
 export class UsersQueryRepository {
   constructor(
     @InjectModel(Users.name)
-    private UserModel: Model<UsersDocument>,
+    private readonly UserModel: Model<UsersDocument>,
   ) {}
 
   private async getUsersCount(filter: any): Promise<number> {

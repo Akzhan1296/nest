@@ -11,14 +11,14 @@ import { PostLikesRepository } from '../likes/infrastructure/repository/post.lik
 @Controller('testing/all-data')
 export class DeleteController {
   constructor(
-    protected blogsQueryRepository: BlogsQueryRepository,
-    protected postsQueryRepository: PostsQueryRepository,
-    protected commentsQueryRepository: CommentsQueryRepository,
-    protected usersQueryRepository: UsersQueryRepository,
-    protected jwtTokensQueryRepository: JwtTokensQueryRepository,
-    protected blockIpsQueryRepository: BlockIpsQueryRepository,
-    protected likesQueryRepository: LikesQueryRepository,
-    protected postLikesRepository: PostLikesRepository,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
+    private readonly postsQueryRepository: PostsQueryRepository,
+    private readonly commentsQueryRepository: CommentsQueryRepository,
+    private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly jwtTokensQueryRepository: JwtTokensQueryRepository,
+    private readonly blockIpsQueryRepository: BlockIpsQueryRepository,
+    private readonly likesQueryRepository: LikesQueryRepository,
+    private readonly postLikesRepository: PostLikesRepository,
   ) {}
 
   @Delete()

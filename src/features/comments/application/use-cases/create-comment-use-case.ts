@@ -21,10 +21,10 @@ export class CreateCommentUseCase
 {
   constructor(
     @InjectModel(Comment.name)
-    private CommentModel: Model<CommentDocument>,
-    protected commentsRepository: CommentsRepository,
-    protected postsRepository: PostsRepository,
-    protected usersRepository: UsersRepository,
+    private readonly CommentModel: Model<CommentDocument>,
+    private readonly commentsRepository: CommentsRepository,
+    private readonly postsRepository: PostsRepository,
+    private readonly usersRepository: UsersRepository,
   ) {}
 
   // domain factory

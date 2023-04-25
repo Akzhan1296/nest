@@ -13,7 +13,7 @@ export class DeleteCommentCommand {
 export class DeleteCommentUseCase
   implements ICommandHandler<DeleteCommentCommand>
 {
-  constructor(protected commentsRepository: CommentsRepository) {}
+  constructor(private readonly commentsRepository: CommentsRepository) {}
 
   async execute(command: DeleteCommentCommand): Promise<boolean> {
     const comment = await this.commentsRepository.findCommentById(

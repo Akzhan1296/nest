@@ -9,7 +9,7 @@ import { Repository } from '../../../../common/common-repository-types';
 export class LikesRepository extends Repository<LikeDocument> {
   constructor(
     @InjectModel(Like.name)
-    private LikeModel: Model<LikeDocument>,
+    private readonly LikeModel: Model<LikeDocument>,
   ) {
     super();
   }

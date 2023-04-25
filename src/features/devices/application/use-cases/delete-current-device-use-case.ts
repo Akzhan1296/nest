@@ -13,8 +13,8 @@ export class DeleteCurrentDeviceUseCase
   implements ICommandHandler<DeleteCurrentDeviceCommand>
 {
   constructor(
-    protected usersRepository: UsersRepository,
-    protected jwtTokensRepository: JwtTokensRepository,
+    private readonly usersRepository: UsersRepository,
+    private readonly jwtTokensRepository: JwtTokensRepository,
   ) {}
 
   async execute(command: DeleteCurrentDeviceCommand): Promise<boolean> {

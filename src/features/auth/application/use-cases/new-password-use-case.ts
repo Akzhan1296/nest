@@ -10,7 +10,7 @@ export class NewPasswordCommand {
 
 @CommandHandler(NewPasswordCommand)
 export class NewPasswordUseCase implements ICommandHandler<NewPasswordCommand> {
-  constructor(protected usersRepository: UsersRepository) {}
+  constructor(private readonly usersRepository: UsersRepository) {}
 
   async execute(command: NewPasswordCommand): Promise<boolean> {
     const { recoveryCode, newPassword } = command.newPasswordDTO;

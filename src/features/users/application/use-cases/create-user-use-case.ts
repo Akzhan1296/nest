@@ -8,7 +8,7 @@ export class CreateUserCommand {
 }
 @CommandHandler(CreateUserCommand)
 export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
-  constructor(protected usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   async execute(command: CreateUserCommand): Promise<UsersDocument> {
     return this.usersService.createUser(command.createUserDTO);

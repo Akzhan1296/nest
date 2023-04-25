@@ -8,8 +8,8 @@ import { PostsQueryType } from '../../posts/api/models/input.models';
 @Injectable()
 export class CommentsQueryService {
   constructor(
-    protected commentsQueryRepository: CommentsQueryRepository,
-    protected likesQueryRepository: LikesQueryRepository,
+    private readonly commentsQueryRepository: CommentsQueryRepository,
+    private readonly likesQueryRepository: LikesQueryRepository,
   ) {}
   async getCommentById(commentId: string, userId: string) {
     let _userId = null;

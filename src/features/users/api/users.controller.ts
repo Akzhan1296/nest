@@ -26,8 +26,8 @@ import { UsersQueryRepository } from '../infrastructure/repository/users.query.r
 @UseGuards(AuthBasicGuard)
 export class UsersController {
   constructor(
-    private commandBus: CommandBus,
-    protected usersQueryRepository: UsersQueryRepository,
+    private readonly commandBus: CommandBus,
+    private readonly usersQueryRepository: UsersQueryRepository,
   ) {}
 
   @Get()

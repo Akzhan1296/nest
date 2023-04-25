@@ -10,8 +10,8 @@ import { generateHash } from '../../../common/utils';
 export class UsersService {
   constructor(
     @InjectModel(Users.name)
-    private UsersModel: Model<UsersDocument>,
-    protected usersRepository: UsersRepository,
+    private readonly UsersModel: Model<UsersDocument>,
+    private readonly usersRepository: UsersRepository,
   ) {}
 
   private async _createUser(

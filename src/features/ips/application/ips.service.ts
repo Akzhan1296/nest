@@ -10,8 +10,8 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 export class BlockIpsService {
   constructor(
     @InjectModel(BlockIps.name)
-    private BlockIpsModel: Model<BlockIpsDocument>,
-    protected blockIpsRepository: BlockIpsRepository,
+    private readonly BlockIpsModel: Model<BlockIpsDocument>,
+    private readonly blockIpsRepository: BlockIpsRepository,
   ) {}
 
   async addIpData(ipsData: IpsDataDto): Promise<boolean> {

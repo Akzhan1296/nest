@@ -18,9 +18,9 @@ export class HandlePostsLikesUseCase
 {
   constructor(
     @InjectModel(PostLike.name)
-    private PostLikeModel: Model<PostLikeDocument>,
-    protected postLikesRepository: PostLikesRepository,
-    protected postsRepository: PostsRepository,
+    private readonly PostLikeModel: Model<PostLikeDocument>,
+    private readonly postLikesRepository: PostLikesRepository,
+    private readonly postsRepository: PostsRepository,
   ) {}
   async execute(command: HandlePostsLikesCommand) {
     const { postId, postLikeStatus, userId, login } =

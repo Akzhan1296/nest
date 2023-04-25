@@ -9,7 +9,7 @@ import { Repository } from '../../../../common/common-repository-types';
 export class JwtTokensRepository extends Repository<JwtTokensDocument> {
   constructor(
     @InjectModel(JwtTokens.name)
-    private JwtTokenModel: Model<JwtTokensDocument>,
+    private readonly JwtTokenModel: Model<JwtTokensDocument>,
   ) {
     super();
   }

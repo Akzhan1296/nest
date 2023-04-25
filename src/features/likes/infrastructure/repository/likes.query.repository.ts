@@ -9,7 +9,7 @@ import { LikeModelView } from '../models/view.models';
 export class LikesQueryRepository {
   constructor(
     @InjectModel(Like.name)
-    private LikeModel: Model<LikeDocument>,
+    private readonly LikeModel: Model<LikeDocument>,
   ) {}
 
   async getLikeById(

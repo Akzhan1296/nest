@@ -8,7 +8,7 @@ import { BlogsStateRepository } from '../../application/blogs.interface';
 export class BlogsRepository implements BlogsStateRepository {
   constructor(
     @InjectModel(BlogItemType.name)
-    private blogModel: Model<BlogItemType>,
+    private readonly blogModel: Model<BlogItemType>,
   ) {}
   async getBlogById(id: string): Promise<BlogItemDBType | null> {
     const blog = await this.blogModel.findOne({ _id: id });

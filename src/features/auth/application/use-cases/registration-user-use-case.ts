@@ -16,9 +16,9 @@ export class RegistrationUserUseCase
   implements ICommandHandler<RegistrationUserCommand>
 {
   constructor(
-    protected commandBus: CommandBus,
-    protected usersRepository: UsersRepository,
-    protected authService: AuthService,
+    private readonly commandBus: CommandBus,
+    private readonly usersRepository: UsersRepository,
+    private readonly authService: AuthService,
   ) {}
 
   async execute(command: RegistrationUserCommand): Promise<void> {

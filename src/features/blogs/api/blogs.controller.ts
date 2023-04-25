@@ -25,11 +25,11 @@ import {
 export class BlogsController {
   constructor(
     @Inject(BlogsService.name)
-    protected blogsService: BlogsService,
-    protected blogsQueryRepository: BlogsQueryRepository,
+    private readonly blogsService: BlogsService,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
     @Inject(PostsService.name)
-    protected postService: PostsService,
-    protected postQuerysRepository: PostsQueryRepository,
+    private readonly postService: PostsService,
+    private readonly postQuerysRepository: PostsQueryRepository,
   ) {}
 
   @Post()

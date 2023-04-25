@@ -10,7 +10,7 @@ export class CreateAccessTokenCommand {
 export class CreateAccessTokenUseCase
   implements ICommandHandler<CreateAccessTokenCommand>
 {
-  constructor(protected jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) {}
   async execute(command: CreateAccessTokenCommand): Promise<string> {
     const { user } = command;
     const login = user.getLogin();

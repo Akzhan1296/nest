@@ -14,7 +14,6 @@ import { Request, Response } from 'express';
 
 // guards
 import { AuthGuard } from '../../../guards/auth.guard';
-import { BlockIpGuard } from '../../../guards/ip.guard';
 import { RefreshTokenGuard } from '../../../guards/refreshToken.guard';
 
 // query repo
@@ -39,13 +38,11 @@ import {
   AuthRegistrationInputModal,
   NewPasswordInputModal,
 } from './models/auth.models';
-import { addSeconds } from 'date-fns';
-
 @Controller('auth')
 export class AuthController {
   constructor(
-    private commandBus: CommandBus,
-    protected usersQueryRepository: UsersQueryRepository,
+    private readonly commandBus: CommandBus,
+    private readonly usersQueryRepository: UsersQueryRepository,
   ) {}
 
   @Post('login')

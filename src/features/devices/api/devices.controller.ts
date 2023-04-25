@@ -19,8 +19,8 @@ import { DeleteDevicesExceptOneCommand } from '../application/use-cases/delete-a
 @Controller('security/devices')
 export class DevicesController {
   constructor(
-    private commandBus: CommandBus,
-    protected jwtTokensQueryRepository: JwtTokensQueryRepository,
+    private readonly commandBus: CommandBus,
+    private readonly jwtTokensQueryRepository: JwtTokensQueryRepository,
   ) {}
 
   @Get('')

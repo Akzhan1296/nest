@@ -13,8 +13,8 @@ export class EmailResendingUseCase
   implements ICommandHandler<EmailResendingCommand>
 {
   constructor(
-    protected usersRepository: UsersRepository,
-    protected authService: AuthService,
+    private readonly usersRepository: UsersRepository,
+    private readonly authService: AuthService,
   ) {}
 
   async execute(command: EmailResendingCommand): Promise<void> {

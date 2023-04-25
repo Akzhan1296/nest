@@ -17,7 +17,7 @@ import {
 export class BlogsQueryRepository implements BlogsQueryStateRepository {
   constructor(
     @InjectModel(BlogItemType.name)
-    private blogModel: Model<BlogItemType>,
+    private readonly blogModel: Model<BlogItemType>,
   ) {}
   private async getBlogsCount(filter: SearchTermBlogs): Promise<number> {
     return await this.blogModel.find(filter).count();

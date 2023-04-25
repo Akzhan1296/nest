@@ -6,7 +6,7 @@ import { settings } from '../settings';
 
 @Injectable()
 export class UserIdGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) {}
   async canActivate(context: ExecutionContext) {
     const request: Request = context.switchToHttp().getRequest();
     request.body.userId = '';

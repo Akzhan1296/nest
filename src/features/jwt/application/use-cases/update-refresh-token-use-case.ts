@@ -12,8 +12,8 @@ export class UpdateRefreshTokenUseCase
   implements ICommandHandler<UpdateRefreshTokenCommand>
 {
   constructor(
-    protected jwtTokensRepository: JwtTokensRepository,
-    protected jwtService: JwtService,
+    private readonly jwtTokensRepository: JwtTokensRepository,
+    private readonly jwtService: JwtService,
   ) {}
 
   async execute(command: UpdateRefreshTokenCommand): Promise<string | null> {

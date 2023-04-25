@@ -18,9 +18,9 @@ export class HandleCommentsLikesUseCase
 {
   constructor(
     @InjectModel(Like.name)
-    private LikeModel: Model<LikeDocument>,
-    protected likesRepository: LikesRepository,
-    protected commentsRepository: CommentsRepository,
+    private readonly LikeModel: Model<LikeDocument>,
+    private readonly likesRepository: LikesRepository,
+    private readonly commentsRepository: CommentsRepository,
   ) {}
   async execute(command: HandleCommentsLikesCommand) {
     const { commentId, commentLikeStatus } = command.likeCommentDto;

@@ -11,7 +11,7 @@ import { Post, PostDocument } from '../../schema/posts.schema';
 export class PostsRepository implements PostsStateRepository {
   constructor(
     @InjectModel(Post.name)
-    private postModel: Model<PostDocument>,
+    private readonly postModel: Model<PostDocument>,
   ) {}
   async getPostById(id: string): Promise<PostDocument | null> {
     return await this.postModel.findOne({ _id: id });

@@ -11,7 +11,7 @@ import { Repository } from '../../../../common/common-repository-types';
 export class UsersRepository extends Repository<UsersDocument> {
   constructor(
     @InjectModel(Users.name)
-    private UserModel: Model<UsersDocument>,
+    private readonly UserModel: Model<UsersDocument>,
   ) {
     super();
   }

@@ -13,8 +13,8 @@ import { settings } from '../settings';
 @Injectable()
 export class RefreshTokenGuard implements CanActivate {
   constructor(
-    private jwtService: JwtService,
-    private jwtTokensQueryRepository: JwtTokensQueryRepository,
+    private readonly jwtService: JwtService,
+    private readonly jwtTokensQueryRepository: JwtTokensQueryRepository,
   ) {}
   async canActivate(context: ExecutionContext) {
     const request: Request = context.switchToHttp().getRequest();

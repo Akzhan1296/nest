@@ -1,4 +1,4 @@
-import { HydratedDocument, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Comment, CommentDocument } from '../../domain/entity/comments.schema';
@@ -7,7 +7,7 @@ import { Repository } from '../../../../common/common-repository-types';
 export class CommentsRepository extends Repository<Comment> {
   constructor(
     @InjectModel(Comment.name)
-    private CommentModel: Model<CommentDocument>,
+    private readonly CommentModel: Model<CommentDocument>,
   ) {
     super();
   }

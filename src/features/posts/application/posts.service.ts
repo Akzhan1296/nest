@@ -9,8 +9,8 @@ import { PostsStateRepository } from './posts.interface';
 @Injectable()
 export class PostsService {
   constructor(
-    protected postsRepository: PostsStateRepository,
-    protected blogsRepository: BlogsStateRepository,
+    private readonly postsRepository: PostsStateRepository,
+    private readonly blogsRepository: BlogsStateRepository,
   ) {}
   async createPost(dto: CreatePostDTO): Promise<PostDocument> {
     const blog = await this.blogsRepository.getBlogById(dto.blogId);

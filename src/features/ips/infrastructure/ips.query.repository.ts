@@ -7,7 +7,7 @@ import { BlockIps, BlockIpsDocument } from '../domain/ips.schema';
 export class BlockIpsQueryRepository {
   constructor(
     @InjectModel(BlockIps.name)
-    private BlockIpsModel: Model<BlockIpsDocument>,
+    private readonly BlockIpsModel: Model<BlockIpsDocument>,
   ) {}
   async findIp(ip: string, path: string, dateLeft: number, dateRight: number) {
     const result = await this.BlockIpsModel.find({

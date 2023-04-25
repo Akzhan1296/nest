@@ -19,9 +19,9 @@ import { PostsQueryService } from './posts.query.service';
 @Controller('posts')
 export class PostsQueryController {
   constructor(
-    protected postsQueryRepository: PostsQueryRepository,
-    protected postsQueryService: PostsQueryService,
-    protected commentsQueryService: CommentsQueryService,
+    private readonly postsQueryRepository: PostsQueryRepository,
+    private readonly postsQueryService: PostsQueryService,
+    private readonly commentsQueryService: CommentsQueryService,
   ) {}
 
   @UseGuards(UserIdGuard)

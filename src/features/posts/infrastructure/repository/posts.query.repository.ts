@@ -15,7 +15,7 @@ import { Post, PostDocument } from '../../schema/posts.schema';
 export class PostsQueryRepository implements PostsQueryStateRepository {
   constructor(
     @InjectModel(Post.name)
-    private postModel: Model<PostDocument>,
+    private readonly postModel: Model<PostDocument>,
   ) {}
 
   private async getPostsCount(filter: any = {}): Promise<number> {

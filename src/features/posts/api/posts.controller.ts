@@ -31,10 +31,10 @@ import { HandlePostsLikesCommand } from '../../likes/application/use-cases/handl
 export class PostsController {
   constructor(
     @Inject(PostsService.name)
-    protected postService: PostsService,
-    protected postQuerysRepository: PostsQueryRepository,
-    protected commentsQueryRepository: CommentsQueryRepository,
-    protected commandBus: CommandBus,
+    private readonly postService: PostsService,
+    private readonly postQuerysRepository: PostsQueryRepository,
+    private readonly commentsQueryRepository: CommentsQueryRepository,
+    private readonly commandBus: CommandBus,
   ) {}
 
   @Post()

@@ -12,8 +12,8 @@ export class PasswordRecoveryUseCase
   implements ICommandHandler<PasswordRecoveryCommand>
 {
   constructor(
-    protected usersRepository: UsersRepository,
-    protected authService: AuthService,
+    private readonly usersRepository: UsersRepository,
+    private readonly authService: AuthService,
   ) {}
 
   async execute(command: PasswordRecoveryCommand): Promise<void> {

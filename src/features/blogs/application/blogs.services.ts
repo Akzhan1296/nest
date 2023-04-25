@@ -3,7 +3,7 @@ import { BlogItemDBType, BlogItemType } from '../infrastructure/blogs.type';
 import { BlogsStateRepository } from './blogs.interface';
 import { BlogType } from './dto/blogs.dto';
 export class BlogsService {
-  constructor(protected blogRepository: BlogsStateRepository) {}
+  constructor(private readonly blogRepository: BlogsStateRepository) {}
 
   createBlog(dto: BlogType): Promise<BlogItemDBType> {
     const newBlog = new BlogItemType(

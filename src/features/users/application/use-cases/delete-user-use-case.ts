@@ -7,7 +7,7 @@ export class DeleteUserCommand {
 }
 @CommandHandler(DeleteUserCommand)
 export class DeleteUserUseCase implements ICommandHandler<DeleteUserCommand> {
-  constructor(protected usersRepository: UsersRepository) {}
+  constructor(private readonly usersRepository: UsersRepository) {}
 
   async execute(command: DeleteUserCommand): Promise<boolean> {
     const user = await this.usersRepository.findUserById(command.id);

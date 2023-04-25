@@ -12,8 +12,8 @@ import { BlockIpsQueryRepository } from '../features/ips/infrastructure/ips.quer
 @Injectable()
 export class BlockIpGuard implements CanActivate {
   constructor(
-    private blockIpQueryRepository: BlockIpsQueryRepository,
-    private blockIpsService: BlockIpsService,
+    private readonly blockIpQueryRepository: BlockIpsQueryRepository,
+    private readonly blockIpsService: BlockIpsService,
   ) {}
   async canActivate(context: ExecutionContext) {
     const request: Request = context.switchToHttp().getRequest();

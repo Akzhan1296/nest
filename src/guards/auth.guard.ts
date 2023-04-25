@@ -13,8 +13,8 @@ import { settings } from '../settings';
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-    private usersQueryRepository: UsersQueryRepository,
-    private jwtService: JwtService,
+    private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly jwtService: JwtService,
   ) {}
   async canActivate(context: ExecutionContext) {
     const request: Request = context.switchToHttp().getRequest();

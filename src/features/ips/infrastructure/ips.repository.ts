@@ -8,7 +8,7 @@ import { Repository } from '../../../common/common-repository-types';
 export class BlockIpsRepository extends Repository<BlockIpsDocument> {
   constructor(
     @InjectModel(BlockIps.name)
-    private BlockIpsModel: Model<BlockIpsDocument>,
+    private readonly BlockIpsModel: Model<BlockIpsDocument>,
   ) {
     super();
   }

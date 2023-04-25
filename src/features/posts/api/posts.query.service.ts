@@ -6,8 +6,8 @@ import { PostsQueryRepository } from '../infrastructure/repository/posts.query.r
 @Injectable()
 export class PostsQueryService {
   constructor(
-    protected postQuerysRepository: PostsQueryRepository,
-    protected postLikesQueryRepository: PostLikesRepository,
+    private readonly postQuerysRepository: PostsQueryRepository,
+    private readonly postLikesQueryRepository: PostLikesRepository,
   ) {}
   async getPostWithLikeById(postId: string, userId: string) {
     let _userId = null;

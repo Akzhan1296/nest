@@ -29,9 +29,9 @@ import { HandleCommentsLikesCommand } from '../../likes/application/use-cases/ha
 @Controller('comments')
 export class CommentsController {
   constructor(
-    protected commandBus: CommandBus,
-    protected commentsQueryRepository: CommentsQueryRepository,
-    protected commentsQueryService: CommentsQueryService,
+    private readonly commandBus: CommandBus,
+    private readonly commentsQueryRepository: CommentsQueryRepository,
+    private readonly commentsQueryService: CommentsQueryService,
   ) {}
 
   @UseGuards(UserIdGuard)

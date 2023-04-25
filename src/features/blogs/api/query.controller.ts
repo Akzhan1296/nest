@@ -20,9 +20,9 @@ import { BlogsQueryType } from './models/input.models';
 @Controller('blogs')
 export class BlogsQueryController {
   constructor(
-    protected blogsQueryRepository: BlogsQueryRepository,
-    protected postsQueryRepository: PostsQueryRepository,
-    protected postsQueryService: PostsQueryService,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
+    private readonly postsQueryRepository: PostsQueryRepository,
+    private readonly postsQueryService: PostsQueryService,
   ) {}
   @Get()
   async getBlogs(

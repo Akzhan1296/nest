@@ -10,7 +10,7 @@ import { BlogsQueryRepository } from '../../../blogs/infrastructure/repository/b
 @Injectable()
 @ValidatorConstraint({ async: true })
 export class IsValidBlog implements ValidatorConstraintInterface {
-  constructor(protected blogsQueryRepository: BlogsQueryRepository) {}
+  constructor(private readonly blogsQueryRepository: BlogsQueryRepository) {}
 
   public async validate(blogId: string): Promise<boolean> {
     const blog = await this.blogsQueryRepository.getBlogById(blogId);

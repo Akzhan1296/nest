@@ -17,7 +17,7 @@ import {
 export class CommentsQueryRepository {
   constructor(
     @InjectModel(Comment.name)
-    private CommentModel: Model<CommentDocument>,
+    private readonly CommentModel: Model<CommentDocument>,
   ) {}
 
   private async getCommentsCount(postId: string | undefined): Promise<number> {

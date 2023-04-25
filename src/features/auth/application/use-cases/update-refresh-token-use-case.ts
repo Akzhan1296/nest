@@ -14,8 +14,8 @@ export class UpdateUserRefreshTokenUseCase
   implements ICommandHandler<UpdateUserRefreshTokenCommand>
 {
   constructor(
-    protected commandBus: CommandBus,
-    protected usersRepository: UsersRepository,
+    private readonly commandBus: CommandBus,
+    private readonly usersRepository: UsersRepository,
   ) {}
 
   async execute(

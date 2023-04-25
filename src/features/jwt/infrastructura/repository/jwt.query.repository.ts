@@ -9,7 +9,7 @@ import { DevicesViewModel } from '../models/view.models';
 export class JwtTokensQueryRepository {
   constructor(
     @InjectModel(JwtTokens.name)
-    private JwtTokenModel: Model<JwtTokensDocument>,
+    private readonly JwtTokenModel: Model<JwtTokensDocument>,
   ) {}
   async getDevicesByUserId(userId: string): Promise<DevicesViewModel[]> {
     const userObjectId = new ObjectId(userId);

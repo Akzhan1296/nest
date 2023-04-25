@@ -10,7 +10,7 @@ export class RegistrationConfirmationCommand {
 export class RegistrationConfirmationUseCase
   implements ICommandHandler<RegistrationConfirmationCommand>
 {
-  constructor(protected usersRepository: UsersRepository) {}
+  constructor(private readonly usersRepository: UsersRepository) {}
 
   async execute(command: RegistrationConfirmationCommand): Promise<boolean> {
     const userByConfirmCode = await this.usersRepository.findUserByConfirmCode(
