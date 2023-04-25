@@ -49,7 +49,7 @@ export class AuthController {
   ) {}
 
   @Post('login')
-  @UseGuards(BlockIpGuard)
+  // @UseGuards(BlockIpGuard)
   @HttpCode(200)
   async login(
     @Req() request: Request,
@@ -68,7 +68,7 @@ export class AuthController {
     response.cookie('refreshToken', tokens.refreshToken, {
       httpOnly: true,
       secure: true,
-      expires: addSeconds(new Date(), 20),
+      // expires: addSeconds(new Date(), 20),
     });
     response.status(200).send({ accessToken: tokens.accessToken });
     return;
@@ -90,7 +90,7 @@ export class AuthController {
     response.cookie('refreshToken', `${tokens.refreshToken}`, {
       httpOnly: true,
       secure: true,
-      expires: addSeconds(new Date(), 20),
+      // expires: addSeconds(new Date(), 20),
     });
     response.status(200).send({ accessToken: tokens.accessToken });
     return;
@@ -110,13 +110,13 @@ export class AuthController {
       .cookie('refreshToken', ``, {
         httpOnly: true,
         secure: true,
-        expires: new Date(),
+        // expires: new Date(),
       })
       .send();
   }
 
   @Post('registration-confirmation')
-  @UseGuards(BlockIpGuard)
+  // @UseGuards(BlockIpGuard)
   @HttpCode(204)
   async registrationConfirmation(
     @Body() inputModel: AuthRegistrationConfirmInputModal,
@@ -127,7 +127,7 @@ export class AuthController {
   }
 
   @Post('registration')
-  @UseGuards(BlockIpGuard)
+  // @UseGuards(BlockIpGuard)
   @HttpCode(204)
   async registration(
     @Body() inputModel: AuthRegistrationInputModal,
@@ -136,7 +136,7 @@ export class AuthController {
   }
 
   @Post('registration-email-resending')
-  @UseGuards(BlockIpGuard)
+  // @UseGuards(BlockIpGuard)
   @HttpCode(204)
   async registrationEmailResending(
     @Body() inputModel: AuthEmailResendingInputModal,
@@ -151,7 +151,7 @@ export class AuthController {
   }
 
   @Post('password-recovery')
-  @UseGuards(BlockIpGuard)
+  // @UseGuards(BlockIpGuard)
   @HttpCode(204)
   async passwordRecovery(
     @Body() inputModel: AuthEmailResendingInputModal,
@@ -162,7 +162,7 @@ export class AuthController {
   }
 
   @Post('new-password')
-  @UseGuards(BlockIpGuard)
+  // @UseGuards(BlockIpGuard)
   @HttpCode(204)
   async newPassword(
     @Body() inputModal: NewPasswordInputModal,
