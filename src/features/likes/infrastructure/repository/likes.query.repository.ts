@@ -31,16 +31,11 @@ export class LikesQueryRepository {
     postId: string,
     userId: ObjectId,
   ): Promise<LikeDocument[]> {
-    // const _postId = new ObjectId(postId);
     const likes = await this.LikeModel.find({
       postId,
       userId,
     });
 
     return likes;
-  }
-
-  async dropLikes() {
-    return this.LikeModel.deleteMany({});
   }
 }

@@ -5,13 +5,6 @@ import { IsBlogExist } from './post.decorator';
 
 
 export class PostInputModel {
-  // @MaxLength(30)
-  // public title: string;
-  // @MaxLength(100)
-  // public shortDescription: string;
-  // @MaxLength(1000)
-  // public content: string;
-  // public blogId: string;
   @Transform(({ value }) => value.trim())
   @IsNotEmpty()
   @MaxLength(30)

@@ -87,7 +87,4 @@ export class UsersQueryRepository {
       this.getUsersViews(users),
     );
   }
-  async dropUsers() {
-    return this.UserModel.deleteMany({});
-  }
 }

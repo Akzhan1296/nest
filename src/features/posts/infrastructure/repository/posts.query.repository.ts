@@ -98,7 +98,4 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
     }
     return null;
   }
-  async dropPosts() {
-    return this.postModel.deleteMany({});
-  }
 }

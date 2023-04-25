@@ -103,6 +103,7 @@ import { PostLikesRepository } from './features/likes/infrastructure/repository/
 
 //decorators
 import { IsValidBlog } from './features/posts/api/models/post.decorator';
+import { DeleteService } from './features/delete/delete.service';
 
 const authUseCases = [
   LoginUseCase,
@@ -200,7 +201,8 @@ const likesUseCases = [HandleCommentsLikesUseCase, HandlePostsLikesUseCase];
     PostsQueryService,
     //decorators
     IsValidBlog,
-
+    // deleteData
+    DeleteService,
     // use cases
     ...authUseCases,
     ...usersUseCases,

@@ -29,7 +29,7 @@ import { RegistrationUserCommand } from '../application/use-cases/registration-u
 import { UpdateUserRefreshTokenCommand } from '../application/use-cases/update-refresh-token-use-case';
 import { DeleteCurrentDeviceCommand } from '../../devices/application/use-cases/delete-current-device-use-case';
 
-// modes
+// models
 import { MeViewModel } from '../../users/infrastructure/models/view.models';
 import {
   AuthEmailResendingInputModal,

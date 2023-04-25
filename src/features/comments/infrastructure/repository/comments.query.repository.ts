@@ -93,7 +93,4 @@ export class CommentsQueryRepository {
       .limit(pageSize);
     return this.getPaginatedPosts(pageParams, comments, postId);
   }
-  async dropComments() {
-    return this.CommentModel.deleteMany({});
-  }
 }

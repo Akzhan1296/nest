@@ -31,7 +31,4 @@ export class JwtTokensQueryRepository {
       deviceId: deviceObjectId,
     }).lean();
   }
-  async dropJwts() {
-    return this.JwtTokenModel.deleteMany({});
-  }
 }

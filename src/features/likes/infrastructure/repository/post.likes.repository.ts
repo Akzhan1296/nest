@@ -29,7 +29,4 @@ export class PostLikesRepository extends Repository<PostLikeDocument> {
       userId,
     });
   }
-  async dropPostLikes() {
-    return this.PostLikeModel.deleteMany({});
-  }
 }
