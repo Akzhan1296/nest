@@ -4,7 +4,7 @@ import { CreateUserDTO } from './dto/users.dto';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { UsersRepository } from '../infrastructure/repository/users.repository';
-import { generateHash } from '../../../common/utils';
+import { Utils } from '../../../common/utils';
 
 @Injectable()
 export class UsersService {
@@ -28,7 +28,7 @@ export class UsersService {
   }
   async createUser(createUserDTO: CreateUserDTO): Promise<UsersDocument> {
     const { password, ...restCreateUserData } = createUserDTO;
-    const passwordHash = await generateHash(password);
+    const passwordHash = await Utils.generateHash(password);
     const newUser = await this._createUser({
       ...restCreateUserData,
       password: passwordHash,

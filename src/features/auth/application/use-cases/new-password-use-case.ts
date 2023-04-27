@@ -1,7 +1,7 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { NewPasswordDTO } from './../dto/auth.dto';
 import { UsersRepository } from '../../../users/infrastructure/repository/users.repository';
-import { generateHash } from '../../../../common/utils';
+import { Utils } from '../../../../common/utils';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 export class NewPasswordCommand {
@@ -24,7 +24,7 @@ export class NewPasswordUseCase implements ICommandHandler<NewPasswordCommand> {
     const confirmCodeExpDate = userByConfirmCode.getEmailExpirationDate();
 
     if (code === recoveryCode && confirmCodeExpDate > new Date()) {
-      const passwordHash = await generateHash(newPassword);
+      const passwordHash = await Utils.generateHash(newPassword);
       userByConfirmCode.setPassword(passwordHash);
       return await this.usersRepository.save(userByConfirmCode);
     } else {

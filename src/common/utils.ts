@@ -17,11 +17,6 @@ export abstract class Paginated {
   }
 }
 
-export const generateHash = async (password: string) => {
-  const hash = await bcrypt.hash(password, 10);
-  return hash;
-};
-
 export abstract class Utils {
   static async generateHash(password: string) {
     return await bcrypt.hash(password, 10);
