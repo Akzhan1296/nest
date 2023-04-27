@@ -14,14 +14,12 @@ export class LikesRepository extends Repository<LikeDocument> {
     super();
   }
   async findLikeByCommentId(
-    commentId: string,
-    userId: string,
+    commentId: ObjectId,
+    userId: ObjectId,
   ): Promise<LikeDocument> {
-    const _commentId = new ObjectId(commentId);
-    const _userId = new ObjectId(userId);
     return await this.LikeModel.findOne({
-      commentId: _commentId,
-      userId: _userId,
+      commentId,
+      userId,
     });
   }
 }

@@ -9,6 +9,7 @@ import { Request } from 'express';
 import { RefreshTokenPayloadDTO } from '../features/jwt/application/dto/jwt.dto';
 import { JwtTokensQueryRepository } from '../features/jwt/infrastructura/repository/jwt.query.repository';
 import { settings } from '../settings';
+import { Utils } from '../common/utils';
 
 @Injectable()
 export class RefreshTokenGuard implements CanActivate {
@@ -35,8 +36,8 @@ export class RefreshTokenGuard implements CanActivate {
     if (payload) {
       jwtTokenByIds =
         await this.jwtTokensQueryRepository.getJwtByUserAndDeviceId(
-          payload.userId,
-          payload.deviceId,
+          await Utils.transformObjectId(payload.userId),
+          await Utils.transformObjectId(payload.deviceId),
         );
     }
 

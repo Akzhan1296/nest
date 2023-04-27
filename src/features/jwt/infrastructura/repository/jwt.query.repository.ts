@@ -11,10 +11,9 @@ export class JwtTokensQueryRepository {
     @InjectModel(JwtTokens.name)
     private readonly JwtTokenModel: Model<JwtTokensDocument>,
   ) {}
-  async getDevicesByUserId(userId: string): Promise<DevicesViewModel[]> {
-    const userObjectId = new ObjectId(userId);
+  async getDevicesByUserId(userId: ObjectId): Promise<DevicesViewModel[]> {
     const tokensMetaData = await this.JwtTokenModel.find({
-      userId: userObjectId,
+      userId,
     });
     return tokensMetaData.map((tokenData) => ({
       ip: tokenData.getDeviceIp(),
@@ -23,12 +22,10 @@ export class JwtTokensQueryRepository {
       deviceId: tokenData.getDeviceId().toString(),
     }));
   }
-  async getJwtByUserAndDeviceId(userId: string, deviceId: string) {
-    const userObjectId = new ObjectId(userId);
-    const deviceObjectId = new ObjectId(deviceId);
+  async getJwtByUserAndDeviceId(userId: ObjectId, deviceId: ObjectId) {
     return await this.JwtTokenModel.findOne({
-      userId: userObjectId,
-      deviceId: deviceObjectId,
+      userId,
+      deviceId,
     }).lean();
   }
 }

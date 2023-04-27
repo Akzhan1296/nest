@@ -15,6 +15,7 @@ import { JwtTokensQueryRepository } from '../../jwt/infrastructura/repository/jw
 //commands
 import { DeleteCurrentDeviceCommand } from '../application/use-cases/delete-current-device-use-case';
 import { DeleteDevicesExceptOneCommand } from '../application/use-cases/delete-all-device-use-case';
+import { Utils } from '../../../common/utils';
 
 @Controller('security/devices')
 export class DevicesController {
@@ -27,7 +28,7 @@ export class DevicesController {
   @UseGuards(RefreshTokenGuard)
   async getDevices(@Req() request: Request): Promise<DevicesViewModel[]> {
     return this.jwtTokensQueryRepository.getDevicesByUserId(
-      request.body.userId,
+      await Utils.transformObjectId(request.body.userId),
     );
   }
 

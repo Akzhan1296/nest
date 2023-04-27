@@ -3,6 +3,7 @@ import { BadGatewayException } from '@nestjs/common';
 import { settings } from '../../../../settings';
 import { JwtTokensRepository } from '../../infrastructura/repository/jwt.repository';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { Utils } from '../../../../common/utils';
 
 export class UpdateRefreshTokenCommand {
   constructor(public deviceId: string) {}
@@ -20,7 +21,9 @@ export class UpdateRefreshTokenUseCase
     let updatedRefreshToken = null;
 
     const refreshTokenMetaData =
-      await this.jwtTokensRepository.getJwtByDeviceId(command.deviceId);
+      await this.jwtTokensRepository.getJwtByDeviceId(
+        await Utils.transformObjectId(command.deviceId),
+      );
 
     refreshTokenMetaData.setCreatedAt(new Date());
     const isTokenSaved = await this.jwtTokensRepository.save(

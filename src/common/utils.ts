@@ -1,5 +1,6 @@
 import { PageSizeQueryModel, PaginationViewModel } from './common-types';
 import * as bcrypt from 'bcrypt';
+import { ObjectId } from 'mongodb';
 
 export abstract class Paginated {
   static transformPagination<T>(
@@ -20,3 +21,16 @@ export const generateHash = async (password: string) => {
   const hash = await bcrypt.hash(password, 10);
   return hash;
 };
+
+export abstract class Utils {
+  static async generateHash(password: string) {
+    return await bcrypt.hash(password, 10);
+  }
+  static async transformObjectId(id: string): Promise<ObjectId> {
+    try {
+      return new ObjectId(id);
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+}

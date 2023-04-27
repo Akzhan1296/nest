@@ -7,6 +7,7 @@ import { Like, LikeDocument } from '../../domain/likes.schema';
 import { LikesRepository } from '../../infrastructure/repository/likes.repository';
 import { HandleLikeCommentDTO } from '../dto/likes.dto';
 import { ObjectId } from 'mongodb';
+import { Utils } from '../../../../common/utils';
 
 export class HandleCommentsLikesCommand {
   constructor(public likeCommentDto: HandleLikeCommentDTO) {}
@@ -32,8 +33,8 @@ export class HandleCommentsLikesUseCase
       throw new NotFoundException({ message: 'Comment not found' });
     }
     const likeEntity = await this.likesRepository.findLikeByCommentId(
-      commentId,
-      command.likeCommentDto.userId,
+      await Utils.transformObjectId(commentId),
+      await Utils.transformObjectId(command.likeCommentDto.userId),
     );
     //current like status, before update
     let likeStatus = 'None';

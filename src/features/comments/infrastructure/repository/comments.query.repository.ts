@@ -59,10 +59,8 @@ export class CommentsQueryRepository {
     const comments = await this.CommentModel.find().skip(1).limit(pageSize);
     return this.getPaginatedPosts(pageParams, comments);
   }
-  async getCommentById(id: string): Promise<CommentViewModel | null> {
-    const objId = new ObjectId(id);
-
-    const comment = await this.CommentModel.findById({ _id: objId });
+  async getCommentById(id: ObjectId): Promise<CommentViewModel | null> {
+    const comment = await this.CommentModel.findById({ _id: id });
     if (comment) {
       return {
         id: comment._id.toString(),

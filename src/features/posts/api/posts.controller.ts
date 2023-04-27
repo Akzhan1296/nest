@@ -81,7 +81,7 @@ export class PostsController {
     );
 
     const commentViewModel = await this.commentsQueryRepository.getCommentById(
-      comment._id.toString(),
+      comment._id,
     );
     return commentViewModel;
   }

@@ -3,6 +3,7 @@ import { UsersRepository } from '../../../users/infrastructure/repository/users.
 import { JwtTokensRepository } from '../../../jwt/infrastructura/repository/jwt.repository';
 import { DeleteDeviceDTO } from './../dto/devices.dto';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { Utils } from '../../../../common/utils';
 
 export class DeleteCurrentDeviceCommand {
   constructor(public deleteDeviceDTO: DeleteDeviceDTO) {}
@@ -23,7 +24,7 @@ export class DeleteCurrentDeviceUseCase
     ); // from jwt
 
     const device = await this.jwtTokensRepository.getJwtByDeviceId(
-      command.deleteDeviceDTO.deviceId,
+      await Utils.transformObjectId(command.deleteDeviceDTO.deviceId),
     ); //from params
 
     if (!device) throw new NotFoundException();
