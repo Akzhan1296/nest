@@ -8,20 +8,18 @@ import {
   Req,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { PostsQueryRepository } from 'src/features/posts/infrastructure/repository/posts.query.repository';
-import { PaginationViewModel } from '../../../common/common-types';
-import { UserIdGuard } from '../../../guards/userId';
-import { PostsQueryService } from '../../posts/api/posts.query.service';
-import { PostViewModel } from '../../posts/infrastructure/repository/models/view.models';
-import { BlogsQueryRepository } from '../infrastructure/repository/blogs.query.repository';
-import { BlogViewModel } from '../infrastructure/repository/models/view.models';
-import { BlogsQueryType } from './models/input.models';
+import { PaginationViewModel } from '../../../../common/common-types';
+import { BlogViewModel } from '../../_models/view.models';
+import { BlogsQueryType } from '../../_models/input.models';
+import { UserIdGuard } from '../../../../guards/userId';
+import { PostsQueryService } from '../../../posts/api/posts.query.service';
+import { PostViewModel } from '../../../posts/infrastructure/repository/models/view.models';
+import { BlogsQueryRepository } from '../../infrastructure/repository/blogs.query.repository';
 
 @Controller('blogs')
-export class BlogsQueryController {
+export class BlogsPublicQueryController {
   constructor(
     private readonly blogsQueryRepository: BlogsQueryRepository,
-    private readonly postsQueryRepository: PostsQueryRepository,
     private readonly postsQueryService: PostsQueryService,
   ) {}
   @Get()

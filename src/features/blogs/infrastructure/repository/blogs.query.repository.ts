@@ -2,13 +2,13 @@ import { BlogItemDBType, BlogItemType, SearchTermBlogs } from '../blogs.type';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { BlogsQueryStateRepository } from 'src/features/blogs/application/blogs.query.interface';
-import { BlogViewModel } from './models/view.models';
 import { Paginated } from '../../../../common/utils';
 import {
   PageSizeQueryModel,
   PaginationViewModel,
 } from '../../../../common/common-types';
+import { BlogViewModel } from '../../_models/view.models';
+import { BlogsQueryStateRepository } from '../../_application/blogs.query.interface';
 
 // asc сначала старые потом новые
 // desc сначала новые потом старые

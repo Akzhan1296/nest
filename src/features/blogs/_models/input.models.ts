@@ -1,6 +1,6 @@
 import { Transform } from 'class-transformer';
-import { IsNotEmpty, Matches, MaxLength, isNotEmpty } from 'class-validator';
-import { PageSizeDTO } from '../../../../common/common-types';
+import { IsNotEmpty, Matches, MaxLength } from 'class-validator';
+import { PageSizeDTO } from '../../../common/common-types';
 
 export class BlogInputModelType {
   @Transform(({ value }) => value.trim())

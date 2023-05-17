@@ -3,7 +3,6 @@ import { PageSizeDTO } from '../../../../common/common-types';
 import { Transform } from 'class-transformer';
 import { IsBlogExist } from './post.decorator';
 
-
 export class PostInputModel {
   @Transform(({ value }) => value.trim())
   @IsNotEmpty()

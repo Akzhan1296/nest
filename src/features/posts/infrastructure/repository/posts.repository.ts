@@ -26,7 +26,7 @@ export class PostsRepository implements PostsStateRepository {
     post.title = postItem.title;
     post.content = postItem.content;
     post.shortDescription = postItem.shortDescription;
-    post.blogId = new ObjectId(postItem.blogId);
+    // post.blogId = new ObjectId(postItem.blogId);
     const isPostUpdated = post
       .save()
       .then((savedDoc) => {
