@@ -29,7 +29,7 @@ import {
   CreatePostByBlogIdInputType,
 } from '../../../_models/input.models';
 import { AuthGuard } from '../../../../../guards/auth.guard';
-import { PostInputModel } from './models';
+import { UpdatePostInputModel } from './models';
 
 @UseGuards(AuthGuard)
 @Controller('blogger/blogs')
@@ -102,7 +102,7 @@ export class BlogsController {
   @Put(':blogId/posts/:postId')
   async updatePostByBlogId(
     @Param() params: { blogId: string; postId: string },
-    @Body() postsInputModel: PostInputModel,
+    @Body() postsInputModel: UpdatePostInputModel,
     @Req() request: Request,
   ) {
     const checkingResult =
@@ -140,14 +140,4 @@ export class BlogsController {
     if (checkingResult.isForbidden) throw new ForbiddenException();
     return await this.postService.deletePost(params.postId);
   }
-
-  //update post
-
-  // add ownerId for blog entity
-
-  // in application check
-  // add server method which will check is ownerId and userId from token same ?
-  // if no return 403 forbidden or skip it
-
-  //delete post
 }

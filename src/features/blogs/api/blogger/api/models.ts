@@ -1,7 +1,7 @@
 import { IsNotEmpty, MaxLength } from 'class-validator';
 import { Transform } from 'class-transformer';
 
-export class PostInputModel {
+export class UpdatePostInputModel {
   @Transform(({ value }) => value.trim())
   @IsNotEmpty()
   @MaxLength(30)
