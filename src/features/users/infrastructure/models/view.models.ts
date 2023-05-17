@@ -10,3 +10,5 @@ export type MeViewModel = {
   login: string;
   email: string;
 };
+
+// update ban info
