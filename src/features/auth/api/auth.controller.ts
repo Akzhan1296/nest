@@ -38,15 +38,18 @@ import {
   AuthRegistrationInputModal,
   NewPasswordInputModal,
 } from './models/auth.models';
+import { UsersRepository } from '../../users/infrastructure/repository/users.repository';
+import { CheckBanGuard } from '../../../guards/check-ban.guard';
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly commandBus: CommandBus,
+    private readonly usersRepository: UsersRepository,
     private readonly usersQueryRepository: UsersQueryRepository,
   ) {}
 
   @Post('login')
-  // @UseGuards(BlockIpGuard)
+  @UseGuards(CheckBanGuard)
   @HttpCode(200)
   async login(
     @Req() request: Request,
