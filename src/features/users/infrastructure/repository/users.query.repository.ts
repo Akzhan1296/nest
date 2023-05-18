@@ -29,6 +29,11 @@ export class UsersQueryRepository {
       createdAt: user.createdAt,
       email: user.getEmail(),
       id: user._id.toString(),
+      banInfo: {
+        isBanned: user.getIsBanned(),
+        banDate: user.getBanDate(),
+        banReason: user.getBanReason(),
+      },
     }));
   }
 
@@ -40,6 +45,11 @@ export class UsersQueryRepository {
         login: user.getLogin(),
         email: user.getEmail(),
         id: user._id.toString(),
+        banInfo: {
+          isBanned: user.getIsBanned(),
+          banDate: user.getBanDate(),
+          banReason: user.getBanReason(),
+        },
       };
     }
     return null;

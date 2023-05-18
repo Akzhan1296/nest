@@ -109,6 +109,7 @@ import { PostLikesRepository } from './features/likes/infrastructure/repository/
 //decorators
 import { IsValidBlog } from './features/posts/api/models/post.decorator';
 import { DeleteService } from './features/delete/delete.service';
+import { BanUserCommandUseCase } from './features/users/application/use-cases/ban-unban-use-case';
 
 const authUseCases = [
   LoginUseCase,
@@ -119,7 +120,11 @@ const authUseCases = [
   RegistrationUserUseCase,
   UpdateUserRefreshTokenUseCase,
 ];
-const usersUseCases = [CreateUserUseCase, DeleteUserUseCase];
+const usersUseCases = [
+  CreateUserUseCase,
+  DeleteUserUseCase,
+  BanUserCommandUseCase,
+];
 const commentsUseCases = [
   CreateCommentUseCase,
   DeleteCommentUseCase,

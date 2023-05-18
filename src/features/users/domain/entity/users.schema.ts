@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { CreateUserDTO } from '../../application/dto/users.dto';
+import { CreateUserDTO, SetBanDataDTO } from '../../application/dto/users.dto';
 
 export type UsersDocument = HydratedDocument<Users>;
 
@@ -23,6 +23,41 @@ export class Users {
   private emailExpirationDate: Date | null;
   @Prop()
   createdAt: Date;
+
+  @Prop({
+    default: false,
+  })
+  private isBanned: boolean;
+
+  @Prop({
+    default: null,
+  })
+  private banDate: null | Date;
+
+  @Prop({
+    default: null,
+  })
+  private banReason: null | string;
+
+  getIsBanned() {
+    return this.isBanned;
+  }
+  getBanDate() {
+    return this.banDate;
+  }
+  getBanReason() {
+    return this.banReason;
+  }
+
+  setIsBanned(isBanned: boolean) {
+    this.isBanned = isBanned;
+  }
+  setBanDate(banDate: Date | null) {
+    this.banDate = banDate;
+  }
+  setBanReason(banReason: string | null) {
+    this.banReason = banReason;
+  }
 
   setLogin(login: string) {
     const length = login.length;
@@ -77,6 +112,11 @@ export class Users {
     this.setIsConfirmed(createUserData.isConfirmed);
     this.setEmailExpirationDate(createUserData.emailExpirationDate);
   }
+  setBanData(setBanData: SetBanDataDTO) {
+    this.setBanDate(setBanData.banDate);
+    this.setBanReason(setBanData.banReason);
+    this.setIsBanned(setBanData.isBanned);
+  }
 }
 
 export const UsersSchema = SchemaFactory.createForClass(Users);
@@ -95,3 +135,11 @@ UsersSchema.methods.getEmailExpirationDate =
 UsersSchema.methods.setEmailExpirationDate =
   Users.prototype.setEmailExpirationDate;
 UsersSchema.methods.createUser = Users.prototype.createUser;
+
+UsersSchema.methods.getIsBanned = Users.prototype.getIsBanned;
+UsersSchema.methods.getBanDate = Users.prototype.getBanDate;
+UsersSchema.methods.getBanReason = Users.prototype.getBanReason;
+UsersSchema.methods.setIsBanned = Users.prototype.setIsBanned;
+UsersSchema.methods.setBanDate = Users.prototype.setBanDate;
+UsersSchema.methods.setBanReason = Users.prototype.setBanReason;
+UsersSchema.methods.setBanData = Users.prototype.setBanData;

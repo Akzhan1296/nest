@@ -1,4 +1,4 @@
-import { MinLength, MaxLength, Matches } from 'class-validator';
+import { MinLength, MaxLength, Matches, IsBoolean } from 'class-validator';
 import { PageSizeDTO } from '../../../../common/common-types';
 export class AddUserInputModel {
   @MinLength(3)
@@ -19,4 +19,11 @@ export class UsersQueryType extends PageSizeDTO {
   searchEmailTerm = '';
   sortBy = 'createdAt';
   sortDirection = 'desc';
+}
+
+export class BanUserInputModal {
+  @IsBoolean()
+  isBanned: boolean;
+  @MinLength(20)
+  banReason: string;
 }

@@ -62,15 +62,23 @@ export class BlogsService {
     };
 
     const blog = await this.blogRepository.getBlogById(dto.blogId);
-    if (blog) result.isBlogFound = true;
+    if (blog) {
+      result.isBlogFound = true;
+      return result;
+    }
     const post = await this.postsRepository.getPostById(dto.postId);
-    if (post) result.isPostFound = true;
+    if (post) {
+      result.isPostFound = true;
+      return result;
+    }
     const isBlogOwner = await this.checkIsBlogOwner({
       blogId: dto.blogId,
       userId: dto.userId,
     });
-    if (!isBlogOwner) result.isForbidden = true;
-    console.log(result);
+    if (!isBlogOwner) {
+      result.isForbidden = true;
+      return result;
+    }
     return result;
   }
 }

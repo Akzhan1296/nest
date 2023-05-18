@@ -3,6 +3,11 @@ export type UserViewModel = {
   login: string;
   email: string;
   createdAt: Date;
+  banInfo: {
+    isBanned: boolean;
+    banDate: null | Date;
+    banReason: null | string;
+  };
 };
 
 export type MeViewModel = {
