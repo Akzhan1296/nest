@@ -4,12 +4,14 @@ import { CommentsQueryRepository } from '../infrastructure/repository/comments.q
 import { ObjectId } from 'mongodb';
 import { LikeModelView } from '../../likes/infrastructure/models/view.models';
 import { PostsQueryType } from '../../posts/api/models/input.models';
+import { UsersQueryRepository } from '../../users/infrastructure/repository/users.query.repository';
 
 @Injectable()
 export class CommentsQueryService {
   constructor(
     private readonly commentsQueryRepository: CommentsQueryRepository,
     private readonly likesQueryRepository: LikesQueryRepository,
+    private readonly usersQueryRepository: UsersQueryRepository,
   ) {}
   async getCommentById(commentId: string, userId: string) {
     let _userId = null;
@@ -27,6 +29,8 @@ export class CommentsQueryService {
         _userId,
       );
     }
+    const userEntity = await this.usersQueryRepository.findUserById(_userId);
+    if (userEntity.banInfo.isBanned) throw new NotFoundException();
     const commentEntity = await this.commentsQueryRepository.getCommentById(
       commentId,
     );
