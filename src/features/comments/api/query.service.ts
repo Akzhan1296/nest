@@ -61,6 +61,9 @@ export class CommentsQueryService {
       console.warn('can not change user id ');
     }
 
+    const userEntity = await this.usersQueryRepository.findUserById(userId);
+    if (userEntity.banInfo.isBanned) throw new NotFoundException();
+
     const comments = await this.commentsQueryRepository.getCommentsByPostId(
       pageSize,
       postId,
