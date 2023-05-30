@@ -19,6 +19,8 @@ export class BanUserCommandUseCase implements ICommandHandler<BanUserCommand> {
   ) {}
 
   async execute(command: BanUserCommand) {
+    let postEntityByIds = null;
+
     const user = await this.usersRepository.findUserById(
       command.banData.userId,
     );
@@ -37,13 +39,14 @@ export class BanUserCommandUseCase implements ICommandHandler<BanUserCommand> {
     const postEntity = await this.postsRepository.getPostByUserId(user._id);
 
     //get likeEntity by postId and userId
-    const postEntityByIds =
-      await this.postLikesRepository.findLikeByUserAndPostId(
+    if (postEntity) {
+      postEntityByIds = await this.postLikesRepository.findLikeByUserAndPostId(
         postEntity._id.toString(),
         user._id,
       );
+    }
 
-    if (command.banData.isBanned) {
+    if (postEntityByIds && command.banData.isBanned) {
       if (postEntityByIds.getLikeStatus() === 'Like') {
         this.postsRepository.decLike(postEntity._id.toString());
       }
@@ -53,7 +56,7 @@ export class BanUserCommandUseCase implements ICommandHandler<BanUserCommand> {
       }
     }
 
-    if (!command.banData.isBanned) {
+    if (postEntityByIds && !command.banData.isBanned) {
       if (postEntityByIds.getLikeStatus() === 'Like') {
         this.postsRepository.incLike(postEntity._id.toString());
       }
