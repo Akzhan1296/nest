@@ -27,9 +27,6 @@ export class PostsQueryService {
           postId,
           _userId,
         );
-
-      const userEntity = await this.usersQueryRepository.findUserById(userId);
-      if (userEntity.banInfo.isBanned) throw new NotFoundException();
     }
 
     return {

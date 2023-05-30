@@ -10,6 +10,7 @@ export class PostItemType {
     public createdAt: Date,
     public dislikeCount: number,
     public likeCount: number,
+    public userId: ObjectId,
   ) {}
 }
 

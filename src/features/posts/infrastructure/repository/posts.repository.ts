@@ -16,6 +16,9 @@ export class PostsRepository implements PostsStateRepository {
   async getPostById(id: string): Promise<PostDocument | null> {
     return await this.postModel.findOne({ _id: id });
   }
+  async getPostByUserId(userId: ObjectId): Promise<PostDocument | null> {
+    return await this.postModel.findOne({ userId });
+  }
   async createPost(postItem: PostItemType): Promise<PostDocument> {
     const result = await this.postModel.create(postItem);
     return result;
@@ -26,7 +29,6 @@ export class PostsRepository implements PostsStateRepository {
     post.title = postItem.title;
     post.content = postItem.content;
     post.shortDescription = postItem.shortDescription;
-    // post.blogId = new ObjectId(postItem.blogId);
     const isPostUpdated = post
       .save()
       .then((savedDoc) => {

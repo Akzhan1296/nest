@@ -24,6 +24,7 @@ export class PostsService {
       new Date(),
       0,
       0,
+      new ObjectId(dto.userId),
     );
     return this.postsRepository.createPost(newPost);
   }

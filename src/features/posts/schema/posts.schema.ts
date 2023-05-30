@@ -18,6 +18,8 @@ export class Post {
   blogName: string;
   @Prop()
   createdAt: Date;
+  @Prop()
+  userId: ObjectId;
   @Prop({ default: 0 })
   likeCount: number;
   @Prop({ default: 0 })
@@ -28,6 +30,9 @@ export class Post {
   private likedUsers: string[];
   getLikedUsers() {
     return this.likedUsers;
+  }
+  setUserId(userId: ObjectId) {
+    this.userId = userId;
   }
   setLikedUsers(id: string) {
     this.likedUsers = [...this.likedUsers, id];
@@ -60,3 +65,4 @@ PostsSchema.methods.setLikedUsers = Post.prototype.setLikedUsers;
 PostsSchema.methods.getNewestLikes = Post.prototype.getNewestLikes;
 PostsSchema.methods.getLikedUsers = Post.prototype.getLikedUsers;
 PostsSchema.methods.removeNewestUser = Post.prototype.removeNewestUser;
+PostsSchema.methods.setUserId = Post.prototype.setUserId;

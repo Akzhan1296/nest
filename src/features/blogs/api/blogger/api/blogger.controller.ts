@@ -87,10 +87,12 @@ export class BlogsController {
   async createPostByBlogId(
     @Param() params: { blogId: string },
     @Body() postInputModel: CreatePostByBlogIdInputType,
+    @Req() request: Request,
   ): Promise<PostViewModel> {
     const postByBlogId = await this.postService.createPost({
       ...postInputModel,
       blogId: params.blogId,
+      userId: request.body.userId,
     });
     return await this.postQuerysRepository.getPostById(
       postByBlogId._id.toString(),
@@ -118,6 +120,7 @@ export class BlogsController {
     return this.postService.updatePost(params.postId, {
       ...postsInputModel,
       blogId: params.blogId,
+      userId: request.body.userId,
     });
   }
 

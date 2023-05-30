@@ -28,7 +28,7 @@ export class CreateAccessTokenUseCase
     };
     const accessToken = this.jwtService.sign(payload, {
       secret: settings.JWT_SECRET,
-      expiresIn: '5min',
+      expiresIn: '50min',
     });
     return accessToken;
   }

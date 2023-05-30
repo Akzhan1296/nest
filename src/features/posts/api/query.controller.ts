@@ -15,6 +15,7 @@ import { CommentViewModel } from '../../comments/infrastructure/models/view.mode
 import { PostsQueryRepository } from '../infrastructure/repository/posts.query.repository';
 import { PostsQueryType } from './models/input.models';
 import { PostsQueryService } from './posts.query.service';
+import { CheckBanGuard } from '../../../guards/check-ban.guard';
 
 @Controller('posts')
 export class PostsQueryController {
@@ -35,6 +36,7 @@ export class PostsQueryController {
   }
 
   @UseGuards(UserIdGuard)
+  @UseGuards(CheckBanGuard)
   @Get(':id')
   // : Promise<PostViewModel>
   async getPostById(@Req() request: Request, @Param() params: { id: string }) {
@@ -47,6 +49,7 @@ export class PostsQueryController {
   }
 
   @UseGuards(UserIdGuard)
+  @UseGuards(CheckBanGuard)
   @Get(':postId/comments')
   async getCommentsByPostId(
     @Req() request: Request,
