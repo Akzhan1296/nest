@@ -35,6 +35,8 @@ async function bootstrap() {
     }),
   );
   app.useGlobalFilters(new HttpExceptionFilter());
-  await app.listen(PORT);
+  await app.listen(PORT, () => {
+    console.log('app started');
+  });
 }
 bootstrap();

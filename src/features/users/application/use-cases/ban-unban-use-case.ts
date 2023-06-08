@@ -40,6 +40,19 @@ export class BanUserCommandUseCase implements ICommandHandler<BanUserCommand> {
     //get likeEntity by postId and userId
     if (postsEntity.length) {
       const promises = postsEntity.map(async (post) => {
+        if (command.banData.isBanned) {
+          post.removeNewestUser(post.userId.toString());
+          await post.save();
+        }
+        if (!command.banData.isBanned) {
+          const likedUsers = post
+            .getWhoLiked()
+            .filter((user) => user.userId === post.userId.toString());
+          if (likedUsers.length) {
+            post.setNewestUser(likedUsers[0]);
+            await post.save();
+          }
+        }
         const postLike =
           await this.postLikesRepository.findLikesByUserAndPostId(
             post._id.toString(),
@@ -52,29 +65,21 @@ export class BanUserCommandUseCase implements ICommandHandler<BanUserCommand> {
     }
 
     if (postsLikeEntityByIds.length) {
-      postsLikeEntityByIds.forEach(async (postLikeEntity) => {
+      postsLikeEntityByIds.forEach(async (postEntity) => {
         if (command.banData.isBanned) {
-          if (postLikeEntity.getLikeStatus() === 'Like') {
-            await this.postsRepository.decLike(
-              postLikeEntity.postId.toString(),
-            );
+          if (postEntity.getLikeStatus() === 'Like') {
+            await this.postsRepository.decLike(postEntity.postId.toString());
           }
-          if (postLikeEntity.getLikeStatus() === 'Dislike') {
-            await this.postsRepository.decDislike(
-              postLikeEntity.postId.toString(),
-            );
+          if (postEntity.getLikeStatus() === 'Dislike') {
+            await this.postsRepository.decDislike(postEntity.postId.toString());
           }
         }
         if (!command.banData.isBanned) {
-          if (postLikeEntity.getLikeStatus() === 'Like') {
-            await this.postsRepository.incLike(
-              postLikeEntity.postId.toString(),
-            );
+          if (postEntity.getLikeStatus() === 'Like') {
+            await this.postsRepository.incLike(postEntity.postId.toString());
           }
-          if (postLikeEntity.getLikeStatus() === 'Dislike') {
-            await this.postsRepository.incDislike(
-              postLikeEntity.postId.toString(),
-            );
+          if (postEntity.getLikeStatus() === 'Dislike') {
+            await this.postsRepository.incDislike(postEntity.postId.toString());
           }
         }
       });

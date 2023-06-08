@@ -27,6 +27,8 @@ export class Post {
   @Prop()
   private newestLikes: NewestUser[];
   @Prop()
+  private whoLiked: NewestUser[];
+  @Prop()
   private likedUsers: string[];
   getLikedUsers() {
     return this.likedUsers;
@@ -51,10 +53,18 @@ export class Post {
     }
     this.newestLikes = users;
   }
+  getWhoLiked() {
+    return this.whoLiked;
+  }
+  setWhoLiked(user: NewestUser) {
+    this.whoLiked.push(user);
+  }
   removeNewestUser(userId: string) {
+    console.log(userId);
     const filteredLikes = this.newestLikes.filter(
       (like) => like.userId !== userId,
     );
+    console.log(filteredLikes);
     this.newestLikes = filteredLikes;
   }
 }
@@ -66,3 +76,5 @@ PostsSchema.methods.getNewestLikes = Post.prototype.getNewestLikes;
 PostsSchema.methods.getLikedUsers = Post.prototype.getLikedUsers;
 PostsSchema.methods.removeNewestUser = Post.prototype.removeNewestUser;
 PostsSchema.methods.setUserId = Post.prototype.setUserId;
+PostsSchema.methods.setWhoLiked = Post.prototype.setWhoLiked;
+PostsSchema.methods.getWhoLiked = Post.prototype.getWhoLiked;
