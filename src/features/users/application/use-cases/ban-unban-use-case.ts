@@ -52,21 +52,29 @@ export class BanUserCommandUseCase implements ICommandHandler<BanUserCommand> {
     }
 
     if (postsLikeEntityByIds.length) {
-      postsLikeEntityByIds.forEach(async (postEntity) => {
+      postsLikeEntityByIds.forEach(async (postLikeEntity) => {
         if (command.banData.isBanned) {
-          if (postEntity.getLikeStatus() === 'Like') {
-            await this.postsRepository.decLike(postEntity.postId.toString());
+          if (postLikeEntity.getLikeStatus() === 'Like') {
+            await this.postsRepository.decLike(
+              postLikeEntity.postId.toString(),
+            );
           }
-          if (postEntity.getLikeStatus() === 'Dislike') {
-            await this.postsRepository.decDislike(postEntity.postId.toString());
+          if (postLikeEntity.getLikeStatus() === 'Dislike') {
+            await this.postsRepository.decDislike(
+              postLikeEntity.postId.toString(),
+            );
           }
         }
         if (!command.banData.isBanned) {
-          if (postEntity.getLikeStatus() === 'Like') {
-            await this.postsRepository.incLike(postEntity.postId.toString());
+          if (postLikeEntity.getLikeStatus() === 'Like') {
+            await this.postsRepository.incLike(
+              postLikeEntity.postId.toString(),
+            );
           }
-          if (postEntity.getLikeStatus() === 'Dislike') {
-            await this.postsRepository.incDislike(postEntity.postId.toString());
+          if (postLikeEntity.getLikeStatus() === 'Dislike') {
+            await this.postsRepository.incDislike(
+              postLikeEntity.postId.toString(),
+            );
           }
         }
       });

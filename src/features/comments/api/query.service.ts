@@ -34,10 +34,10 @@ export class CommentsQueryService {
     );
     if (!commentEntity) throw new NotFoundException('comment not found');
 
-    // const userEntity = await this.usersQueryRepository.findUserById(
-    //   commentEntity.commentatorInfo.userId.toString(),
-    // );
-    // if (userEntity.banInfo.isBanned) throw new NotFoundException();
+    const userEntity = await this.usersQueryRepository.findUserById(
+      commentEntity.commentatorInfo.userId.toString(),
+    );
+    if (userEntity.banInfo.isBanned) throw new NotFoundException();
 
     return {
       ...commentEntity,
