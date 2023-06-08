@@ -13,58 +13,68 @@ export class BanUserCommand {
 @CommandHandler(BanUserCommand)
 export class BanUserCommandUseCase implements ICommandHandler<BanUserCommand> {
   constructor(
-    private readonly usersRepository: UsersRepository,
-    private readonly postLikesRepository: PostLikesRepository,
-    private readonly postsRepository: PostsRepository,
+    private usersRepository: UsersRepository,
+    private postLikesRepository: PostLikesRepository,
+    private postsRepository: PostsRepository,
   ) {}
 
   async execute(command: BanUserCommand) {
-    let postEntityByIds = null;
+    let postsLikeEntityByIds = [];
 
     const user = await this.usersRepository.findUserById(
       command.banData.userId,
     );
+    // users data
     if (!user) throw new NotFoundException('user not found');
     user.setBanData({
       isBanned: command.banData.isBanned,
       banDate: command.banData.isBanned ? new Date() : null,
       banReason: command.banData.isBanned ? command.banData.banReason : null,
     });
+    await this.usersRepository.save(user);
 
-    // get all postsEntity
-    const postsLikeEntity =
-      await this.postLikesRepository.findPostLikesByUserId(user._id);
-
+    // posts likes logic
     // get post entity
-    const postEntity = await this.postsRepository.getPostByUserId(user._id);
+    const postsEntity = await this.postsRepository.getPostsByUserId(user._id);
 
     //get likeEntity by postId and userId
-    if (postEntity) {
-      postEntityByIds = await this.postLikesRepository.findLikeByUserAndPostId(
-        postEntity._id.toString(),
-        user._id,
-      );
+    if (postsEntity.length) {
+      const promises = postsEntity.map(async (post) => {
+        const postLike =
+          await this.postLikesRepository.findLikesByUserAndPostId(
+            post._id.toString(),
+            user._id,
+          );
+
+        return postLike;
+      });
+      postsLikeEntityByIds = await Promise.all(promises);
     }
 
-    if (postEntityByIds && command.banData.isBanned) {
-      if (postEntityByIds.getLikeStatus() === 'Like') {
-        this.postsRepository.decLike(postEntity._id.toString());
-      }
-
-      if (postEntityByIds.getLikeStatus() === 'Dislike') {
-        this.postsRepository.decDislike(postEntity._id.toString());
-      }
+    if (postsLikeEntityByIds.length) {
+      postsLikeEntityByIds.forEach(async (postEntity) => {
+        if (command.banData.isBanned) {
+          if (postEntity.getLikeStatus() === 'Like') {
+            await this.postsRepository.decLike(postEntity.postId.toString());
+          }
+          if (postEntity.getLikeStatus() === 'Dislike') {
+            await this.postsRepository.decDislike(postEntity.postId.toString());
+          }
+        }
+        if (!command.banData.isBanned) {
+          if (postEntity.getLikeStatus() === 'Like') {
+            await this.postsRepository.incLike(postEntity.postId.toString());
+          }
+          if (postEntity.getLikeStatus() === 'Dislike') {
+            await this.postsRepository.incDislike(postEntity.postId.toString());
+          }
+        }
+      });
     }
 
-    if (postEntityByIds && !command.banData.isBanned) {
-      if (postEntityByIds.getLikeStatus() === 'Like') {
-        this.postsRepository.incLike(postEntity._id.toString());
-      }
-
-      if (postEntityByIds.getLikeStatus() === 'Dislike') {
-        this.postsRepository.incDislike(postEntity._id.toString());
-      }
-    }
+    // get all posts likes Entity
+    const postsLikeEntity =
+      await this.postLikesRepository.findPostLikesByUserId(user._id);
 
     // set banned statuses for all posts
     if (postsLikeEntity) {
@@ -75,7 +85,7 @@ export class BanUserCommandUseCase implements ICommandHandler<BanUserCommand> {
       await Promise.all(promises);
     }
 
-    await this.usersRepository.save(user);
+    // comments likes logic
     return user;
   }
 }

@@ -6,6 +6,7 @@ import { PostItemType } from '../posts.type';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreatePostDTO } from 'src/features/posts/application/dto/posts.dto';
 import { Post, PostDocument } from '../../schema/posts.schema';
+import { log } from 'console';
 
 @Injectable()
 export class PostsRepository implements PostsStateRepository {
@@ -18,6 +19,9 @@ export class PostsRepository implements PostsStateRepository {
   }
   async getPostByUserId(userId: ObjectId): Promise<PostDocument | null> {
     return await this.postModel.findOne({ userId });
+  }
+  async getPostsByUserId(userId: ObjectId): Promise<PostDocument[] | null> {
+    return await this.postModel.find({ userId });
   }
   async createPost(postItem: PostItemType): Promise<PostDocument> {
     const result = await this.postModel.create(postItem);

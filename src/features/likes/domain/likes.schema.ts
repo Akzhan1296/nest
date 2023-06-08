@@ -13,6 +13,8 @@ export class Like {
   private postId: ObjectId;
   @Prop()
   private userId: ObjectId;
+  @Prop({ default: false })
+  private isBanned: boolean;
 
   setLikeStatus(likeStatus: string) {
     if (
@@ -51,6 +53,12 @@ export class Like {
   getUserId() {
     return this.userId;
   }
+  getUserBanStatus() {
+    return this.isBanned;
+  }
+  setUserBanStatus(isBanned: boolean) {
+    this.isBanned = isBanned;
+  }
 }
 
 export const LikeSchema = SchemaFactory.createForClass(Like);
@@ -61,3 +69,5 @@ LikeSchema.methods.getCommentId = Like.prototype.getCommentId;
 LikeSchema.methods.setUserId = Like.prototype.setUserId;
 LikeSchema.methods.getUserId = Like.prototype.getUserId;
 LikeSchema.methods.setPostId = Like.prototype.setPostId;
+LikeSchema.methods.setUserBanStatus = Like.prototype.setUserBanStatus;
+LikeSchema.methods.getUserBanStatus = Like.prototype.getUserBanStatus;

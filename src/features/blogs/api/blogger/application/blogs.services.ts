@@ -21,7 +21,6 @@ export class BlogsService {
 
   private async checkIsBlogOwner(dto: BlogOwnerDTO): Promise<boolean> {
     const blog = await this.blogRepository.getBlogById(dto.blogId);
-    console.log(blog);
     return blog.ownerId.toString() === dto.userId;
   }
 
