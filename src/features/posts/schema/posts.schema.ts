@@ -60,11 +60,9 @@ export class Post {
     this.whoLiked.push(user);
   }
   removeNewestUser(userId: string) {
-    console.log(userId);
     const filteredLikes = this.newestLikes.filter(
       (like) => like.userId !== userId,
     );
-    console.log(filteredLikes);
     this.newestLikes = filteredLikes;
   }
 }
