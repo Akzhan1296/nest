@@ -36,7 +36,7 @@ export class PostsQueryController {
   }
 
   @UseGuards(UserIdGuard)
-  @UseGuards(CheckBanGuard)
+  // @UseGuards(CheckBanGuard)
   @Get(':id')
   // : Promise<PostViewModel>
   async getPostById(@Req() request: Request, @Param() params: { id: string }) {
