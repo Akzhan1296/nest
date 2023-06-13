@@ -46,6 +46,8 @@ export class BanUserCommandUseCase implements ICommandHandler<BanUserCommand> {
     // });
     // console.log(filteredByUserId);
 
+    console.log('test');
+
     //get likeEntity by postId and userId
     console.log('postsEntity', postsEntity);
     if (postsEntity.length) {
