@@ -50,8 +50,8 @@ export class BanUserCommandUseCase implements ICommandHandler<BanUserCommand> {
     console.log('postsEntity', postsEntity);
     if (postsEntity.length) {
       const promises = postsEntity.map(async (post) => {
-        if (command.banData.isBanned) {
-          post.removeNewestUser(post.userId.toString());
+        if (command.banData.userId) {
+          post.removeNewestUser(command.banData.userId.toString());
           await post.save();
         }
         if (!command.banData.isBanned) {
