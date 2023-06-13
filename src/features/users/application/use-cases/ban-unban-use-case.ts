@@ -44,10 +44,11 @@ export class BanUserCommandUseCase implements ICommandHandler<BanUserCommand> {
       const users = post.getWhoLiked();
       return users.filter((user) => user.userId === currentUserId);
     });
+    console.log(filteredByUserId);
 
     //get likeEntity by postId and userId
-    if (filteredByUserId.length) {
-      const promises = filteredByUserId.map(async (post) => {
+    if (postsEntity.length) {
+      const promises = postsEntity.map(async (post) => {
         if (command.banData.isBanned) {
           post.removeNewestUser(post.userId.toString());
           await post.save();
