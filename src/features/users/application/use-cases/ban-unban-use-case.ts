@@ -47,6 +47,7 @@ export class BanUserCommandUseCase implements ICommandHandler<BanUserCommand> {
     // console.log(filteredByUserId);
 
     //get likeEntity by postId and userId
+    console.log('postsEntity', postsEntity);
     if (postsEntity.length) {
       const promises = postsEntity.map(async (post) => {
         if (command.banData.isBanned) {
@@ -68,12 +69,19 @@ export class BanUserCommandUseCase implements ICommandHandler<BanUserCommand> {
             user._id,
           );
 
+        console.log('postLike', postLike);
+
         return postLike;
       });
-      postsLikeEntityByIds = await Promise.all(promises);
+      console.log('promises', promises);
+      postsLikeEntityByIds = (await Promise.all(promises)).filter(
+        (item) => item !== null,
+      );
     }
 
-    if (postsLikeEntityByIds.length) {
+    console.log('postsLikeEntityByIds', postsLikeEntityByIds);
+
+    if (postsLikeEntityByIds && postsLikeEntityByIds.length) {
       postsLikeEntityByIds.forEach(async (postEntity) => {
         if (command.banData.isBanned) {
           if (postEntity.getLikeStatus() === 'Like') {
