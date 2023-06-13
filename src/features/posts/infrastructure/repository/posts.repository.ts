@@ -23,6 +23,9 @@ export class PostsRepository implements PostsStateRepository {
   async getPostsByUserId(userId: ObjectId): Promise<PostDocument[] | null> {
     return await this.postModel.find({ userId });
   }
+  async getPosts(): Promise<PostDocument[] | null> {
+    return await this.postModel.find();
+  }
   async createPost(postItem: PostItemType): Promise<PostDocument> {
     const result = await this.postModel.create(postItem);
     return result;
