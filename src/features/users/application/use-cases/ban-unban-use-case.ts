@@ -57,7 +57,9 @@ export class BanUserCommandUseCase implements ICommandHandler<BanUserCommand> {
         if (!command.banData.isBanned) {
           const likedUsers = post
             .getWhoLiked()
-            .filter((user) => user.userId === post.userId.toString());
+            .filter(
+              (user) => user.userId === command.banData.userId.toString(),
+            );
           if (likedUsers.length) {
             post.setNewestUser(likedUsers[0]);
             await post.save();
