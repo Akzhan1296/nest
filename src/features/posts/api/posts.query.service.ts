@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { PageSizeQueryModel } from '../../../common/common-types';
 import { PostLikesRepository } from '../../likes/infrastructure/repository/post.likes.repository';
