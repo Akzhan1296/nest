@@ -110,6 +110,7 @@ import { PostLikesRepository } from './features/likes/infrastructure/repository/
 import { IsValidBlog } from './features/posts/api/models/post.decorator';
 import { DeleteService } from './features/delete/delete.service';
 import { BanUserCommandUseCase } from './features/users/application/use-cases/ban-unban-use-case';
+import { BlogsSAController } from './features/blogs/api/sa/sa.blogs.controller';
 
 const authUseCases = [
   LoginUseCase,
@@ -169,6 +170,7 @@ const likesUseCases = [HandleCommentsLikesUseCase, HandlePostsLikesUseCase];
     UsersController,
     BlogsController,
     BlogsPublicQueryController,
+    BlogsSAController,
     PostsController,
     PostsQueryController,
     CommentsController,
