@@ -9,6 +9,7 @@ export const BlogsSchema = new Schema<BlogItemType>(
     createdAt: Date,
     description: String,
     ownerId: ObjectId,
+    ownerLogin: String,
   },
   { versionKey: false },
 );

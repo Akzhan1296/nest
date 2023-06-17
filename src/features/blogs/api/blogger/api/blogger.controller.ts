@@ -69,6 +69,7 @@ export class BlogsController {
     const blog = await this.blogsService.createBlog({
       ...blogInputModel,
       userId: request.body.userId,
+      userLogin: request.body.login,
     });
     return await this.blogsQueryRepository.getBlogById(blog._id.toString());
   }

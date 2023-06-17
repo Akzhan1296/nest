@@ -8,6 +8,7 @@ export class BlogItemType {
     public createdAt: Date,
     public description: string,
     public ownerId: ObjectId | null,
+    public ownerLogin: string | null,
   ) {}
 }
 

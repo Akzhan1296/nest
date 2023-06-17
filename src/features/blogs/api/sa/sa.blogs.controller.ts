@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { PaginationViewModel } from '../../../../common/common-types';
-import { BlogViewModel } from '../../_models/view.models';
+import { BlogSAViewModel, BlogViewModel } from '../../_models/view.models';
 import { BlogsQueryType } from '../../_models/input.models';
 import { UserIdGuard } from '../../../../guards/userId';
 import { PostsQueryService } from '../../../posts/api/posts.query.service';
@@ -21,7 +21,7 @@ export class BlogsSAController {
   @Get()
   async getBlogs(
     @Query() pageSize: BlogsQueryType,
-  ): Promise<PaginationViewModel<BlogViewModel>> {
-    return await this.blogsQueryRepository.getBlogs(pageSize);
+  ): Promise<PaginationViewModel<BlogSAViewModel>> {
+    return await this.blogsQueryRepository.getBlogsSA(pageSize);
   }
 }

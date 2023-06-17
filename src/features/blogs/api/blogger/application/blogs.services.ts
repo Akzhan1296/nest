@@ -31,7 +31,9 @@ export class BlogsService {
       new Date(),
       dto.description,
       new ObjectId(dto.userId),
+      dto.userLogin,
     );
+
     return this.blogRepository.createBlog(newBlog);
   }
   async updateBlog(id: string, dto: BlogUpdateType): Promise<boolean> {

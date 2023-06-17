@@ -19,7 +19,17 @@ export class BlogsRepository implements BlogsStateRepository {
     return blog;
   }
   async createBlog(newBlog: BlogItemType): Promise<BlogItemDBType> {
-    return await this.blogModel.create(newBlog);
+    console.log(newBlog);
+    const a = await this.blogModel.create({
+      name: newBlog.name,
+      websiteUrl: newBlog.websiteUrl,
+      createdAt: newBlog.createdAt,
+      description: newBlog.description,
+      ownerId: newBlog.ownerId,
+      ownerLogin: newBlog.ownerLogin,
+    });
+    console.log(a);
+    return a;
   }
   async updateBlog(id: string, dto: BlogUpdateType): Promise<boolean> {
     const blog = await this.blogModel.findOne({ _id: id });

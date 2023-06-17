@@ -3,6 +3,7 @@ export type BlogType = {
   websiteUrl: string;
   description: string;
   userId: string;
+  userLogin: string;
 };
 
 export type BlogUpdateType = {
