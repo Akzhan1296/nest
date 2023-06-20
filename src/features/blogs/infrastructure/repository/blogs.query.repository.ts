@@ -9,7 +9,7 @@ import {
 } from '../../../../common/common-types';
 import { BlogSAViewModel, BlogViewModel } from '../../_models/view.models';
 import { BlogsQueryStateRepository } from '../../_application/blogs.query.interface';
-import { ObjectId } from 'mongoDb';
+import { ObjectId } from 'mongodb';
 
 // asc сначала старые потом новые
 // desc сначала новые потом старые
