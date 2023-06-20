@@ -21,7 +21,7 @@ export class BlogsService {
 
   private async checkIsBlogOwner(dto: BlogOwnerDTO): Promise<boolean> {
     const blog = await this.blogRepository.getBlogById(dto.blogId);
-    return blog.ownerId.toString() === dto.userId;
+    return blog.ownerId.toString() === dto.userId.toString();
   }
 
   createBlog(dto: BlogType): Promise<BlogItemDBType> {
@@ -65,12 +65,10 @@ export class BlogsService {
     const blog = await this.blogRepository.getBlogById(dto.blogId);
     if (blog) {
       result.isBlogFound = true;
-      return result;
     }
     const post = await this.postsRepository.getPostById(dto.postId);
     if (post) {
       result.isPostFound = true;
-      return result;
     }
     const isBlogOwner = await this.checkIsBlogOwner({
       blogId: dto.blogId,
@@ -78,7 +76,6 @@ export class BlogsService {
     });
     if (!isBlogOwner) {
       result.isForbidden = true;
-      return result;
     }
     return result;
   }
