@@ -1,18 +1,7 @@
-import {
-  Controller,
-  Get,
-  Param,
-  NotFoundException,
-  Query,
-  UseGuards,
-  Req,
-} from '@nestjs/common';
-import { Request } from 'express';
+import { Controller, Get, Query } from '@nestjs/common';
 import { PaginationViewModel } from '../../../../common/common-types';
-import { BlogSAViewModel, BlogViewModel } from '../../_models/view.models';
+import { BlogSAViewModel } from '../../_models/view.models';
 import { BlogsQueryType } from '../../_models/input.models';
-import { UserIdGuard } from '../../../../guards/userId';
-import { PostsQueryService } from '../../../posts/api/posts.query.service';
 import { BlogsQueryRepository } from '../../infrastructure/repository/blogs.query.repository';
 
 @Controller('sa/blogs')

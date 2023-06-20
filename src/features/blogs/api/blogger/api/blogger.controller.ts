@@ -78,8 +78,12 @@ export class BlogsController {
   @Get()
   async getBlogs(
     @Query() pageSize: BlogsQueryType,
+    @Req() request: Request,
   ): Promise<PaginationViewModel<BlogViewModel>> {
-    return await this.blogsQueryRepository.getBlogs(pageSize);
+    return await this.blogsQueryRepository.getBloggerBlogs(
+      pageSize,
+      request.body.userId,
+    );
   }
 
   // create post by blog id

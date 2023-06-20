@@ -19,8 +19,7 @@ export class BlogsRepository implements BlogsStateRepository {
     return blog;
   }
   async createBlog(newBlog: BlogItemType): Promise<BlogItemDBType> {
-    console.log(newBlog);
-    const a = await this.blogModel.create({
+    return await this.blogModel.create({
       name: newBlog.name,
       websiteUrl: newBlog.websiteUrl,
       createdAt: newBlog.createdAt,
@@ -28,8 +27,6 @@ export class BlogsRepository implements BlogsStateRepository {
       ownerId: newBlog.ownerId,
       ownerLogin: newBlog.ownerLogin,
     });
-    console.log(a);
-    return a;
   }
   async updateBlog(id: string, dto: BlogUpdateType): Promise<boolean> {
     const blog = await this.blogModel.findOne({ _id: id });

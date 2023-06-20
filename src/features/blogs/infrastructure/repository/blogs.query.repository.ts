@@ -9,6 +9,7 @@ import {
 } from '../../../../common/common-types';
 import { BlogSAViewModel, BlogViewModel } from '../../_models/view.models';
 import { BlogsQueryStateRepository } from '../../_application/blogs.query.interface';
+import { ObjectId } from 'mongoDb';
 
 // asc сначала старые потом новые
 // desc сначала новые потом старые
@@ -88,6 +89,34 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
         totalCount: await this.getBlogsCount(filter),
       },
       this.getBlogsViewsSA(blogs),
+    );
+  }
+  async getBloggerBlogs(
+    pageParams: PageSizeQueryModel,
+    ownerId: string,
+  ): Promise<PaginationViewModel<BlogViewModel>> {
+    const _ownerId = new ObjectId(ownerId);
+
+    const { searchNameTerm, skip, pageSize, sortBy, sortDirection } =
+      pageParams;
+
+    const filter: SearchTermBlogs & { ownerId: ObjectId } = {
+      name: new RegExp(searchNameTerm, 'i'),
+      ownerId: _ownerId,
+    };
+
+    const blogs = await this.blogModel
+      .find(filter)
+      .skip(skip)
+      .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
+      .limit(pageSize);
+
+    return Paginated.transformPagination(
+      {
+        ...pageParams,
+        totalCount: await this.getBlogsCount(filter),
+      },
+      this.getBlogsViews(blogs),
     );
   }
   async getBlogById(id: string): Promise<BlogViewModel | null> {
