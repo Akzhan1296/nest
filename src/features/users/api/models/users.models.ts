@@ -3,7 +3,6 @@ import {
   MaxLength,
   Matches,
   IsBoolean,
-  IsIn,
   IsOptional,
   IsEnum,
 } from 'class-validator';
@@ -20,9 +19,6 @@ export class AddUserInputModel {
   @Matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, { message: 'not valid email' })
   email: string;
 }
-
-// const banStatuses = ['banned'] as const;
-// export type Bans = typeof banStatuses[number];
 
 export enum BanStatuses {
   ALL = 'all',

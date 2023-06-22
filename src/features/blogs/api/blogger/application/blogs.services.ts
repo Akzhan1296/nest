@@ -21,7 +21,10 @@ export class BlogsService {
 
   private async checkIsBlogOwner(dto: BlogOwnerDTO): Promise<boolean> {
     const blog = await this.blogRepository.getBlogById(dto.blogId);
-    return blog.ownerId.toString() === dto.userId.toString();
+    if (blog) {
+      return blog.ownerId.toString() === dto.userId.toString();
+    }
+    return false;
   }
 
   createBlog(dto: BlogType): Promise<BlogItemDBType> {
