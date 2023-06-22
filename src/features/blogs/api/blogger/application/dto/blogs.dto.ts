@@ -19,7 +19,7 @@ export type BlogOwnerDTO = {
 
 export type UpdateOrDeletePostDTO = {
   blogId: string;
-  postId: string;
+  postId?: string;
   userId: string;
 };
 

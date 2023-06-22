@@ -69,7 +69,10 @@ export class BlogsService {
     if (blog) {
       result.isBlogFound = true;
     }
-    const post = await this.postsRepository.getPostById(dto.postId);
+    let post = null;
+    if (dto.postId) {
+      post = await this.postsRepository.getPostById(dto.postId);
+    }
     if (post) {
       result.isPostFound = true;
     }

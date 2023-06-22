@@ -55,7 +55,18 @@ export class BlogsController {
   // delete
   @Delete(':id')
   @HttpCode(204)
-  async deleteBlog(@Param() params: { id: string }): Promise<boolean> {
+  async deleteBlog(
+    @Param() params: { id: string },
+    @Req() request: Request,
+  ): Promise<boolean> {
+    const checkingResult =
+      await this.blogsService.checkBlockBeforeUpdateOrDelete({
+        blogId: params.id,
+        userId: request.body.userId,
+      });
+    if (!checkingResult.isBlogFound) throw new NotFoundException();
+    if (checkingResult.isForbidden) throw new ForbiddenException();
+
     return await this.blogsService.deleteBlog(params.id);
   }
 
