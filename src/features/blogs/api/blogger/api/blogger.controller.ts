@@ -48,8 +48,16 @@ export class BlogsController {
   @HttpCode(204)
   async updateBlog(
     @Param() params: { id: string },
+    @Req() request: Request,
     @Body() blogInputModel: BlogInputModelType,
   ): Promise<boolean> {
+    const checkingResult =
+      await this.blogsService.checkBlockBeforeUpdateOrDelete({
+        blogId: params.id,
+        userId: request.body.userId,
+      });
+    if (!checkingResult.isBlogFound) throw new NotFoundException();
+    if (checkingResult.isForbidden) throw new ForbiddenException();
     return await this.blogsService.updateBlog(params.id, blogInputModel);
   }
   // delete
