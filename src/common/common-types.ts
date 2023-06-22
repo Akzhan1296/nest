@@ -9,6 +9,7 @@ export class PageSizeQueryModel {
   searchNameTerm?: string;
   searchLoginTerm?: string;
   searchEmailTerm?: string;
+  banStatus?: string;
 }
 
 export type PaginationViewModel<T> = {

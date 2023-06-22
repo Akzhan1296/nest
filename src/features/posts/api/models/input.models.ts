@@ -1,4 +1,4 @@
-import { IsIn, IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import { IsIn, MaxLength, MinLength } from 'class-validator';
 import { PageSizeDTO } from '../../../../common/common-types';
 // import { Transform } from 'class-transformer';
 // import { IsBlogExist } from './post.decorator';
