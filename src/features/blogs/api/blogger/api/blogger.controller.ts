@@ -113,6 +113,14 @@ export class BlogsController {
     @Body() postInputModel: CreatePostByBlogIdInputType,
     @Req() request: Request,
   ): Promise<PostViewModel> {
+    const checkingResult =
+      await this.blogsService.checkBlockBeforeUpdateOrDelete({
+        blogId: params.blogId,
+        userId: request.body.userId,
+      });
+    if (!checkingResult.isBlogFound) throw new NotFoundException();
+    if (checkingResult.isForbidden) throw new ForbiddenException();
+
     const postByBlogId = await this.postService.createPost({
       ...postInputModel,
       blogId: params.blogId,
