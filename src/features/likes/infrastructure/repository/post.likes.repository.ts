@@ -24,6 +24,17 @@ export class PostLikesRepository extends Repository<PostLikeDocument> {
       userId,
     });
   }
+  async findLikesByUserAndPostId(
+    postId: string,
+    userId: ObjectId,
+  ): Promise<PostLikeDocument[]> {
+    const _postId = new ObjectId(postId);
+
+    return await this.PostLikeModel.findOne({
+      postId: _postId,
+      userId,
+    });
+  }
   async findPostLikesByUserId(userId: ObjectId): Promise<PostLikeDocument[]> {
     return await this.PostLikeModel.find({
       userId,

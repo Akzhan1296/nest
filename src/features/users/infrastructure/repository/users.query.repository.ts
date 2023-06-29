@@ -12,6 +12,7 @@ import {
   PaginationViewModel,
 } from '../../../../common/common-types';
 import { Injectable } from '@nestjs/common';
+import { BanStatuses } from '../../api/models/users.models';
 @Injectable()
 export class UsersQueryRepository {
   constructor(
@@ -29,6 +30,11 @@ export class UsersQueryRepository {
       createdAt: user.createdAt,
       email: user.getEmail(),
       id: user._id.toString(),
+      banInfo: {
+        isBanned: user.getIsBanned(),
+        banDate: user.getBanDate(),
+        banReason: user.getBanReason(),
+      },
     }));
   }
 
@@ -40,6 +46,11 @@ export class UsersQueryRepository {
         login: user.getLogin(),
         email: user.getEmail(),
         id: user._id.toString(),
+        banInfo: {
+          isBanned: user.getIsBanned(),
+          banDate: user.getBanDate(),
+          banReason: user.getBanReason(),
+        },
       };
     }
     return null;
@@ -65,13 +76,24 @@ export class UsersQueryRepository {
       pageSize,
       sortBy,
       sortDirection,
+      banStatus,
     } = pageParams;
+
+    const banFilter: { isBanned?: boolean } = {};
+
+    if (banStatus === BanStatuses.BANNED) {
+      banFilter.isBanned = true;
+    }
+    if (banStatus === BanStatuses.NOT_BANNED) {
+      banFilter.isBanned = false;
+    }
 
     const filter = {
       $or: [
         { login: new RegExp(searchLoginTerm, 'i') },
         { email: new RegExp(searchEmailTerm, 'i') },
       ],
+      $and: [banFilter],
     };
 
     const users = await this.UserModel.find(filter)

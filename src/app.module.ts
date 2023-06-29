@@ -9,13 +9,18 @@ import { AppService } from './app.service';
 import { settings } from './settings';
 
 //blogs
-import { BlogsController } from './features/blogs/api/blogs.controller';
-import { BlogsQueryController } from './features/blogs/api/query.controller';
-import { factoryBlogsService } from './features/blogs/factory/blogs.factory';
-import { BlogsRepository } from './features/blogs/infrastructure/repository/blogs.repository';
+// import { BlogsController } from './features/blogs/api/blogs.controller';
+// import { BlogsQueryController } from './features/blogs/api/query.controller';
+// import { factoryBlogsService } from './features/blogs/factory/sa.factory';
+// import { BlogsRepository } from './features/blogs/infrastructure/repository/blogs.repository';
+
+import { BlogsController } from './features/blogs/api/blogger/api/blogger.controller';
+import { BlogsPublicQueryController } from './features/blogs/api/public/public.blogs.controller';
+import { BlogsRepository } from './features/blogs/api/blogger/infrastructure/repository/blogs.repository';
+import { factoryBlogsService } from './features/blogs/factory/public.factory';
 import { BlogsQueryRepository } from './features/blogs/infrastructure/repository/blogs.query.repository';
 import { BlogItemType } from './features/blogs/infrastructure/blogs.type';
-import { BlogsSchema } from './features/blogs/schema/blogs.schema';
+import { BlogsSchema } from './features/blogs/domain/blogs.schema';
 
 //posts
 import { PostsController } from './features/posts/api/posts.controller';
@@ -104,6 +109,8 @@ import { PostLikesRepository } from './features/likes/infrastructure/repository/
 //decorators
 import { IsValidBlog } from './features/posts/api/models/post.decorator';
 import { DeleteService } from './features/delete/delete.service';
+import { BanUserCommandUseCase } from './features/users/application/use-cases/ban-unban-use-case';
+import { BlogsSAController } from './features/blogs/api/sa/sa.blogs.controller';
 
 const authUseCases = [
   LoginUseCase,
@@ -114,7 +121,11 @@ const authUseCases = [
   RegistrationUserUseCase,
   UpdateUserRefreshTokenUseCase,
 ];
-const usersUseCases = [CreateUserUseCase, DeleteUserUseCase];
+const usersUseCases = [
+  CreateUserUseCase,
+  DeleteUserUseCase,
+  BanUserCommandUseCase,
+];
 const commentsUseCases = [
   CreateCommentUseCase,
   DeleteCommentUseCase,
@@ -158,7 +169,8 @@ const likesUseCases = [HandleCommentsLikesUseCase, HandlePostsLikesUseCase];
     AuthController,
     UsersController,
     BlogsController,
-    BlogsQueryController,
+    BlogsPublicQueryController,
+    BlogsSAController,
     PostsController,
     PostsQueryController,
     CommentsController,

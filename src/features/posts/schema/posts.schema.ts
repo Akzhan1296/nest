@@ -18,6 +18,8 @@ export class Post {
   blogName: string;
   @Prop()
   createdAt: Date;
+  @Prop()
+  userId: ObjectId;
   @Prop({ default: 0 })
   likeCount: number;
   @Prop({ default: 0 })
@@ -25,9 +27,14 @@ export class Post {
   @Prop()
   private newestLikes: NewestUser[];
   @Prop()
+  private whoLiked: NewestUser[];
+  @Prop()
   private likedUsers: string[];
   getLikedUsers() {
     return this.likedUsers;
+  }
+  setUserId(userId: ObjectId) {
+    this.userId = userId;
   }
   setLikedUsers(id: string) {
     this.likedUsers = [...this.likedUsers, id];
@@ -46,6 +53,12 @@ export class Post {
     }
     this.newestLikes = users;
   }
+  getWhoLiked() {
+    return this.whoLiked;
+  }
+  setWhoLiked(user: NewestUser) {
+    this.whoLiked.push(user);
+  }
   removeNewestUser(userId: string) {
     const filteredLikes = this.newestLikes.filter(
       (like) => like.userId !== userId,
@@ -60,3 +73,6 @@ PostsSchema.methods.setLikedUsers = Post.prototype.setLikedUsers;
 PostsSchema.methods.getNewestLikes = Post.prototype.getNewestLikes;
 PostsSchema.methods.getLikedUsers = Post.prototype.getLikedUsers;
 PostsSchema.methods.removeNewestUser = Post.prototype.removeNewestUser;
+PostsSchema.methods.setUserId = Post.prototype.setUserId;
+PostsSchema.methods.setWhoLiked = Post.prototype.setWhoLiked;
+PostsSchema.methods.getWhoLiked = Post.prototype.getWhoLiked;

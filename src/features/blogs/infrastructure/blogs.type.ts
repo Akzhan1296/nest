@@ -7,16 +7,22 @@ export class BlogItemType {
     public websiteUrl: string,
     public createdAt: Date,
     public description: string,
+    public ownerId: ObjectId | null,
+    public ownerLogin: string | null,
   ) {}
 }
 
 // db type
-export class BlogItemDBType {
-  name: string;
-  websiteUrl: string;
+// export class BlogItemDBType {
+//   name: string;
+//   websiteUrl: string;
+//   _id: ObjectId;
+//   createdAt: Date;
+//   description: string;
+// }
+
+export class BlogItemDBType extends BlogItemType {
   _id: ObjectId;
-  createdAt: Date;
-  description: string;
 }
 
 export type SearchTermBlogs = { name: RegExp };

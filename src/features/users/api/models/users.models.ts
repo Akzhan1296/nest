@@ -1,4 +1,11 @@
-import { MinLength, MaxLength, Matches } from 'class-validator';
+import {
+  MinLength,
+  MaxLength,
+  Matches,
+  IsBoolean,
+  IsOptional,
+  IsEnum,
+} from 'class-validator';
 import { PageSizeDTO } from '../../../../common/common-types';
 export class AddUserInputModel {
   @MinLength(3)
@@ -13,10 +20,25 @@ export class AddUserInputModel {
   email: string;
 }
 
+export enum BanStatuses {
+  ALL = 'all',
+  BANNED = 'banned',
+  NOT_BANNED = 'notBanned',
+}
 export class UsersQueryType extends PageSizeDTO {
   // eslint-disable-next-line @typescript-eslint/no-inferrable-types
   searchLoginTerm = '';
   searchEmailTerm = '';
   sortBy = 'createdAt';
   sortDirection = 'desc';
+  @IsOptional()
+  @IsEnum(BanStatuses)
+  banStatus: string;
+}
+
+export class BanUserInputModal {
+  @IsBoolean()
+  isBanned: boolean;
+  @MinLength(20)
+  banReason: string;
 }

@@ -24,4 +24,7 @@ export class LikesRepository extends Repository<LikeDocument> {
       userId: _userId,
     });
   }
+  async findLikeByUserId(userId: ObjectId): Promise<LikeDocument[]> {
+    return await this.LikeModel.find({ userId });
+  }
 }

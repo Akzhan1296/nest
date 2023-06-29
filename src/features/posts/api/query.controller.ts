@@ -15,6 +15,8 @@ import { CommentViewModel } from '../../comments/infrastructure/models/view.mode
 import { PostsQueryRepository } from '../infrastructure/repository/posts.query.repository';
 import { PostsQueryType } from './models/input.models';
 import { PostsQueryService } from './posts.query.service';
+import { CheckBanGuard } from '../../../guards/check-ban.guard';
+import { PostViewModel } from '../infrastructure/repository/models/view.models';
 
 @Controller('posts')
 export class PostsQueryController {
@@ -26,8 +28,10 @@ export class PostsQueryController {
 
   @UseGuards(UserIdGuard)
   @Get()
-  // : Promise<PaginationViewModel<PostViewModel>>
-  async getPosts(@Req() request: Request, @Query() pageSize: PostsQueryType) {
+  async getPosts(
+    @Req() request: Request,
+    @Query() pageSize: PostsQueryType,
+  ): Promise<PaginationViewModel<PostViewModel>> {
     return await this.postsQueryService.getAllPostsWithLike(
       pageSize,
       request.body.userId,
@@ -35,9 +39,12 @@ export class PostsQueryController {
   }
 
   @UseGuards(UserIdGuard)
+  // @UseGuards(CheckBanGuard)
   @Get(':id')
-  // : Promise<PostViewModel>
-  async getPostById(@Req() request: Request, @Param() params: { id: string }) {
+  async getPostById(
+    @Req() request: Request,
+    @Param() params: { id: string },
+  ): Promise<PostViewModel> {
     const post = await this.postsQueryRepository.getPostById(params.id);
     if (!post) throw new NotFoundException('post not found');
     return await this.postsQueryService.getPostWithLikeById(
@@ -47,6 +54,7 @@ export class PostsQueryController {
   }
 
   @UseGuards(UserIdGuard)
+  @UseGuards(CheckBanGuard)
   @Get(':postId/comments')
   async getCommentsByPostId(
     @Req() request: Request,

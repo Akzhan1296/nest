@@ -1,8 +1,12 @@
-import { BlogItemDBType, BlogItemType } from '../blogs.type';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { BlogsStateRepository } from '../../application/blogs.interface';
+import {
+  BlogItemDBType,
+  BlogItemType,
+} from '../../../../infrastructure/blogs.type';
+import { BlogUpdateType } from '../../application/dto/blogs.dto';
 
 @Injectable()
 export class BlogsRepository implements BlogsStateRepository {
@@ -15,10 +19,16 @@ export class BlogsRepository implements BlogsStateRepository {
     return blog;
   }
   async createBlog(newBlog: BlogItemType): Promise<BlogItemDBType> {
-    const result = await this.blogModel.create(newBlog);
-    return result;
+    return await this.blogModel.create({
+      name: newBlog.name,
+      websiteUrl: newBlog.websiteUrl,
+      createdAt: newBlog.createdAt,
+      description: newBlog.description,
+      ownerId: newBlog.ownerId,
+      ownerLogin: newBlog.ownerLogin,
+    });
   }
-  async updateBlog(id: string, dto: BlogItemType): Promise<boolean> {
+  async updateBlog(id: string, dto: BlogUpdateType): Promise<boolean> {
     const blog = await this.blogModel.findOne({ _id: id });
     blog.name = dto.name;
     blog.websiteUrl = dto.websiteUrl;

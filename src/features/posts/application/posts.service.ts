@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
-import { BlogsStateRepository } from '../../blogs/application/blogs.interface';
+import { BlogsStateRepository } from '../../blogs/api/blogger/application/blogs.interface';
 import { PostItemType } from '../infrastructure/posts.type';
 import { PostDocument } from '../schema/posts.schema';
 import { CreatePostDTO } from './dto/posts.dto';
@@ -24,6 +24,7 @@ export class PostsService {
       new Date(),
       0,
       0,
+      new ObjectId(dto.userId),
     );
     return this.postsRepository.createPost(newPost);
   }

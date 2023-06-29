@@ -3,11 +3,13 @@ import { ObjectId } from 'mongodb';
 import { PageSizeQueryModel } from '../../../common/common-types';
 import { PostLikesRepository } from '../../likes/infrastructure/repository/post.likes.repository';
 import { PostsQueryRepository } from '../infrastructure/repository/posts.query.repository';
+import { UsersQueryRepository } from '../../users/infrastructure/repository/users.query.repository';
 @Injectable()
 export class PostsQueryService {
   constructor(
     private readonly postQuerysRepository: PostsQueryRepository,
     private readonly postLikesQueryRepository: PostLikesRepository,
+    private readonly usersQueryRepository: UsersQueryRepository,
   ) {}
   async getPostWithLikeById(postId: string, userId: string) {
     let _userId = null;
@@ -27,14 +29,13 @@ export class PostsQueryService {
         );
     }
 
-    const a = {
+    return {
       ...post,
       extendedLikesInfo: {
         ...post.extendedLikesInfo,
         myStatus: postLikeEntity ? postLikeEntity.getLikeStatus() : 'None',
       },
     };
-    return a;
   }
 
   async getAllPostsWithLike(pageParams: PageSizeQueryModel, userId: string) {

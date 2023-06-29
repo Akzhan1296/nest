@@ -6,6 +6,7 @@ import {
   HttpCode,
   Param,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -18,11 +19,16 @@ import { DeleteUserCommand } from '../application/use-cases/delete-user-use-case
 // models
 import { PaginationViewModel } from '../../../common/common-types';
 import { UserViewModel } from '../infrastructure/models/view.models';
-import { AddUserInputModel, UsersQueryType } from './models/users.models';
+import {
+  AddUserInputModel,
+  BanUserInputModal,
+  UsersQueryType,
+} from './models/users.models';
 // repo
 import { UsersQueryRepository } from '../infrastructure/repository/users.query.repository';
+import { BanUserCommand } from '../application/use-cases/ban-unban-use-case';
 
-@Controller('users')
+@Controller('sa/users')
 @UseGuards(AuthBasicGuard)
 export class UsersController {
   constructor(
@@ -37,6 +43,7 @@ export class UsersController {
     return await this.usersQueryRepository.getUsers(pageSize);
   }
 
+  // create user
   @Post()
   @HttpCode(201)
   async createUser(
@@ -53,6 +60,23 @@ export class UsersController {
     return await this.usersQueryRepository.findUserById(user._id.toString());
   }
 
+  //ban user
+  @Put(':userId/ban')
+  @HttpCode(204)
+  async banUser(
+    @Param() params: { userId: string },
+    @Body() inputModel: BanUserInputModal,
+  ) {
+    const user = await this.commandBus.execute(
+      new BanUserCommand({
+        ...inputModel,
+        userId: params.userId,
+      }),
+    );
+    return await this.usersQueryRepository.findUserById(user._id.toString());
+  }
+
+  // delete user
   @Delete(':id')
   @HttpCode(204)
   async deleteUser(@Param() params: { id: string }): Promise<boolean> {

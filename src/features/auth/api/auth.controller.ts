@@ -38,6 +38,7 @@ import {
   AuthRegistrationInputModal,
   NewPasswordInputModal,
 } from './models/auth.models';
+import { CheckBanGuard } from '../../../guards/check-ban.guard';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -46,7 +47,7 @@ export class AuthController {
   ) {}
 
   @Post('login')
-  // @UseGuards(BlockIpGuard)
+  @UseGuards(CheckBanGuard)
   @HttpCode(200)
   async login(
     @Req() request: Request,

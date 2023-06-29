@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   HttpCode,
-  NotFoundException,
   Param,
   Put,
   Req,
@@ -12,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 
-import { CommentsQueryRepository } from '../infrastructure/repository/comments.query.repository';
 import { CommentViewModel } from '../infrastructure/models/view.models';
 import {
   CommentInputModelType,
@@ -30,7 +28,6 @@ import { HandleCommentsLikesCommand } from '../../likes/application/use-cases/ha
 export class CommentsController {
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly commentsQueryRepository: CommentsQueryRepository,
     private readonly commentsQueryService: CommentsQueryService,
   ) {}
 

@@ -1,5 +1,5 @@
-import { BlogsStateRepository } from '../../blogs/application/blogs.interface';
-import { BlogsRepository } from '../../blogs/infrastructure/repository/blogs.repository';
+import { BlogsStateRepository } from '../../blogs/api/blogger/application/blogs.interface';
+import { BlogsRepository } from '../../blogs/api/blogger/infrastructure/repository/blogs.repository';
 import { PostsStateRepository } from '../application/posts.interface';
 import { PostsService } from '../application/posts.service';
 import { PostsRepository } from '../infrastructure/repository/posts.repository';

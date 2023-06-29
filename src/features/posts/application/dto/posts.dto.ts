@@ -3,6 +3,7 @@ export type CreatePostDTO = {
   shortDescription: string;
   content: string;
   blogId: string;
+  userId: string;
 };
 
 export type CreateCommentDTO = {

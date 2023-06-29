@@ -49,6 +49,7 @@ export class HandlePostsLikesUseCase
       postsEntity.setLikedUsers(userId);
       if (postLikeStatus === 'Like') {
         postsEntity.setNewestUser({ userId, login, addedAt: new Date() });
+        postsEntity.setWhoLiked({ userId, login, addedAt: new Date() });
       }
       await postsEntity.save();
       await this.postLikesRepository.save(newPostLikeEntity);
@@ -66,6 +67,7 @@ export class HandlePostsLikesUseCase
           login,
           addedAt: new Date(),
         });
+        postsEntity.setWhoLiked({ userId, login, addedAt: new Date() });
         await postsEntity.save();
       }
       if (likeStatus === 'Dislike') {

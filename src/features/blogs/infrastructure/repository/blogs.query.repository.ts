@@ -2,13 +2,14 @@ import { BlogItemDBType, BlogItemType, SearchTermBlogs } from '../blogs.type';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { BlogsQueryStateRepository } from 'src/features/blogs/application/blogs.query.interface';
-import { BlogViewModel } from './models/view.models';
 import { Paginated } from '../../../../common/utils';
 import {
   PageSizeQueryModel,
   PaginationViewModel,
 } from '../../../../common/common-types';
+import { BlogSAViewModel, BlogViewModel } from '../../_models/view.models';
+import { BlogsQueryStateRepository } from '../../_application/blogs.query.interface';
+import { ObjectId } from 'mongodb';
 
 // asc сначала старые потом новые
 // desc сначала новые потом старые
@@ -32,6 +33,20 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
       isMembership: false,
     }));
   }
+  private getBlogsViewsSA(blogs: BlogItemDBType[]): BlogSAViewModel[] {
+    return blogs.map((blog) => ({
+      name: blog.name,
+      websiteUrl: blog.websiteUrl,
+      id: blog._id.toString(),
+      createdAt: blog.createdAt,
+      description: blog.description,
+      isMembership: false,
+      blogOwnerInfo: {
+        userId: blog.ownerId.toString(),
+        userLogin: blog.ownerLogin,
+      },
+    }));
+  }
   async getBlogs(
     pageParams: PageSizeQueryModel,
   ): Promise<PaginationViewModel<BlogViewModel>> {
@@ -39,6 +54,56 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
       pageParams;
 
     const filter: SearchTermBlogs = { name: new RegExp(searchNameTerm, 'i') };
+
+    const blogs = await this.blogModel
+      .find(filter)
+      .skip(skip)
+      .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
+      .limit(pageSize);
+
+    return Paginated.transformPagination(
+      {
+        ...pageParams,
+        totalCount: await this.getBlogsCount(filter),
+      },
+      this.getBlogsViews(blogs),
+    );
+  }
+  async getBlogsSA(
+    pageParams: PageSizeQueryModel,
+  ): Promise<PaginationViewModel<BlogSAViewModel>> {
+    const { searchNameTerm, skip, pageSize, sortBy, sortDirection } =
+      pageParams;
+
+    const filter: SearchTermBlogs = { name: new RegExp(searchNameTerm, 'i') };
+
+    const blogs = await this.blogModel
+      .find(filter)
+      .skip(skip)
+      .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
+      .limit(pageSize);
+
+    return Paginated.transformPagination(
+      {
+        ...pageParams,
+        totalCount: await this.getBlogsCount(filter),
+      },
+      this.getBlogsViewsSA(blogs),
+    );
+  }
+  async getBloggerBlogs(
+    pageParams: PageSizeQueryModel,
+    ownerId: string,
+  ): Promise<PaginationViewModel<BlogViewModel>> {
+    const _ownerId = new ObjectId(ownerId);
+
+    const { searchNameTerm, skip, pageSize, sortBy, sortDirection } =
+      pageParams;
+
+    const filter: SearchTermBlogs & { ownerId: ObjectId } = {
+      name: new RegExp(searchNameTerm, 'i'),
+      ownerId: _ownerId,
+    };
 
     const blogs = await this.blogModel
       .find(filter)
