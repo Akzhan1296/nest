@@ -77,9 +77,8 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
     const { searchNameTerm, skip, pageSize, sortBy, sortDirection } =
       pageParams;
 
-    const filter: SearchTermBlogs & { isBanned: boolean } = {
+    const filter: SearchTermBlogs = {
       name: new RegExp(searchNameTerm, 'i'),
-      isBanned: false,
     };
 
     const blogs = await this.blogModel

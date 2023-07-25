@@ -5,6 +5,7 @@ export interface BlogViewModel {
   createdAt: Date;
   description: string;
   isMembership: boolean;
+  isBanned: boolean;
 }
 
 export interface BlogSAViewModel extends BlogViewModel {

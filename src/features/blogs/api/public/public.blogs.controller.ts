@@ -37,6 +37,9 @@ export class BlogsPublicQueryController {
     if (!blog) {
       throw new NotFoundException('blog not found');
     }
+    if (blog.isBanned) {
+      throw new NotFoundException('blog not found');
+    }
     return blog;
   }
 
