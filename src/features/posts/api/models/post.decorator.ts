@@ -5,7 +5,7 @@ import {
   ValidatorConstraintInterface,
   registerDecorator,
 } from 'class-validator';
-import { BlogsQueryRepository } from '../../../blogs/infrastructure/repository/blogs.query.repository';
+import { BlogsQueryRepository } from '../../../blogs/_infrastructure/repository/blogs.query.repository';
 
 @Injectable()
 @ValidatorConstraint({ async: true })

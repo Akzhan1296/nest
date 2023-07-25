@@ -19,7 +19,7 @@ import { PostsService } from '../../../../posts/application/posts.service';
 import { PostViewModel } from '../../../../posts/infrastructure/repository/models/view.models';
 import { PostsQueryRepository } from '../../../../posts/infrastructure/repository/posts.query.repository';
 import { BlogsService } from '../application/blogs.services';
-import { BlogsQueryRepository } from '../../../infrastructure/repository/blogs.query.repository';
+import { BlogsQueryRepository } from '../../../_infrastructure/repository/blogs.query.repository';
 import { PaginationViewModel } from '../../../../../common/common-types';
 
 import { BlogViewModel } from '../../../_models/view.models';

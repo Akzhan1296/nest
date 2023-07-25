@@ -14,7 +14,7 @@ import { BlogsQueryType } from '../../_models/input.models';
 import { UserIdGuard } from '../../../../guards/userId';
 import { PostsQueryService } from '../../../posts/api/posts.query.service';
 import { PostViewModel } from '../../../posts/infrastructure/repository/models/view.models';
-import { BlogsQueryRepository } from '../../infrastructure/repository/blogs.query.repository';
+import { BlogsQueryRepository } from '../../_infrastructure/repository/blogs.query.repository';
 
 @Controller('blogs')
 export class BlogsPublicQueryController {

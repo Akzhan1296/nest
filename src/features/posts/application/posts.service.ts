@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
-import { BlogsStateRepository } from '../../blogs/api/blogger/application/blogs.interface';
 import { PostItemType } from '../infrastructure/posts.type';
 import { PostDocument } from '../schema/posts.schema';
 import { CreatePostDTO } from './dto/posts.dto';
 import { PostsStateRepository } from './posts.interface';
+import { BlogsStateRepository } from '../../blogs/_application/blogs.interface';
 
 @Injectable()
 export class PostsService {

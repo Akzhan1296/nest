@@ -53,8 +53,9 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
     const { searchNameTerm, skip, pageSize, sortBy, sortDirection } =
       pageParams;
 
-    const filter: SearchTermBlogs = { name: new RegExp(searchNameTerm, 'i') };
-
+    const filter: SearchTermBlogs = {
+      name: new RegExp(searchNameTerm, 'i'),
+    };
     const blogs = await this.blogModel
       .find(filter)
       .skip(skip)

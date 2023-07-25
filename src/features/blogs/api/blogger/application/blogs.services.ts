@@ -1,18 +1,18 @@
 import { NotFoundException } from '@nestjs/common';
-import { BlogsStateRepository } from './blogs.interface';
 import {
   BlogOwnerDTO,
   BlogType,
   BlogUpdateType,
   UpdateOrDeletePostCheckResultDTO,
   UpdateOrDeletePostDTO,
-} from './dto/blogs.dto';
+} from '../../../_application/dto/blogs.dto';
 import { ObjectId } from 'mongodb';
 import {
   BlogItemDBType,
   BlogItemType,
-} from '../../../infrastructure/blogs.type';
+} from '../../../_infrastructure/blogs.type';
 import { PostsStateRepository } from '../../../../posts/application/posts.interface';
+import { BlogsStateRepository } from '../../../_application/blogs.interface';
 export class BlogsService {
   constructor(
     private readonly blogRepository: BlogsStateRepository,
@@ -35,8 +35,9 @@ export class BlogsService {
       dto.description,
       new ObjectId(dto.userId),
       dto.userLogin,
+      false,
     );
-
+    console.log(newBlog);
     return this.blogRepository.createBlog(newBlog);
   }
   async updateBlog(id: string, dto: BlogUpdateType): Promise<boolean> {
