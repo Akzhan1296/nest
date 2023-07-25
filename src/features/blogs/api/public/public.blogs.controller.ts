@@ -34,13 +34,14 @@ export class BlogsPublicQueryController {
     @Param() params: { id: string },
   ): Promise<BlogViewModel | null> {
     const blog = await this.blogsQueryRepository.getBlogById(params.id);
+    const { isBanned, ...rest } = blog;
     if (!blog) {
       throw new NotFoundException('blog not found');
     }
-    if (blog.isBanned) {
+    if (isBanned) {
       throw new NotFoundException('blog not found');
     }
-    return blog;
+    return rest;
   }
 
   @UseGuards(UserIdGuard)

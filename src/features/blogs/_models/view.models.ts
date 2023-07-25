@@ -5,12 +5,16 @@ export interface BlogViewModel {
   createdAt: Date;
   description: string;
   isMembership: boolean;
-  isBanned: boolean;
+  isBanned?: boolean;
 }
 
 export interface BlogSAViewModel extends BlogViewModel {
   blogOwnerInfo: {
     userId: string;
     userLogin: string;
+  };
+  banInfo: {
+    isBanned: boolean;
+    banDate: Date;
   };
 }

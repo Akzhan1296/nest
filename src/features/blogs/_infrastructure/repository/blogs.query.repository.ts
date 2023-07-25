@@ -45,6 +45,10 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
         userId: blog.ownerId.toString(),
         userLogin: blog.ownerLogin,
       },
+      banInfo: {
+        isBanned: blog.isBanned,
+        banDate: new Date(),
+      }
     }));
   }
   async getBlogs(
@@ -133,6 +137,7 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
         createdAt: blog.createdAt,
         description: blog.description,
         isMembership: false,
+        isBanned: blog.isBanned,
       };
     }
     return null;
