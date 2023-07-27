@@ -45,6 +45,7 @@ export class BlogsRepository implements BlogsStateRepository {
     const blog = await this.blogModel.findOne({ _id: id });
     if (!blog) return false;
     blog.isBanned = banStatus;
+    banStatus ? (blog.banDate = new Date()) : (blog.banDate = null);
     const isBlogBanned = blog
       .save()
       .then((savedDoc) => {

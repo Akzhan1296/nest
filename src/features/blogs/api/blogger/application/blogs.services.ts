@@ -36,6 +36,7 @@ export class BlogsService {
       new ObjectId(dto.userId),
       dto.userLogin,
       false,
+      null,
     );
     console.log(newBlog);
     return this.blogRepository.createBlog(newBlog);

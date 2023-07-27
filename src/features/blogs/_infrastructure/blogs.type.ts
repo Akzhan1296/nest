@@ -10,6 +10,7 @@ export class BlogItemType {
     public ownerId: ObjectId | null,
     public ownerLogin: string | null,
     public isBanned: boolean,
+    public banDate: Date | null,
   ) {}
 }
 

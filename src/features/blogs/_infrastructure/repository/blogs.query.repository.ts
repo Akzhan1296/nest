@@ -47,7 +47,7 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
       },
       banInfo: {
         isBanned: blog.isBanned,
-        banDate: new Date(),
+        banDate: blog.banDate,
       },
     }));
   }

@@ -15,6 +15,6 @@ export interface BlogSAViewModel extends BlogViewModel {
   };
   banInfo: {
     isBanned: boolean;
-    banDate: Date;
+    banDate: Date | null;
   };
 }
