@@ -17,6 +17,7 @@ import { PostsQueryType } from './models/input.models';
 import { PostsQueryService } from './posts.query.service';
 import { CheckBanGuard } from '../../../guards/check-ban.guard';
 import { PostViewModel } from '../infrastructure/repository/models/view.models';
+import { BlogsQueryRepository } from '../../blogs/_infrastructure/repository/blogs.query.repository';
 
 @Controller('posts')
 export class PostsQueryController {
@@ -24,6 +25,7 @@ export class PostsQueryController {
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly postsQueryService: PostsQueryService,
     private readonly commentsQueryService: CommentsQueryService,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
   ) {}
 
   @UseGuards(UserIdGuard)
@@ -46,6 +48,10 @@ export class PostsQueryController {
     @Param() params: { id: string },
   ): Promise<PostViewModel> {
     const post = await this.postsQueryRepository.getPostById(params.id);
+    const blog = await this.blogsQueryRepository.getBlogById(params.id);
+    if (blog.isBanned) {
+      throw new NotFoundException('blog not found');
+    }
     if (!post) throw new NotFoundException('post not found');
     return await this.postsQueryService.getPostWithLikeById(
       params.id,

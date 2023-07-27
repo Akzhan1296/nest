@@ -55,6 +55,9 @@ export class BlogsPublicQueryController {
     if (!blog) {
       throw new NotFoundException('posts by blogid not found');
     }
+    if (blog.isBanned) {
+      throw new NotFoundException('blog not found');
+    }
     return await this.postsQueryService.getPostsWithLikeByblogId(
       pageSize,
       request.body.userId,
