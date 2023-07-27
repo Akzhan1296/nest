@@ -48,7 +48,7 @@ export class PostsQueryController {
     @Param() params: { id: string },
   ): Promise<PostViewModel> {
     const post = await this.postsQueryRepository.getPostById(params.id);
-    const blog = await this.blogsQueryRepository.getBlogById(params.id);
+    const blog = await this.blogsQueryRepository.getBlogById(post.blogId);
     if (blog.isBanned) {
       throw new NotFoundException('blog not found');
     }
