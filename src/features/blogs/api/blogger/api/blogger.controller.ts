@@ -90,7 +90,10 @@ export class BlogsController {
       userId: request.body.userId,
       userLogin: request.body.login,
     });
-    return await this.blogsQueryRepository.getBlogById(blog._id.toString());
+    const { isBanned, ...rest } = await this.blogsQueryRepository.getBlogById(
+      blog._id.toString(),
+    );
+    return rest;
   }
 
   // get blogs

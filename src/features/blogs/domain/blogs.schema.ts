@@ -11,7 +11,7 @@ export const BlogsSchema = new Schema<BlogItemType>(
     ownerId: ObjectId,
     ownerLogin: String,
     isBanned: Boolean,
-    banDate: Date,
+    banDate: { type: Date, default: null },
   },
   { versionKey: false },
 );
