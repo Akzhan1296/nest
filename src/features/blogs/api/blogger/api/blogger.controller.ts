@@ -30,6 +30,8 @@ import {
 } from '../../../_models/input.models';
 import { AuthGuard } from '../../../../../guards/auth.guard';
 import { UpdatePostInputModel } from './models';
+import { UserIdGuard } from '../../../../../guards/userId';
+import { PostsQueryService } from '../../../../posts/api/posts.query.service';
 
 @UseGuards(AuthGuard)
 @Controller('blogger/blogs')
@@ -41,6 +43,8 @@ export class BlogsController {
     @Inject(PostsService.name)
     private readonly postService: PostsService,
     private readonly postQuerysRepository: PostsQueryRepository,
+    private readonly postsQueryService: PostsQueryService,
+
   ) {}
 
   // update blog
@@ -177,5 +181,26 @@ export class BlogsController {
     if (!checkingResult.isPostFound) throw new NotFoundException();
     if (checkingResult.isForbidden) throw new ForbiddenException();
     return await this.postService.deletePost(params.postId);
+  }
+
+  @UseGuards(UserIdGuard)
+  @Get(':blogId/posts')
+  async getBlogPosts(
+    @Req() request: Request,
+    @Query() pageSize: BlogsQueryType,
+    @Param() params: { blogId: string },
+  ): Promise<PaginationViewModel<PostViewModel>> {
+    const blog = await this.blogsQueryRepository.getBlogById(params.blogId);
+    if (!blog) {
+      throw new NotFoundException('posts by blogid not found');
+    }
+    if (blog.isBanned) {
+      throw new NotFoundException('blog not found');
+    }
+    return await this.postsQueryService.getPostsWithLikeByblogId(
+      pageSize,
+      request.body.userId,
+      params.blogId,
+    );
   }
 }
