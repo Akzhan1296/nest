@@ -190,13 +190,14 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
       .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
       .limit(pageSize);
 
+    if (!blog) {
+      throw new NotFoundException();
+    }
+
     if (ownerId.toString() !== blog.ownerId.toString()) {
       throw new ForbiddenException();
     }
 
-    if (!blog) {
-      throw new NotFoundException();
-    }
     return Paginated.transformPagination(
       {
         ...pageParams,
