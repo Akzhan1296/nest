@@ -231,11 +231,13 @@ export class BlogsUserController {
   async updateBlog(
     @Param() params: { userId: string },
     @Body() banUserForBlogInputModel: BanUserForBlogInputModal,
+    @Req() request: Request,
   ): Promise<boolean> {
     const banUserResult: BanUserBlogResultDTO = await this.commandBus.execute(
       new BanUserForBlogCommand({
         ...banUserForBlogInputModel,
         userId: params.userId,
+        ownerId: request.body.userId,
       }),
     );
 

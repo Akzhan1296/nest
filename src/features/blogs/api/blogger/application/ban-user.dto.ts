@@ -9,4 +9,5 @@ export type BanUserBlogDTO = {
   banReason: string | null;
   blogId: string;
   userId: string;
+  ownerId: string;
 };

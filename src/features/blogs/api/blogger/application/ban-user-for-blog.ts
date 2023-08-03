@@ -33,7 +33,9 @@ export class BanUserForBlogUseCase
 
     if (user) result.isUserFound = true;
 
-    if (user._id.toString() !== blog.ownerId.toString()) {
+    if (
+      command.banUserForBlogDTO.ownerId.toString() !== blog.ownerId.toString()
+    ) {
       throw new ForbiddenException();
     }
 
