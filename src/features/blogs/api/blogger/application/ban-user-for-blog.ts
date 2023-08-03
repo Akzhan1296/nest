@@ -2,6 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BlogsRepository } from '../../../_infrastructure/repository/blogs.repository';
 import { BanUserBlogDTO, BanUserBlogResultDTO } from './ban-user.dto';
 import { UsersRepository } from '../../../../users/infrastructure/repository/users.repository';
+import { ForbiddenException } from '@nestjs/common';
 
 export class BanUserForBlogCommand {
   constructor(public banUserForBlogDTO: BanUserBlogDTO) {}
@@ -31,6 +32,10 @@ export class BanUserForBlogUseCase
     );
 
     if (user) result.isUserFound = true;
+
+    if (user._id.toString() !== blog.ownerId.toString()) {
+      throw new ForbiddenException();
+    }
 
     if (user && command.banUserForBlogDTO.isBanned) {
       blog.bannedUsers = [
@@ -68,9 +73,6 @@ export class BanUserForBlogUseCase
           return false;
         });
     }
-
-    // result.isBlogFound = true;
-    // result.isBlogBanned = await this.blogsRepository.banBlog(blogId, isBanned);
 
     return result;
   }
