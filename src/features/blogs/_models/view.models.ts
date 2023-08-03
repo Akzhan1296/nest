@@ -18,3 +18,13 @@ export interface BlogSAViewModel extends BlogViewModel {
     banDate: Date | null;
   };
 }
+
+export interface BannedUserForBlog {
+  id: string;
+  login: string;
+  banInfo: {
+    isBanned: boolean;
+    banDate: Date;
+    banReason: string;
+  };
+}

@@ -11,7 +11,7 @@ export class BlogsRepository implements BlogsStateRepository {
     @InjectModel(BlogItemType.name)
     private readonly blogModel: Model<BlogItemType>,
   ) {}
-  async getBlogById(id: string): Promise<BlogItemDBType | null> {
+  async getBlogById(id: string) {
     const blog = await this.blogModel.findOne({ _id: id });
     return blog;
   }

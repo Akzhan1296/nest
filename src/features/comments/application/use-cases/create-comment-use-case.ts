@@ -47,6 +47,8 @@ export class CreateCommentUseCase
     );
     if (!user) throw new NotFoundException('user not found');
 
+    //add logic for banned user
+
     //new comment entity
     const newComment = this.createComment({
       ...command.createCommentDTO,

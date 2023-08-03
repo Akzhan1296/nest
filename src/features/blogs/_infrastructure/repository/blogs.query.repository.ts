@@ -1,4 +1,9 @@
-import { BlogItemDBType, BlogItemType, SearchTermBlogs } from '../blogs.type';
+import {
+  BannedUserBlogType,
+  BlogItemDBType,
+  BlogItemType,
+  SearchTermBlogs,
+} from '../blogs.type';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -7,7 +12,11 @@ import {
   PageSizeQueryModel,
   PaginationViewModel,
 } from '../../../../common/common-types';
-import { BlogSAViewModel, BlogViewModel } from '../../_models/view.models';
+import {
+  BannedUserForBlog,
+  BlogSAViewModel,
+  BlogViewModel,
+} from '../../_models/view.models';
 import { BlogsQueryStateRepository } from '../../_application/blogs.query.interface';
 import { ObjectId } from 'mongodb';
 
@@ -50,6 +59,34 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
         banDate: blog.banDate,
       },
     }));
+  }
+  private getBannedBlogUsersViews(
+    bannedUsers: BannedUserBlogType[],
+  ): BannedUserForBlog[] {
+    return bannedUsers.map((user) => ({
+      id: user.userId,
+      login: user.userLogin,
+      banInfo: {
+        isBanned: user.isBanned,
+        banDate: user.banDate,
+        banReason: user.banReason,
+      },
+    }));
+  }
+  async getBlogById(id: string): Promise<BlogViewModel | null> {
+    const blog = await this.blogModel.findById(id);
+    if (blog) {
+      return {
+        name: blog.name,
+        websiteUrl: blog.websiteUrl,
+        id: blog._id.toString(),
+        createdAt: blog.createdAt,
+        description: blog.description,
+        isMembership: false,
+        isBanned: blog.isBanned,
+      };
+    }
+    return null;
   }
   async getBlogs(
     pageParams: PageSizeQueryModel,
@@ -127,19 +164,36 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
       this.getBlogsViews(blogs),
     );
   }
-  async getBlogById(id: string): Promise<BlogViewModel | null> {
-    const blog = await this.blogModel.findById(id);
-    if (blog) {
-      return {
-        name: blog.name,
-        websiteUrl: blog.websiteUrl,
-        id: blog._id.toString(),
-        createdAt: blog.createdAt,
-        description: blog.description,
-        isMembership: false,
-        isBanned: blog.isBanned,
-      };
-    }
-    return null;
+  async getBloggerBannedUsers(
+    pageParams: PageSizeQueryModel,
+    blogId: string,
+  ): Promise<PaginationViewModel<BannedUserForBlog>> {
+    console.log(blogId);
+    // const _blogId = new ObjectId(blogId);
+
+    const { searchNameTerm, skip, pageSize, sortBy, sortDirection } =
+      pageParams;
+
+    // const filter: SearchTermBlogs & { id: ObjectId } = {
+    //   name: new RegExp(searchNameTerm, 'i'),
+    //   id: _blogId,
+    // };
+
+    const blogs = await this.blogModel
+      .findById(blogId)
+      .skip(skip)
+      .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
+      .limit(pageSize);
+
+      console.log(blogs);
+
+    return Paginated.transformPagination(
+      {
+        ...pageParams,
+        // totalCount: await this.getBlogsCount(filter),
+        totalCount: blogs.bannedUsers ? blogs.bannedUsers.length : 0,
+      },
+      this.getBannedBlogUsersViews(blogs.bannedUsers ? blogs.bannedUsers : []),
+    );
   }
 }

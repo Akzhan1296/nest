@@ -1,5 +1,8 @@
 import { Schema } from 'mongoose';
-import { BlogItemType } from '../_infrastructure/blogs.type';
+import {
+  BlogItemType,
+  BannedUserBlogType,
+} from '../_infrastructure/blogs.type';
 import { ObjectId } from 'mongodb';
 
 export const BlogsSchema = new Schema<BlogItemType>(
@@ -12,6 +15,7 @@ export const BlogsSchema = new Schema<BlogItemType>(
     ownerLogin: String,
     isBanned: Boolean,
     banDate: { type: Date, default: null },
+    bannedUsers: Array<BannedUserBlogType>,
   },
   { versionKey: false },
 );

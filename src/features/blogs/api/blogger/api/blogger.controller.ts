@@ -22,8 +22,9 @@ import { BlogsService } from '../application/blogs.services';
 import { BlogsQueryRepository } from '../../../_infrastructure/repository/blogs.query.repository';
 import { PaginationViewModel } from '../../../../../common/common-types';
 
-import { BlogViewModel } from '../../../_models/view.models';
+import { BannedUserForBlog, BlogViewModel } from '../../../_models/view.models';
 import {
+  BanUserForBlogInputModal,
   BlogInputModelType,
   BlogsQueryType,
   CreatePostByBlogIdInputType,
@@ -32,6 +33,9 @@ import { AuthGuard } from '../../../../../guards/auth.guard';
 import { UpdatePostInputModel } from './models';
 import { UserIdGuard } from '../../../../../guards/userId';
 import { PostsQueryService } from '../../../../posts/api/posts.query.service';
+import { CommandBus } from '@nestjs/cqrs';
+import { BanUserForBlogCommand } from '../application/ban-user-for-blog';
+import { BanUserBlogResultDTO } from '../application/ban-user.dto';
 
 @UseGuards(AuthGuard)
 @Controller('blogger/blogs')
@@ -44,7 +48,6 @@ export class BlogsController {
     private readonly postService: PostsService,
     private readonly postQuerysRepository: PostsQueryRepository,
     private readonly postsQueryService: PostsQueryService,
-
   ) {}
 
   // update blog
@@ -183,6 +186,8 @@ export class BlogsController {
     return await this.postService.deletePost(params.postId);
   }
 
+  // get blog posts
+  @HttpCode(200)
   @UseGuards(UserIdGuard)
   @Get(':blogId/posts')
   async getBlogPosts(
@@ -200,6 +205,54 @@ export class BlogsController {
     return await this.postsQueryService.getPostsWithLikeByblogId(
       pageSize,
       request.body.userId,
+      params.blogId,
+    );
+  }
+
+  // get blog all comments
+  @HttpCode(200)
+  @Get('comments')
+  async getBlogPostsAllComments() {
+    return [];
+  }
+}
+
+@UseGuards(AuthGuard)
+@Controller('blogger/users')
+export class BlogsUserController {
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
+  ) {}
+
+  // ban user for specific blog
+  @Put(':userId/ban')
+  @HttpCode(204)
+  async updateBlog(
+    @Param() params: { userId: string },
+    @Body() banUserForBlogInputModel: BanUserForBlogInputModal,
+  ): Promise<boolean> {
+    const banUserResult: BanUserBlogResultDTO = await this.commandBus.execute(
+      new BanUserForBlogCommand({
+        ...banUserForBlogInputModel,
+        userId: params.userId,
+      }),
+    );
+
+    if (!banUserResult.isBlogFound) throw new NotFoundException();
+    if (!banUserResult.isUserFound) throw new NotFoundException();
+
+    return banUserResult.isUserBanned;
+  }
+
+  // get banned users list
+  @Get('blog/:blogId')
+  async getBlogs(
+    @Query() pageSize: BlogsQueryType,
+    @Param() params: { blogId: string },
+  ): Promise<PaginationViewModel<BannedUserForBlog>> {
+    return await this.blogsQueryRepository.getBloggerBannedUsers(
+      pageSize,
       params.blogId,
     );
   }
