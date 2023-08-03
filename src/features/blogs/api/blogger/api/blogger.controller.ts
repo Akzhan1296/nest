@@ -233,6 +233,7 @@ export class BlogsUserController {
     @Body() banUserForBlogInputModel: BanUserForBlogInputModal,
     @Req() request: Request,
   ): Promise<boolean> {
+    console.log(request.body.userId);
     const banUserResult: BanUserBlogResultDTO = await this.commandBus.execute(
       new BanUserForBlogCommand({
         ...banUserForBlogInputModel,
@@ -252,10 +253,12 @@ export class BlogsUserController {
   async getBlogs(
     @Query() pageSize: BlogsQueryType,
     @Param() params: { blogId: string },
+    @Req() request: Request,
   ): Promise<PaginationViewModel<BannedUserForBlog>> {
     return await this.blogsQueryRepository.getBloggerBannedUsers(
       pageSize,
       params.blogId,
+      request.body.userId, // ownerId
     );
   }
 }

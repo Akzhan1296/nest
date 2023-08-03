@@ -5,7 +5,11 @@ import {
   SearchTermBlogs,
 } from '../blogs.type';
 import { Model } from 'mongoose';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Paginated } from '../../../../common/utils';
 import {
@@ -167,6 +171,7 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
   async getBloggerBannedUsers(
     pageParams: PageSizeQueryModel,
     blogId: string,
+    ownerId: string,
   ): Promise<PaginationViewModel<BannedUserForBlog>> {
     console.log(blogId);
     // const _blogId = new ObjectId(blogId);
@@ -184,6 +189,10 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
       .skip(skip)
       .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
       .limit(pageSize);
+
+    if (ownerId.toString() !== blog.ownerId.toString()) {
+      throw new ForbiddenException();
+    }
 
     if (!blog) {
       throw new NotFoundException();
