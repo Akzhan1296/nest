@@ -1,4 +1,8 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Comment, CommentDocument } from '../../domain/entity/comments.schema';
@@ -11,6 +15,7 @@ import { CommentsRepository } from '../../infrastructure/repository/comments.rep
 import { PostsRepository } from '../../../posts/infrastructure/repository/posts.repository';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UsersRepository } from '../../../users/infrastructure/repository/users.repository';
+import { BlogsRepository } from '../../../blogs/_infrastructure/repository/blogs.repository';
 
 export class CreateCommentCommand {
   constructor(public createCommentDTO: CreateCommentDTO) {}
@@ -25,6 +30,7 @@ export class CreateCommentUseCase
     private readonly commentsRepository: CommentsRepository,
     private readonly postsRepository: PostsRepository,
     private readonly usersRepository: UsersRepository,
+    private readonly blogsRepository: BlogsRepository,
   ) {}
 
   // domain factory
@@ -46,6 +52,16 @@ export class CreateCommentUseCase
       command.createCommentDTO.userId.toString(),
     );
     if (!user) throw new NotFoundException('user not found');
+
+    const blog = await this.blogsRepository.getBlogById(post.blogId.toString());
+
+    if (blog && blog.bannedUsers) {
+      blog.bannedUsers.forEach((bannedUser) => {
+        if (bannedUser.userId.toString() === user._id.toString()) {
+          throw new ForbiddenException();
+        }
+      });
+    }
 
     //add logic for banned user
 

@@ -5,7 +5,7 @@ import {
   SearchTermBlogs,
 } from '../blogs.type';
 import { Model } from 'mongoose';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Paginated } from '../../../../common/utils';
 import {
@@ -179,21 +179,22 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
     //   id: _blogId,
     // };
 
-    const blogs = await this.blogModel
+    const blog = await this.blogModel
       .findById(blogId)
       .skip(skip)
       .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
       .limit(pageSize);
 
-      console.log(blogs);
-
+    if (!blog) {
+      throw new NotFoundException();
+    }
     return Paginated.transformPagination(
       {
         ...pageParams,
         // totalCount: await this.getBlogsCount(filter),
-        totalCount: blogs.bannedUsers ? blogs.bannedUsers.length : 0,
+        totalCount: blog.bannedUsers ? blog.bannedUsers.length : 0,
       },
-      this.getBannedBlogUsersViews(blogs.bannedUsers ? blogs.bannedUsers : []),
+      this.getBannedBlogUsersViews(blog.bannedUsers ? blog.bannedUsers : []),
     );
   }
 }
