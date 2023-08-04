@@ -6,6 +6,7 @@ import {
   Param,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { PaginationViewModel } from '../../../../common/common-types';
 import { BlogSAViewModel } from '../../_models/view.models';
@@ -14,6 +15,7 @@ import { BlogsQueryRepository } from '../../_infrastructure/repository/blogs.que
 import { CommandBus } from '@nestjs/cqrs';
 import { BanBlogInputModal } from './sa.input.models';
 import { BanBlogBySACommand } from './application/ban-blog-use-case';
+import { AuthGuard } from '../../../../guards/auth.guard';
 
 @Controller('sa/blogs')
 export class BlogsSAController {
@@ -30,6 +32,7 @@ export class BlogsSAController {
   }
 
   //ban user
+  @UseGuards(AuthGuard)
   @Put(':blogId/ban')
   @HttpCode(204)
   async banUser(
