@@ -4,6 +4,7 @@ import { PostsQueryRepository } from '../../../posts/infrastructure/repository/p
 import { CommentsQueryRepository } from '../../../comments/infrastructure/repository/comments.query.repository';
 import { PostDocument } from '../../../posts/schema/posts.schema';
 import { PageSizeQueryModel } from '../../../../common/common-types';
+import { CommentDocument } from '../../../comments/domain/entity/comments.schema';
 
 @Injectable()
 export class BlogsQueryServiceRepository {
@@ -31,7 +32,7 @@ export class BlogsQueryServiceRepository {
     const commentsView = [].concat(...comments);
 
     const paginator = (
-      array: Array<any>,
+      array: Array<CommentDocument>,
       pageSize: number,
       pageNumber: number,
     ) => {
@@ -42,7 +43,9 @@ export class BlogsQueryServiceRepository {
       commentsView,
       pageSize.pageSize,
       pageSize.pageNumber,
-    );
+    ).sort(function (a, b) {
+      return new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf();
+    });
 
     return {
       page: pageSize.pageNumber,
@@ -51,7 +54,7 @@ export class BlogsQueryServiceRepository {
       pagesCount: Math.ceil(commentsView.length / pageSize.pageSize),
       items: paginatedComments.map((comment) => {
         const post = postsa.filter(
-          (p) => p._id.toString() === comment.postId,
+          (p) => p._id.toString() === comment.postId.toString(),
         )[0];
         return {
           id: comment._id.toString(),
