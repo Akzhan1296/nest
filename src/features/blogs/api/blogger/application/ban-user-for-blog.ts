@@ -33,13 +33,6 @@ export class BanUserForBlogUseCase
 
     if (user) result.isUserFound = true;
 
-    console.log(555);
-
-    // console.log(console.log(command.banUserForBlogDTO.ownerId.toString()));
-    // console.log(blog.ownerId.toString());
-    // console.log(
-    //   command.banUserForBlogDTO.ownerId.toString() !== blog.ownerId.toString(),
-    // );
     if (
       command.banUserForBlogDTO.ownerId.toString() !== blog.ownerId.toString()
     ) {

@@ -173,7 +173,6 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
     blogId: string,
     ownerId: string,
   ): Promise<PaginationViewModel<BannedUserForBlog>> {
-    console.log(blogId);
     // const _blogId = new ObjectId(blogId);
 
     const { searchNameTerm, skip, pageSize, sortBy, sortDirection } =
@@ -206,5 +205,9 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
       },
       this.getBannedBlogUsersViews(blog.bannedUsers ? blog.bannedUsers : []),
     );
+  }
+
+  async getBlogsAllComments(userId: string) {
+    return await this.blogModel.find({ ownerId: new ObjectId(userId) });
   }
 }

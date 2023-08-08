@@ -110,6 +110,7 @@ import { DeleteService } from './features/delete/delete.service';
 import { BanUserCommandUseCase } from './features/users/application/use-cases/ban-unban-use-case';
 import { BlogsSAController } from './features/blogs/api/sa/sa.blogs.controller';
 import { BanBlogBySAUseCase } from './features/blogs/api/sa/application/ban-blog-use-case';
+import { BlogsQueryServiceRepository } from './features/blogs/_infrastructure/repository/blogs.query.service';
 
 const authUseCases = [
   LoginUseCase,
@@ -184,6 +185,7 @@ const blogsUseCases = [BanBlogBySAUseCase, BanUserForBlogUseCase];
     factoryBlogsService(),
     BlogsRepository,
     BlogsQueryRepository,
+    BlogsQueryServiceRepository,
     //posts
     factoryPostService(),
     PostsRepository,

@@ -36,6 +36,7 @@ import { PostsQueryService } from '../../../../posts/api/posts.query.service';
 import { CommandBus } from '@nestjs/cqrs';
 import { BanUserForBlogCommand } from '../application/ban-user-for-blog';
 import { BanUserBlogResultDTO } from '../application/ban-user.dto';
+import { BlogsQueryServiceRepository } from '../../../_infrastructure/repository/blogs.query.service';
 
 @UseGuards(AuthGuard)
 @Controller('blogger/blogs')
@@ -44,6 +45,7 @@ export class BlogsController {
     @Inject(BlogsService.name)
     private readonly blogsService: BlogsService,
     private readonly blogsQueryRepository: BlogsQueryRepository,
+    private readonly blogsQueryServiceRepository: BlogsQueryServiceRepository,
     @Inject(PostsService.name)
     private readonly postService: PostsService,
     private readonly postQuerysRepository: PostsQueryRepository,
@@ -212,8 +214,14 @@ export class BlogsController {
   // get blog all comments
   @HttpCode(200)
   @Get('comments')
-  async getBlogPostsAllComments() {
-    return [];
+  async getBlogPostsAllComments(
+    @Query() pageSize: BlogsQueryType,
+    @Req() request: Request,
+  ) {
+    return this.blogsQueryServiceRepository.getCommentAll(
+      pageSize,
+      request.body.userId,
+    );
   }
 }
 
@@ -233,7 +241,6 @@ export class BlogsUserController {
     @Body() banUserForBlogInputModel: BanUserForBlogInputModal,
     @Req() request: Request,
   ): Promise<boolean> {
-    console.log(request.body.userId);
     const banUserResult: BanUserBlogResultDTO = await this.commandBus.execute(
       new BanUserForBlogCommand({
         ...banUserForBlogInputModel,

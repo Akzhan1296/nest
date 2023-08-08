@@ -93,4 +93,7 @@ export class CommentsQueryRepository {
       .limit(pageSize);
     return this.getPaginatedPosts(pageParams, comments, postId);
   }
+  async getBlogAllComments(postId: string) {
+    return await this.CommentModel.find({ postId });
+  }
 }
