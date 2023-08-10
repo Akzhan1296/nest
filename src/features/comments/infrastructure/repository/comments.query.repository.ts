@@ -124,9 +124,9 @@ export class CommentsQueryRepository {
   ) {
     // const comments = await this.repo.find({postId: posts.map(p=>p._id)}).sort().skip().limit()
     const { skip, pageSize, sortBy, sortDirection } = pageParams;
-
+    const ids = blogs.map((b) => b._id);
     const comments = await this.CommentModel.find({
-      blogId: blogs.map((b) => b._id),
+      blogId: { $in: ids }, // ['123', '456']
     })
       .skip(skip)
       .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
