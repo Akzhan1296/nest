@@ -25,7 +25,8 @@ export class NewPasswordUseCase implements ICommandHandler<NewPasswordCommand> {
 
     if (code === recoveryCode && confirmCodeExpDate > new Date()) {
       const passwordHash = await generateHash(newPassword);
-      userByConfirmCode.setPassword(passwordHash);
+      // userByConfirmCode.setPassword(passwordHash);
+      userByConfirmCode.setPassword(newPassword);
       return await this.usersRepository.save(userByConfirmCode);
     } else {
       throw new BadRequestException('date is already expired');
