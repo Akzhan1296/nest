@@ -35,44 +35,34 @@ export class BlogsQueryServiceRepository {
 
     const comments = await this.commentsQueryRepository.getBlogAllComments(
       blogs,
+      pageSize,
     );
 
-    const paginator = (
-      array: Array<CommentDocument>,
-      pageSize: number,
-      pageNumber: number,
-    ) => {
-      return array.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
-    };
+    // const paginator = (
+    //   array: Array<CommentDocument>,
+    //   pageSize: number,
+    //   pageNumber: number,
+    // ) => {
+    //   return array.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+    // };
 
-    const paginatedComments = paginator(
-      comments,
-      pageSize.pageSize,
-      pageSize.pageNumber,
-    ).sort(function (a, b) {
-      return new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf();
-    });
+    // const paginatedComments = paginator(
+    //   comments,
+    //   pageSize.pageSize,
+    //   pageSize.pageNumber,
+    // ).sort(function (a, b) {
+    //   return new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf();
+    // });
 
     return {
-      page: pageSize.pageNumber,
-      pageSize: pageSize.pageSize,
-      totalCount: comments.length,
-      pagesCount: Math.ceil(comments.length / pageSize.pageSize),
-      items: paginatedComments.map((comment) => {
+      ...comments,
+      items: comments.items.map((comment) => {
         const post = postsa.filter(
           (p) => p._id.toString() === comment.postId.toString(),
         )[0];
         return {
-          id: comment._id.toString(),
-          content: comment.getContent(),
-          commentatorInfo: {
-            userId: comment.userId.toString(),
-            userLogin: comment.userLogin,
-          },
-          createdAt: comment.createdAt,
           likesInfo: {
-            likesCount: comment.getLikes(),
-            dislikesCount: comment.getDislikes(),
+            ...comment.likesInfo,
             myStatus: 'None',
           },
           postInfo: {

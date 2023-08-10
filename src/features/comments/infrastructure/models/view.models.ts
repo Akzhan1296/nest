@@ -11,4 +11,5 @@ export type CommentViewModel = {
     dislikesCount: number;
     myStatus?: string;
   };
+  postId?: string;
 };
