@@ -5,6 +5,7 @@ import { CommentsQueryRepository } from '../../../comments/infrastructure/reposi
 import { PostDocument } from '../../../posts/schema/posts.schema';
 import { PageSizeQueryModel } from '../../../../common/common-types';
 import { CommentDocument } from '../../../comments/domain/entity/comments.schema';
+import { BlogItemDBType } from '../blogs.type';
 
 @Injectable()
 export class BlogsQueryServiceRepository {
@@ -15,21 +16,26 @@ export class BlogsQueryServiceRepository {
   ) {}
 
   async getCommentAll(pageSize: PageSizeQueryModel, userId: string) {
-    const blogs = await this.blogsQueryRepository.getBlogsAllComments(userId);
+    const blogs: Array<BlogItemDBType> =
+      await this.blogsQueryRepository.getBlogsAllComments(userId); // [ {userId, blogId1}, {userid, blogId2} ]
 
     const postsPromises = blogs.map((blog) => {
       return this.postsQueryRepository.getPostsAllComments(blog._id);
     });
     const posts = await Promise.all(postsPromises); // [ [{}], [{}, {}], [{}]]
     const postsa: Array<PostDocument> = [].concat(...posts); // [{}, {}, {}, {}]
-// const comments = await this.repo.find({postId: posts.map(p=>p._id)}).sort().skip().limit()
-    const commentPromises = postsa.map((post) => {
-      return this.commentsQueryRepository.getBlogAllComments(
-        post._id.toString(),
-      );
-    });
-    const comments = await Promise.all(commentPromises);
-    const commentsView = [].concat(...comments);
+    // const comments = await this.repo.find({postId: posts.map(p=>p._id)}).sort().skip().limit()
+    // const commentPromises = postsa.map((post) => {
+    //   return this.commentsQueryRepository.getBlogAllComments(
+    //     post._id.toString(),
+    //   );
+    // });
+    // const comments = await Promise.all(commentPromises);
+    // const commentsView = [].concat(...comments);
+
+    const comments = await this.commentsQueryRepository.getBlogAllComments(
+      blogs,
+    );
 
     const paginator = (
       array: Array<CommentDocument>,
@@ -40,7 +46,7 @@ export class BlogsQueryServiceRepository {
     };
 
     const paginatedComments = paginator(
-      commentsView,
+      comments,
       pageSize.pageSize,
       pageSize.pageNumber,
     ).sort(function (a, b) {
@@ -50,8 +56,8 @@ export class BlogsQueryServiceRepository {
     return {
       page: pageSize.pageNumber,
       pageSize: pageSize.pageSize,
-      totalCount: commentsView.length,
-      pagesCount: Math.ceil(commentsView.length / pageSize.pageSize),
+      totalCount: comments.length,
+      pagesCount: Math.ceil(comments.length / pageSize.pageSize),
       items: paginatedComments.map((comment) => {
         const post = postsa.filter(
           (p) => p._id.toString() === comment.postId.toString(),

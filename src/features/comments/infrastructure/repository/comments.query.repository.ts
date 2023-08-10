@@ -12,6 +12,10 @@ import {
   PageSizeQueryModel,
   PaginationViewModel,
 } from '../../../../common/common-types';
+import {
+  BlogItemDBType,
+  BlogItemType,
+} from '../../../blogs/_infrastructure/blogs.type';
 
 @Injectable()
 export class CommentsQueryRepository {
@@ -93,7 +97,9 @@ export class CommentsQueryRepository {
       .limit(pageSize);
     return this.getPaginatedPosts(pageParams, comments, postId);
   }
-  async getBlogAllComments(postId: string) {
-    return await this.CommentModel.find({ postId });
+  async getBlogAllComments(blogs: BlogItemDBType[]) {
+    // const comments = await this.repo.find({postId: posts.map(p=>p._id)}).sort().skip().limit()
+
+    return await this.CommentModel.find({ blogId: blogs.map((b) => b._id) });
   }
 }
