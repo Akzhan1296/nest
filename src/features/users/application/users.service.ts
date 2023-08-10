@@ -31,8 +31,7 @@ export class UsersService {
     const passwordHash = await generateHash(password);
     const newUser = await this._createUser({
       ...restCreateUserData,
-      // password: passwordHash,
-      password: password,
+      password: passwordHash,
     });
     await this.usersRepository.save(newUser);
     return newUser;
