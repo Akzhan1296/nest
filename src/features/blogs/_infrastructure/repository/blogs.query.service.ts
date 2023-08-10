@@ -57,10 +57,12 @@ export class BlogsQueryServiceRepository {
     return {
       ...comments,
       items: comments.items.map((comment) => {
+        const { postId, ...rest } = comment;
         const post = postsa.filter(
-          (p) => p._id.toString() === comment.postId.toString(),
+          (p) => p._id.toString() === postId.toString(),
         )[0];
         return {
+          ...rest,
           likesInfo: {
             ...comment.likesInfo,
             myStatus: 'None',
