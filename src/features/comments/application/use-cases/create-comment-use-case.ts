@@ -35,7 +35,7 @@ export class CreateCommentUseCase
 
   // domain factory
   private createComment(
-    createCommentDTO: CreateCommentWithUserLogin,
+    createCommentDTO: CreateCommentWithUserLogin & { blogId: ObjectId },
   ): CommentDocument {
     const contentLength = createCommentDTO.content.length;
     if (contentLength < 20 || contentLength > 300)
@@ -70,6 +70,7 @@ export class CreateCommentUseCase
       ...command.createCommentDTO,
       userId: new ObjectId(command.createCommentDTO.userId),
       userLogin: user.getLogin(),
+      blogId: blog._id,
     });
     await this.commentsRepository.save(newComment);
     return newComment;

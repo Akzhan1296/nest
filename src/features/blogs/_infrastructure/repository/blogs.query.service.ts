@@ -22,7 +22,7 @@ export class BlogsQueryServiceRepository {
     });
     const posts = await Promise.all(postsPromises); // [ [{}], [{}, {}], [{}]]
     const postsa: Array<PostDocument> = [].concat(...posts); // [{}, {}, {}, {}]
-
+// const comments = await this.repo.find({postId: posts.map(p=>p._id)}).sort().skip().limit()
     const commentPromises = postsa.map((post) => {
       return this.commentsQueryRepository.getBlogAllComments(
         post._id.toString(),
