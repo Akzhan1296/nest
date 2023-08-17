@@ -37,8 +37,8 @@ export class BlogsService {
       dto.userLogin,
       false,
       null,
-      [],
     );
+    console.log(newBlog);
     return this.blogRepository.createBlog(newBlog);
   }
   async updateBlog(id: string, dto: BlogUpdateType): Promise<boolean> {

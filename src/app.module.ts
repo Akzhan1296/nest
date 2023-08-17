@@ -19,6 +19,13 @@ import { factoryBlogsService } from './features/blogs/factory/public.factory';
 import { BlogsQueryRepository } from './features/blogs/_infrastructure/repository/blogs.query.repository';
 import { BlogItemType } from './features/blogs/_infrastructure/blogs.type';
 import { BlogsSchema } from './features/blogs/domain/blogs.schema';
+import { BanBlogBySAUseCase } from './features/blogs/api/sa/application/ban-blog-use-case';
+import { BlogsQueryServiceRepository } from './features/blogs/_infrastructure/repository/blogs.query.service';
+import {
+  BanBlog,
+  BanBlogSchema,
+} from './features/blogs/domain/ban-blogs.schema';
+import { BanBlogsRepository } from './features/blogs/_infrastructure/repository/blogs-ban.repository';
 
 //posts
 import { PostsController } from './features/posts/api/posts.controller';
@@ -96,6 +103,7 @@ import { DeleteDevicesExceptOneUseCase } from './features/devices/application/us
 import { HandleCommentsLikesUseCase } from './features/likes/application/use-cases/handle-comments-likes';
 import { HandlePostsLikesUseCase } from './features/likes/application/use-cases/handle-posts-likes';
 import { BanUserForBlogUseCase } from './features/blogs/api/blogger/application/ban-user-for-blog';
+
 //post likes
 import { PostsQueryService } from './features/posts/api/posts.query.service';
 import {
@@ -109,8 +117,6 @@ import { IsValidBlog } from './features/posts/api/models/post.decorator';
 import { DeleteService } from './features/delete/delete.service';
 import { BanUserCommandUseCase } from './features/users/application/use-cases/ban-unban-use-case';
 import { BlogsSAController } from './features/blogs/api/sa/sa.blogs.controller';
-import { BanBlogBySAUseCase } from './features/blogs/api/sa/application/ban-blog-use-case';
-import { BlogsQueryServiceRepository } from './features/blogs/_infrastructure/repository/blogs.query.service';
 
 const authUseCases = [
   LoginUseCase,
@@ -163,6 +169,7 @@ const blogsUseCases = [BanBlogBySAUseCase, BanUserForBlogUseCase];
       { name: BlockIps.name, schema: BlockIpsSchema },
       { name: Like.name, schema: LikeSchema },
       { name: PostLike.name, schema: PostLikeSchema },
+      { name: BanBlog.name, schema: BanBlogSchema },
     ]),
   ],
   controllers: [
@@ -186,6 +193,7 @@ const blogsUseCases = [BanBlogBySAUseCase, BanUserForBlogUseCase];
     BlogsRepository,
     BlogsQueryRepository,
     BlogsQueryServiceRepository,
+    BanBlogsRepository,
     //posts
     factoryPostService(),
     PostsRepository,

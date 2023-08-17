@@ -64,19 +64,7 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
       },
     }));
   }
-  private getBannedBlogUsersViews(
-    bannedUsers: BannedUserBlogType[],
-  ): BannedUserForBlog[] {
-    return bannedUsers.map((user) => ({
-      id: user.userId,
-      login: user.userLogin,
-      banInfo: {
-        isBanned: user.isBanned,
-        banDate: user.banDate,
-        banReason: user.banReason,
-      },
-    }));
-  }
+
   async getBlogById(id: string): Promise<BlogViewModel | null> {
     const blog = await this.blogModel.findById(id);
     if (blog) {
@@ -166,44 +154,6 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
         totalCount: await this.getBlogsCount(filter),
       },
       this.getBlogsViews(blogs),
-    );
-  }
-  async getBloggerBannedUsers(
-    pageParams: PageSizeQueryModel,
-    blogId: string,
-    ownerId: string,
-  ): Promise<PaginationViewModel<BannedUserForBlog>> {
-    // const _blogId = new ObjectId(blogId);
-
-    const { searchNameTerm, skip, pageSize, sortBy, sortDirection } =
-      pageParams;
-
-    // const filter: SearchTermBlogs & { id: ObjectId } = {
-    //   name: new RegExp(searchNameTerm, 'i'),
-    //   id: _blogId,
-    // };
-
-    const blog = await this.blogModel
-      .findById(blogId)
-      .skip(skip)
-      .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
-      .limit(pageSize);
-
-    if (!blog) {
-      throw new NotFoundException();
-    }
-
-    if (ownerId.toString() !== blog.ownerId.toString()) {
-      throw new ForbiddenException();
-    }
-
-    return Paginated.transformPagination(
-      {
-        ...pageParams,
-        // totalCount: await this.getBlogsCount(filter),
-        totalCount: blog.bannedUsers ? blog.bannedUsers.length : 0,
-      },
-      this.getBannedBlogUsersViews(blog.bannedUsers ? blog.bannedUsers : []),
     );
   }
 

@@ -1,8 +1,12 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { BlogsRepository } from '../../../_infrastructure/repository/blogs.repository';
 import { BanUserBlogDTO, BanUserBlogResultDTO } from './ban-user.dto';
 import { UsersRepository } from '../../../../users/infrastructure/repository/users.repository';
 import { ForbiddenException } from '@nestjs/common';
+import { BanBlogsRepository } from '../../../_infrastructure/repository/blogs-ban.repository';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { ObjectId } from 'mongodb';
+import { BanBlog, BanBlogsDocument } from '../../../domain/ban-blogs.schema';
 
 export class BanUserForBlogCommand {
   constructor(public banUserForBlogDTO: BanUserBlogDTO) {}
@@ -12,36 +16,32 @@ export class BanUserForBlogUseCase
   implements ICommandHandler<BanUserForBlogCommand>
 {
   constructor(
-    private readonly blogsRepository: BlogsRepository,
+    @InjectModel(BanBlog.name)
+    private readonly BanBlogModel: Model<BanBlogsDocument>,
     private readonly usersRepository: UsersRepository,
+    private readonly banBlogsRepository: BanBlogsRepository,
   ) {}
 
   async execute(command: BanUserForBlogCommand): Promise<BanUserBlogResultDTO> {
     const result = {
       isUserFound: false,
       isUserBanned: false,
-      isBlogFound: false,
     };
-    const blog = await this.blogsRepository.getBlogById(
+
+    const blogBanEntity = await this.banBlogsRepository.findBanBlogByIds(
       command.banUserForBlogDTO.blogId,
+      command.banUserForBlogDTO.userId,
     );
-    if (blog) result.isBlogFound = true;
 
     const user = await this.usersRepository.findUserById(
       command.banUserForBlogDTO.userId,
     );
-
     if (user) result.isUserFound = true;
 
-    if (
-      command.banUserForBlogDTO.ownerId.toString() !== blog.ownerId.toString()
-    ) {
-      throw new ForbiddenException();
-    }
-
-    if (user && command.banUserForBlogDTO.isBanned) {
-      blog.bannedUsers = [
-        ...blog.bannedUsers,
+    //ban
+    if (user && command.banUserForBlogDTO.isBanned && !blogBanEntity) {
+      const banBlogUsers = new this.BanBlogModel();
+      banBlogUsers.setUser(
         {
           banReason: command.banUserForBlogDTO.banReason,
           isBanned: command.banUserForBlogDTO.isBanned,
@@ -49,31 +49,15 @@ export class BanUserForBlogUseCase
           userLogin: user.getLogin(),
           banDate: new Date(),
         },
-      ];
-      result.isUserBanned = await blog
-        .save()
-        .then((savedDoc) => {
-          return savedDoc === blog;
-        })
-        .catch((error) => {
-          console.error(error);
-          return false;
-        });
+        command.banUserForBlogDTO.blogId,
+      );
+
+      result.isUserBanned = await this.banBlogsRepository.save(banBlogUsers);
     }
 
-    if (user && !command.banUserForBlogDTO.isBanned) {
-      blog.bannedUsers = blog.bannedUsers.filter(
-        (user) => user.userId !== command.banUserForBlogDTO.userId,
-      );
-      result.isUserBanned = await blog
-        .save()
-        .then((savedDoc) => {
-          return savedDoc === blog;
-        })
-        .catch((error) => {
-          console.error(error);
-          return false;
-        });
+    // unban
+    if (user && !command.banUserForBlogDTO.isBanned && blogBanEntity) {
+      await this.banBlogsRepository.delete(blogBanEntity);
     }
 
     return result;

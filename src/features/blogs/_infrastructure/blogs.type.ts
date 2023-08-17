@@ -19,7 +19,6 @@ export class BlogItemType {
     public ownerLogin: string | null,
     public isBanned: boolean,
     public banDate: Date | null,
-    public bannedUsers: Array<BannedUserBlogType>,
   ) {}
 }
 

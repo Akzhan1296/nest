@@ -15,7 +15,8 @@ import { CommentsRepository } from '../../infrastructure/repository/comments.rep
 import { PostsRepository } from '../../../posts/infrastructure/repository/posts.repository';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UsersRepository } from '../../../users/infrastructure/repository/users.repository';
-import { BlogsRepository } from '../../../blogs/_infrastructure/repository/blogs.repository';
+import { BanBlogsRepository } from '../../../blogs/_infrastructure/repository/blogs-ban.repository';
+import { BanBlogsDocument } from '../../../blogs/domain/ban-blogs.schema';
 
 export class CreateCommentCommand {
   constructor(public createCommentDTO: CreateCommentDTO) {}
@@ -30,7 +31,7 @@ export class CreateCommentUseCase
     private readonly commentsRepository: CommentsRepository,
     private readonly postsRepository: PostsRepository,
     private readonly usersRepository: UsersRepository,
-    private readonly blogsRepository: BlogsRepository,
+    private readonly banBlogsRepository: BanBlogsRepository,
   ) {}
 
   // domain factory
@@ -53,24 +54,22 @@ export class CreateCommentUseCase
     );
     if (!user) throw new NotFoundException('user not found');
 
-    const blog = await this.blogsRepository.getBlogById(post.blogId.toString());
+    const banBlogEntity: BanBlogsDocument =
+      await this.banBlogsRepository.findBanBlogByIds(
+        post.blogId.toString(),
+        user._id.toString(),
+      );
 
-    if (blog && blog.bannedUsers) {
-      blog.bannedUsers.forEach((bannedUser) => {
-        if (bannedUser.userId.toString() === user._id.toString()) {
-          throw new ForbiddenException();
-        }
-      });
+    if (banBlogEntity.userId.toString() === user._id.toString()) {
+      throw new ForbiddenException();
     }
-
-    //add logic for banned user
 
     //new comment entity
     const newComment = this.createComment({
       ...command.createCommentDTO,
       userId: new ObjectId(command.createCommentDTO.userId),
       userLogin: user.getLogin(),
-      blogId: blog._id,
+      blogId: new ObjectId(banBlogEntity.blogId),
     });
     await this.commentsRepository.save(newComment);
     return newComment;

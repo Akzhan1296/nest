@@ -37,6 +37,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { BanUserForBlogCommand } from '../application/ban-user-for-blog';
 import { BanUserBlogResultDTO } from '../application/ban-user.dto';
 import { BlogsQueryServiceRepository } from '../../../_infrastructure/repository/blogs.query.service';
+import { BanBlogsRepository } from '../../../_infrastructure/repository/blogs-ban.repository';
 
 @UseGuards(AuthGuard)
 @Controller('blogger/blogs')
@@ -50,6 +51,7 @@ export class BlogsController {
     private readonly postService: PostsService,
     private readonly postQuerysRepository: PostsQueryRepository,
     private readonly postsQueryService: PostsQueryService,
+    private readonly banBlogsRepository: BanBlogsRepository,
   ) {}
 
   // update blog
@@ -230,13 +232,13 @@ export class BlogsController {
 export class BlogsUserController {
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly blogsQueryRepository: BlogsQueryRepository,
+    private readonly banBlogsRepository: BanBlogsRepository,
   ) {}
 
   // ban user for specific blog
   @Put(':userId/ban')
   @HttpCode(204)
-  async updateBlog(
+  async banBlog(
     @Param() params: { userId: string },
     @Body() banUserForBlogInputModel: BanUserForBlogInputModal,
     @Req() request: Request,
@@ -245,11 +247,10 @@ export class BlogsUserController {
       new BanUserForBlogCommand({
         ...banUserForBlogInputModel,
         userId: params.userId,
-        ownerId: request.body.userId,
+        ownerId: request.body.userId, //from token
       }),
     );
 
-    if (!banUserResult.isBlogFound) throw new NotFoundException();
     if (!banUserResult.isUserFound) throw new NotFoundException();
 
     return banUserResult.isUserBanned;
@@ -260,12 +261,10 @@ export class BlogsUserController {
   async getBlogs(
     @Query() pageSize: BlogsQueryType,
     @Param() params: { blogId: string },
-    @Req() request: Request,
   ): Promise<PaginationViewModel<BannedUserForBlog>> {
-    return await this.blogsQueryRepository.getBloggerBannedUsers(
+    return await this.banBlogsRepository.getBloggerBannedUsers(
       pageSize,
       params.blogId,
-      request.body.userId, // ownerId
     );
   }
 }

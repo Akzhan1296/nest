@@ -4,7 +4,6 @@ import { PostsQueryRepository } from '../../../posts/infrastructure/repository/p
 import { CommentsQueryRepository } from '../../../comments/infrastructure/repository/comments.query.repository';
 import { PostDocument } from '../../../posts/schema/posts.schema';
 import { PageSizeQueryModel } from '../../../../common/common-types';
-import { CommentDocument } from '../../../comments/domain/entity/comments.schema';
 import { BlogItemDBType } from '../blogs.type';
 
 @Injectable()
