@@ -40,16 +40,16 @@ export class BanUserForBlogUseCase
     );
     if (user) result.isUserFound = true;
 
-    const blog = await this.blogsRepository.getBlogById(
-      command.banUserForBlogDTO.blogId,
-    );
+    // const blog = await this.blogsRepository.getBlogById(
+    //   command.banUserForBlogDTO.blogId,
+    // );
 
-    if (
-      blog.ownerId.toString() !== command.banUserForBlogDTO.userId.toString()
-    ) {
-      result.isFoubidden = true;
-      return result;
-    }
+    // if (
+    //   blog.ownerId.toString() !== command.banUserForBlogDTO.userId.toString()
+    // ) {
+    //   result.isFoubidden = true;
+    //   return result;
+    // }
 
     //ban
     if (user && command.banUserForBlogDTO.isBanned && !blogBanEntity) {
