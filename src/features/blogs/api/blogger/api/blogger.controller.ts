@@ -251,7 +251,7 @@ export class BlogsUserController {
       }),
     );
     if (!banUserResult.isUserFound) throw new NotFoundException();
-    if (banUserResult.isFoubidden) throw new ForbiddenException();
+    // if (banUserResult.isFoubidden) throw new ForbiddenException();
 
     return banUserResult.isUserBanned;
   }
