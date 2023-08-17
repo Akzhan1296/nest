@@ -250,7 +250,6 @@ export class BlogsUserController {
         ownerId: request.body.userId, //from token
       }),
     );
-
     if (!banUserResult.isUserFound) throw new NotFoundException();
 
     return banUserResult.isUserBanned;
@@ -261,10 +260,12 @@ export class BlogsUserController {
   async getBlogs(
     @Query() pageSize: BlogsQueryType,
     @Param() params: { blogId: string },
+    @Req() request: Request,
   ): Promise<PaginationViewModel<BannedUserForBlog>> {
     return await this.banBlogsRepository.getBloggerBannedUsers(
       pageSize,
       params.blogId,
+      request.body.userId, //from token
     );
   }
 }
