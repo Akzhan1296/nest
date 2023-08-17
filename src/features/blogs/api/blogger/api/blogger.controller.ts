@@ -251,6 +251,7 @@ export class BlogsUserController {
       }),
     );
     if (!banUserResult.isUserFound) throw new NotFoundException();
+    if (banUserResult.isFoubidden) throw new ForbiddenException();
 
     return banUserResult.isUserBanned;
   }
@@ -260,7 +261,6 @@ export class BlogsUserController {
   async getBlogs(
     @Query() pageSize: BlogsQueryType,
     @Param() params: { blogId: string },
-    @Req() request: Request,
   ): Promise<PaginationViewModel<BannedUserForBlog>> {
     const blog = await this.blogsQueryRepository.getBlogById(params.blogId);
 
@@ -271,7 +271,6 @@ export class BlogsUserController {
     return await this.banBlogsRepository.getBloggerBannedUsers(
       pageSize,
       params.blogId,
-      request.body.userId, //from token
     );
   }
 }

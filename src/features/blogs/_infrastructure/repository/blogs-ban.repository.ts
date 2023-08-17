@@ -8,15 +8,11 @@ import {
 } from '../../../../common/common-types';
 import { Paginated } from '../../../../common/utils';
 import { BannedUserForBlog } from '../../_models/view.models';
-import { ForbiddenException } from '@nestjs/common';
-import { BlogItemType } from '../blogs.type';
 
 export class BanBlogsRepository extends Repository<BanBlog> {
   constructor(
     @InjectModel(BanBlog.name)
     private readonly banBlogModel: Model<BanBlogsDocument>,
-    @InjectModel(BlogItemType.name)
-    private readonly blogModel: Model<BlogItemType>,
   ) {
     super();
   }
@@ -45,7 +41,6 @@ export class BanBlogsRepository extends Repository<BanBlog> {
   async getBloggerBannedUsers(
     pageParams: PageSizeQueryModel,
     blogId: string,
-    userId: string, // from token
   ): Promise<PaginationViewModel<BannedUserForBlog>> {
     const { skip, pageSize, sortBy, sortDirection } = pageParams;
 
@@ -54,12 +49,6 @@ export class BanBlogsRepository extends Repository<BanBlog> {
       .skip(skip)
       .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
       .limit(pageSize);
-
-    const blog = await this.blogModel.findOne({ _id: blogId });
-
-    if (blog && blog.ownerId.toString() !== userId.toString()) {
-      throw new ForbiddenException();
-    }
 
     return Paginated.transformPagination(
       {

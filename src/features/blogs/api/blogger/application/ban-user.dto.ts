@@ -1,6 +1,7 @@
 export type BanUserBlogResultDTO = {
   isUserFound: boolean;
   isUserBanned: boolean;
+  isFoubidden: boolean;
 };
 
 export type BanUserBlogDTO = {
