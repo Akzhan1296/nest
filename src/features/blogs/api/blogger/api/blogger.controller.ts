@@ -51,7 +51,6 @@ export class BlogsController {
     private readonly postService: PostsService,
     private readonly postQuerysRepository: PostsQueryRepository,
     private readonly postsQueryService: PostsQueryService,
-    private readonly banBlogsRepository: BanBlogsRepository,
   ) {}
 
   // update blog
@@ -233,6 +232,7 @@ export class BlogsUserController {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly banBlogsRepository: BanBlogsRepository,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
   ) {}
 
   // ban user for specific blog
@@ -262,6 +262,12 @@ export class BlogsUserController {
     @Param() params: { blogId: string },
     @Req() request: Request,
   ): Promise<PaginationViewModel<BannedUserForBlog>> {
+    const blog = await this.blogsQueryRepository.getBlogById(params.blogId);
+
+    if (!blog) {
+      throw new NotFoundException();
+    }
+
     return await this.banBlogsRepository.getBloggerBannedUsers(
       pageSize,
       params.blogId,
