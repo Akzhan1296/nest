@@ -44,6 +44,8 @@ export class BanBlogsRepository extends Repository<BanBlog> {
   ): Promise<PaginationViewModel<BannedUserForBlog>> {
     const { skip, pageSize, sortBy, sortDirection } = pageParams;
 
+    const bannedUsersCount = await this.banBlogModel.find().count();
+
     const bannedUsers = await this.banBlogModel
       .find({ blogId })
       .skip(skip)
@@ -53,7 +55,7 @@ export class BanBlogsRepository extends Repository<BanBlog> {
     return Paginated.transformPagination(
       {
         ...pageParams,
-        totalCount: bannedUsers.length,
+        totalCount: bannedUsersCount,
       },
       this.getBannedBlogUsersViews(bannedUsers),
     );
