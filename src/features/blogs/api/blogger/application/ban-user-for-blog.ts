@@ -47,8 +47,9 @@ export class BanUserForBlogUseCase
     if (
       blog.ownerId.toString() !== command.banUserForBlogDTO.ownerId.toString()
     ) {
-      result.isFoubidden = true;
-      return result;
+      throw new ForbiddenException();
+      // result.isFoubidden = true;
+      // return result;
     }
 
     //ban
