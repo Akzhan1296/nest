@@ -27,7 +27,7 @@ export class BanUserForBlogUseCase
     const result = {
       isUserFound: false,
       isUserBanned: false,
-      isFoubidden: true,
+      isFoubidden: false,
     };
 
     const blogBanEntity = await this.banBlogsRepository.findBanBlogByIds(
@@ -45,9 +45,10 @@ export class BanUserForBlogUseCase
     );
 
     if (
-      blog.ownerId.toString() === command.banUserForBlogDTO.ownerId.toString()
+      blog.ownerId.toString() !== command.banUserForBlogDTO.ownerId.toString()
     ) {
-      result.isFoubidden = false;
+      result.isFoubidden = true;
+      return;
     }
 
     //ban

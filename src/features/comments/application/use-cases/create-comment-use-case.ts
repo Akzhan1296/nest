@@ -32,7 +32,6 @@ export class CreateCommentUseCase
     private readonly commentsRepository: CommentsRepository,
     private readonly postsRepository: PostsRepository,
     private readonly usersRepository: UsersRepository,
-    private readonly blogsRepository: BlogsRepository,
     private readonly banBlogsRepository: BanBlogsRepository,
   ) {}
 
@@ -66,14 +65,12 @@ export class CreateCommentUseCase
       throw new ForbiddenException();
     }
 
-    const blog = await this.blogsRepository.getBlogById(post.blogId.toString());
-
     //new comment entity
     const newComment = this.createComment({
       ...command.createCommentDTO,
       userId: new ObjectId(command.createCommentDTO.userId),
       userLogin: user.getLogin(),
-      blogId: blog._id,
+      blogId: new ObjectId(post.blogId),
     });
     await this.commentsRepository.save(newComment);
     return newComment;
