@@ -49,6 +49,7 @@ export class CreateCommentUseCase
     const post = await this.postsRepository.getPostById(
       command.createCommentDTO.postId,
     );
+    console.log(command.createCommentDTO);
     if (!post) throw new NotFoundException('post not found');
     const user = await this.usersRepository.findUserById(
       command.createCommentDTO.userId.toString(),
@@ -61,7 +62,10 @@ export class CreateCommentUseCase
         user._id.toString(),
       );
 
-    if (banBlogEntity.userId.toString() === user._id.toString()) {
+    if (
+      banBlogEntity &&
+      banBlogEntity.userId.toString() === user._id.toString()
+    ) {
       throw new ForbiddenException();
     }
 

@@ -250,6 +250,7 @@ export class BlogsUserController {
         ownerId: request.body.userId, //from token
       }),
     );
+    console.log(banUserResult);
     if (!banUserResult.isUserFound) throw new NotFoundException();
     if (banUserResult.isFoubidden) throw new ForbiddenException();
 
