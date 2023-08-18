@@ -17,6 +17,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UsersRepository } from '../../../users/infrastructure/repository/users.repository';
 import { BanBlogsRepository } from '../../../blogs/_infrastructure/repository/blogs-ban.repository';
 import { BanBlogsDocument } from '../../../blogs/domain/ban-blogs.schema';
+import { BlogsRepository } from '../../../blogs/_infrastructure/repository/blogs.repository';
 
 export class CreateCommentCommand {
   constructor(public createCommentDTO: CreateCommentDTO) {}
@@ -31,6 +32,7 @@ export class CreateCommentUseCase
     private readonly commentsRepository: CommentsRepository,
     private readonly postsRepository: PostsRepository,
     private readonly usersRepository: UsersRepository,
+    private readonly blogsRepository: BlogsRepository,
     private readonly banBlogsRepository: BanBlogsRepository,
   ) {}
 
@@ -64,12 +66,14 @@ export class CreateCommentUseCase
       throw new ForbiddenException();
     }
 
+    const blog = await this.blogsRepository.getBlogById(post.blogId.toString());
+
     //new comment entity
     const newComment = this.createComment({
       ...command.createCommentDTO,
       userId: new ObjectId(command.createCommentDTO.userId),
       userLogin: user.getLogin(),
-      blogId: new ObjectId(banBlogEntity.blogId),
+      blogId: blog._id,
     });
     await this.commentsRepository.save(newComment);
     return newComment;

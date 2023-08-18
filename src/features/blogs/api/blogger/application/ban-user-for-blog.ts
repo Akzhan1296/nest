@@ -44,9 +44,6 @@ export class BanUserForBlogUseCase
       command.banUserForBlogDTO.blogId,
     );
 
-    console.log(blog);
-    console.log(command.banUserForBlogDTO.ownerId);
-
     if (
       blog.ownerId.toString() === command.banUserForBlogDTO.ownerId.toString()
     ) {
@@ -74,6 +71,8 @@ export class BanUserForBlogUseCase
     if (user && !command.banUserForBlogDTO.isBanned && blogBanEntity) {
       await this.banBlogsRepository.delete(blogBanEntity);
     }
+
+    console.log(result);
 
     return result;
   }
