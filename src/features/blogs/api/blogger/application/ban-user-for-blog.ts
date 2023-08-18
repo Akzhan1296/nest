@@ -1,7 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BanUserBlogDTO, BanUserBlogResultDTO } from './ban-user.dto';
 import { UsersRepository } from '../../../../users/infrastructure/repository/users.repository';
-import { ForbiddenException } from '@nestjs/common';
 import { BanBlogsRepository } from '../../../_infrastructure/repository/blogs-ban.repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -47,9 +46,8 @@ export class BanUserForBlogUseCase
     if (
       blog.ownerId.toString() !== command.banUserForBlogDTO.ownerId.toString()
     ) {
-      throw new ForbiddenException();
-      // result.isFoubidden = true;
-      // return result;
+      result.isFoubidden = true;
+      return result;
     }
 
     //ban
@@ -73,9 +71,6 @@ export class BanUserForBlogUseCase
     if (user && !command.banUserForBlogDTO.isBanned && blogBanEntity) {
       await this.banBlogsRepository.delete(blogBanEntity);
     }
-
-    console.log(result);
-
     return result;
   }
 }

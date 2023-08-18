@@ -38,6 +38,7 @@ import { BanUserForBlogCommand } from '../application/ban-user-for-blog';
 import { BanUserBlogResultDTO } from '../application/ban-user.dto';
 import { BlogsQueryServiceRepository } from '../../../_infrastructure/repository/blogs.query.service';
 import { BanBlogsRepository } from '../../../_infrastructure/repository/blogs-ban.repository';
+import { BlogsRepository } from '../../../_infrastructure/repository/blogs.repository';
 
 @UseGuards(AuthGuard)
 @Controller('blogger/blogs')
@@ -232,7 +233,7 @@ export class BlogsUserController {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly banBlogsRepository: BanBlogsRepository,
-    private readonly blogsQueryRepository: BlogsQueryRepository,
+    private readonly blogsRepository: BlogsRepository,
   ) {}
 
   // ban user for specific blog
@@ -250,9 +251,8 @@ export class BlogsUserController {
         ownerId: request.body.userId, //from token
       }),
     );
-    console.log(banUserResult);
     if (!banUserResult.isUserFound) throw new NotFoundException();
-    // if (banUserResult.isFoubidden) throw new ForbiddenException();
+    if (banUserResult.isFoubidden) throw new ForbiddenException();
 
     return banUserResult.isUserBanned;
   }
@@ -262,11 +262,16 @@ export class BlogsUserController {
   async getBlogs(
     @Query() pageSize: BlogsQueryType,
     @Param() params: { blogId: string },
+    @Req() request: Request,
   ): Promise<PaginationViewModel<BannedUserForBlog>> {
-    const blog = await this.blogsQueryRepository.getBlogById(params.blogId);
+    const blog = await this.blogsRepository.getBlogById(params.blogId);
 
     if (!blog) {
       throw new NotFoundException();
+    }
+
+    if (blog.ownerId.toString() !== request.body.userId.toString()) {
+      throw new ForbiddenException();
     }
 
     return await this.banBlogsRepository.getBloggerBannedUsers(
