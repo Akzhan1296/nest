@@ -44,6 +44,9 @@ export class BanUserForBlogUseCase
       command.banUserForBlogDTO.blogId,
     );
 
+    console.log(blog);
+    console.log(command.banUserForBlogDTO.ownerId);
+
     if (
       blog.ownerId.toString() === command.banUserForBlogDTO.ownerId.toString()
     ) {

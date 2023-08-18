@@ -243,7 +243,6 @@ export class BlogsUserController {
     @Body() banUserForBlogInputModel: BanUserForBlogInputModal,
     @Req() request: Request,
   ): Promise<boolean> {
-
     const banUserResult: BanUserBlogResultDTO = await this.commandBus.execute(
       new BanUserForBlogCommand({
         ...banUserForBlogInputModel,
@@ -252,6 +251,8 @@ export class BlogsUserController {
       }),
     );
     if (!banUserResult.isUserFound) throw new NotFoundException();
+    if (banUserResult.isFoubidden) throw new ForbiddenException();
+
     return banUserResult.isUserBanned;
   }
 
