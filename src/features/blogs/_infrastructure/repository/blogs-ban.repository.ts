@@ -46,10 +46,15 @@ export class BanBlogsRepository extends Repository<BanBlog> {
 
     const bannedUsersCount = await this.banBlogModel.find().count();
 
+    console.log(pageParams);
+
     const bannedUsers = await this.banBlogModel
       .find({ blogId })
       .skip(skip)
-      .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
+      .sort({
+        [sortBy === 'login' ? 'userLogin' : sortBy]:
+          sortDirection === 'asc' ? 1 : -1,
+      })
       .limit(pageSize);
 
     return Paginated.transformPagination(

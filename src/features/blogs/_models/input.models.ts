@@ -42,6 +42,7 @@ export class BlogsQueryType extends PageSizeDTO {
   sortDirection = 'desc';
 }
 
+
 export class BanUserForBlogInputModal {
   @IsBoolean()
   isBanned: boolean;
