@@ -87,7 +87,6 @@ export class PostsQueryService {
     blogId: string,
   ) {
     let _userId = null;
-
     try {
       _userId = new ObjectId(userId);
     } catch (err) {

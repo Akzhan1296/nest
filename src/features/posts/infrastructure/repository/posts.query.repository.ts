@@ -98,4 +98,8 @@ export class PostsQueryRepository implements PostsQueryStateRepository {
     }
     return null;
   }
+
+  async getPostsAllComments(blogId: ObjectId): Promise<PostDocument[]> {
+    return await this.postModel.find({ blogId });
+  }
 }

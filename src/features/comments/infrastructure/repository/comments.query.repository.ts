@@ -12,6 +12,10 @@ import {
   PageSizeQueryModel,
   PaginationViewModel,
 } from '../../../../common/common-types';
+import {
+  BlogItemDBType,
+  BlogItemType,
+} from '../../../blogs/_infrastructure/blogs.type';
 
 @Injectable()
 export class CommentsQueryRepository {
@@ -26,8 +30,9 @@ export class CommentsQueryRepository {
   }
   private getCommentsViewModel(
     comments: CommentDocument[],
+    isPostId = false,
   ): CommentViewModel[] {
-    return comments.map((comment) => ({
+    let viewModel = comments.map((comment) => ({
       id: comment._id.toString(),
       content: comment.getContent(),
       commentatorInfo: {
@@ -40,15 +45,35 @@ export class CommentsQueryRepository {
         dislikesCount: comment.getDislikes(),
       },
     }));
+
+    if (isPostId) {
+      viewModel = comments.map((comment) => ({
+        id: comment._id.toString(),
+        content: comment.getContent(),
+        commentatorInfo: {
+          userId: comment.userId.toString(),
+          userLogin: comment.userLogin,
+        },
+        createdAt: comment.createdAt,
+        likesInfo: {
+          likesCount: comment.getLikes(),
+          dislikesCount: comment.getDislikes(),
+        },
+        postId: comment.postId,
+      }));
+    }
+
+    return viewModel;
   }
   private async getPaginatedPosts(
     pageParams: PageSizeQueryModel,
     comments: CommentDocument[],
+    isPostId = false,
     postId?: string,
   ): Promise<PaginationViewModel<CommentViewModel>> {
     return Paginated.transformPagination<CommentViewModel>(
       { ...pageParams, totalCount: await this.getCommentsCount(postId) },
-      this.getCommentsViewModel(comments),
+      this.getCommentsViewModel(comments, isPostId),
     );
   }
 
@@ -91,6 +116,22 @@ export class CommentsQueryRepository {
       .skip(skip)
       .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
       .limit(pageSize);
-    return this.getPaginatedPosts(pageParams, comments, postId);
+    return this.getPaginatedPosts(pageParams, comments, false, postId);
+  }
+  async getBlogAllComments(
+    blogs: BlogItemDBType[],
+    pageParams: PageSizeQueryModel,
+  ) {
+    // const comments = await this.repo.find({postId: posts.map(p=>p._id)}).sort().skip().limit()
+    const { skip, pageSize, sortBy, sortDirection } = pageParams;
+    const ids = blogs.map((b) => b._id);
+    const comments = await this.CommentModel.find({
+      blogId: { $in: ids }, // ['123', '456']
+    })
+      .skip(skip)
+      .sort({ [sortBy]: sortDirection === 'asc' ? 1 : -1 })
+      .limit(pageSize);
+
+    return this.getPaginatedPosts(pageParams, comments, true);
   }
 }

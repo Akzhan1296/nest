@@ -1,7 +1,4 @@
-import {
-  BlogItemDBType,
-  BlogItemType,
-} from '../../../infrastructure/blogs.type';
+import { BlogItemDBType, BlogItemType } from '../_infrastructure/blogs.type';
 import { BlogUpdateType } from './dto/blogs.dto';
 
 // for repository

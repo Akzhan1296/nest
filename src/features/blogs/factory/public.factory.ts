@@ -1,8 +1,8 @@
 import { PostsStateRepository } from '../../posts/application/posts.interface';
 import { PostsRepository } from '../../posts/infrastructure/repository/posts.repository';
-import { BlogsStateRepository } from '../api/blogger/application/blogs.interface';
+import { BlogsStateRepository } from '../_application/blogs.interface';
+import { BlogsRepository } from '../_infrastructure/repository/blogs.repository';
 import { BlogsService } from '../api/blogger/application/blogs.services';
-import { BlogsRepository } from '../api/blogger/infrastructure/repository/blogs.repository';
 
 export const factoryBlogsService = () => {
   return {

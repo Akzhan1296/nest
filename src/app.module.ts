@@ -9,18 +9,23 @@ import { AppService } from './app.service';
 import { settings } from './settings';
 
 //blogs
-// import { BlogsController } from './features/blogs/api/blogs.controller';
-// import { BlogsQueryController } from './features/blogs/api/query.controller';
-// import { factoryBlogsService } from './features/blogs/factory/sa.factory';
-// import { BlogsRepository } from './features/blogs/infrastructure/repository/blogs.repository';
-
-import { BlogsController } from './features/blogs/api/blogger/api/blogger.controller';
+import { BlogsRepository } from './features/blogs/_infrastructure/repository/blogs.repository';
+import {
+  BlogsController,
+  BlogsUserController,
+} from './features/blogs/api/blogger/api/blogger.controller';
 import { BlogsPublicQueryController } from './features/blogs/api/public/public.blogs.controller';
-import { BlogsRepository } from './features/blogs/api/blogger/infrastructure/repository/blogs.repository';
 import { factoryBlogsService } from './features/blogs/factory/public.factory';
-import { BlogsQueryRepository } from './features/blogs/infrastructure/repository/blogs.query.repository';
-import { BlogItemType } from './features/blogs/infrastructure/blogs.type';
+import { BlogsQueryRepository } from './features/blogs/_infrastructure/repository/blogs.query.repository';
+import { BlogItemType } from './features/blogs/_infrastructure/blogs.type';
 import { BlogsSchema } from './features/blogs/domain/blogs.schema';
+import { BanBlogBySAUseCase } from './features/blogs/api/sa/application/ban-blog-use-case';
+import { BlogsQueryServiceRepository } from './features/blogs/_infrastructure/repository/blogs.query.service';
+import {
+  BanBlog,
+  BanBlogSchema,
+} from './features/blogs/domain/ban-blogs.schema';
+import { BanBlogsRepository } from './features/blogs/_infrastructure/repository/blogs-ban.repository';
 
 //posts
 import { PostsController } from './features/posts/api/posts.controller';
@@ -97,6 +102,7 @@ import { DeleteCurrentDeviceUseCase } from './features/devices/application/use-c
 import { DeleteDevicesExceptOneUseCase } from './features/devices/application/use-cases/delete-all-device-use-case';
 import { HandleCommentsLikesUseCase } from './features/likes/application/use-cases/handle-comments-likes';
 import { HandlePostsLikesUseCase } from './features/likes/application/use-cases/handle-posts-likes';
+import { BanUserForBlogUseCase } from './features/blogs/api/blogger/application/ban-user-for-blog';
 
 //post likes
 import { PostsQueryService } from './features/posts/api/posts.query.service';
@@ -141,6 +147,7 @@ const devicesUseCases = [
   DeleteDevicesExceptOneUseCase,
 ];
 const likesUseCases = [HandleCommentsLikesUseCase, HandlePostsLikesUseCase];
+const blogsUseCases = [BanBlogBySAUseCase, BanUserForBlogUseCase];
 
 @Module({
   imports: [
@@ -162,6 +169,7 @@ const likesUseCases = [HandleCommentsLikesUseCase, HandlePostsLikesUseCase];
       { name: BlockIps.name, schema: BlockIpsSchema },
       { name: Like.name, schema: LikeSchema },
       { name: PostLike.name, schema: PostLikeSchema },
+      { name: BanBlog.name, schema: BanBlogSchema },
     ]),
   ],
   controllers: [
@@ -171,6 +179,7 @@ const likesUseCases = [HandleCommentsLikesUseCase, HandlePostsLikesUseCase];
     BlogsController,
     BlogsPublicQueryController,
     BlogsSAController,
+    BlogsUserController,
     PostsController,
     PostsQueryController,
     CommentsController,
@@ -183,6 +192,8 @@ const likesUseCases = [HandleCommentsLikesUseCase, HandlePostsLikesUseCase];
     factoryBlogsService(),
     BlogsRepository,
     BlogsQueryRepository,
+    BlogsQueryServiceRepository,
+    BanBlogsRepository,
     //posts
     factoryPostService(),
     PostsRepository,
@@ -222,6 +233,7 @@ const likesUseCases = [HandleCommentsLikesUseCase, HandlePostsLikesUseCase];
     ...jwtUseCases,
     ...devicesUseCases,
     ...likesUseCases,
+    ...blogsUseCases,
   ],
 })
 export class AppModule {}

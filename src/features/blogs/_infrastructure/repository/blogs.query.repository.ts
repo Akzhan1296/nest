@@ -1,13 +1,26 @@
-import { BlogItemDBType, BlogItemType, SearchTermBlogs } from '../blogs.type';
+import {
+  BannedUserBlogType,
+  BlogItemDBType,
+  BlogItemType,
+  SearchTermBlogs,
+} from '../blogs.type';
 import { Model } from 'mongoose';
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Paginated } from '../../../../common/utils';
 import {
   PageSizeQueryModel,
   PaginationViewModel,
 } from '../../../../common/common-types';
-import { BlogSAViewModel, BlogViewModel } from '../../_models/view.models';
+import {
+  BannedUserForBlog,
+  BlogSAViewModel,
+  BlogViewModel,
+} from '../../_models/view.models';
 import { BlogsQueryStateRepository } from '../../_application/blogs.query.interface';
 import { ObjectId } from 'mongodb';
 
@@ -45,7 +58,27 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
         userId: blog.ownerId.toString(),
         userLogin: blog.ownerLogin,
       },
+      banInfo: {
+        isBanned: blog.isBanned,
+        banDate: blog.banDate,
+      },
     }));
+  }
+
+  async getBlogById(id: string): Promise<BlogViewModel | null> {
+    const blog = await this.blogModel.findById(id);
+    if (blog) {
+      return {
+        name: blog.name,
+        websiteUrl: blog.websiteUrl,
+        id: blog._id.toString(),
+        createdAt: blog.createdAt,
+        description: blog.description,
+        isMembership: false,
+        isBanned: blog.isBanned,
+      };
+    }
+    return null;
   }
   async getBlogs(
     pageParams: PageSizeQueryModel,
@@ -53,8 +86,10 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
     const { searchNameTerm, skip, pageSize, sortBy, sortDirection } =
       pageParams;
 
-    const filter: SearchTermBlogs = { name: new RegExp(searchNameTerm, 'i') };
-
+    const filter: SearchTermBlogs & { isBanned: boolean } = {
+      name: new RegExp(searchNameTerm, 'i'),
+      isBanned: false,
+    };
     const blogs = await this.blogModel
       .find(filter)
       .skip(skip)
@@ -75,7 +110,9 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
     const { searchNameTerm, skip, pageSize, sortBy, sortDirection } =
       pageParams;
 
-    const filter: SearchTermBlogs = { name: new RegExp(searchNameTerm, 'i') };
+    const filter: SearchTermBlogs = {
+      name: new RegExp(searchNameTerm, 'i'),
+    };
 
     const blogs = await this.blogModel
       .find(filter)
@@ -119,18 +156,8 @@ export class BlogsQueryRepository implements BlogsQueryStateRepository {
       this.getBlogsViews(blogs),
     );
   }
-  async getBlogById(id: string): Promise<BlogViewModel | null> {
-    const blog = await this.blogModel.findById(id);
-    if (blog) {
-      return {
-        name: blog.name,
-        websiteUrl: blog.websiteUrl,
-        id: blog._id.toString(),
-        createdAt: blog.createdAt,
-        description: blog.description,
-        isMembership: false,
-      };
-    }
-    return null;
+
+  async getBlogsAllComments(userId: string) {
+    return await this.blogModel.find({ ownerId: new ObjectId(userId) });
   }
 }

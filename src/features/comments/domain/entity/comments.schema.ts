@@ -8,6 +8,8 @@ export class Comment {
   @Prop()
   userId: ObjectId;
   @Prop()
+  blogId: ObjectId;
+  @Prop()
   userLogin: string;
   @Prop()
   private content: string;

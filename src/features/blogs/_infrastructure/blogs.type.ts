@@ -1,5 +1,13 @@
 import { ObjectId } from 'mongodb';
 
+export type BannedUserBlogType = {
+  banReason: null | string;
+  isBanned: boolean;
+  userId: string;
+  userLogin: string;
+  banDate: Date;
+};
+
 //to create Blog
 export class BlogItemType {
   constructor(
@@ -9,17 +17,10 @@ export class BlogItemType {
     public description: string,
     public ownerId: ObjectId | null,
     public ownerLogin: string | null,
+    public isBanned: boolean,
+    public banDate: Date | null,
   ) {}
 }
-
-// db type
-// export class BlogItemDBType {
-//   name: string;
-//   websiteUrl: string;
-//   _id: ObjectId;
-//   createdAt: Date;
-//   description: string;
-// }
 
 export class BlogItemDBType extends BlogItemType {
   _id: ObjectId;

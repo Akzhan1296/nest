@@ -14,7 +14,7 @@ import { BlogsQueryType } from '../../_models/input.models';
 import { UserIdGuard } from '../../../../guards/userId';
 import { PostsQueryService } from '../../../posts/api/posts.query.service';
 import { PostViewModel } from '../../../posts/infrastructure/repository/models/view.models';
-import { BlogsQueryRepository } from '../../infrastructure/repository/blogs.query.repository';
+import { BlogsQueryRepository } from '../../_infrastructure/repository/blogs.query.repository';
 
 @Controller('blogs')
 export class BlogsPublicQueryController {
@@ -34,10 +34,14 @@ export class BlogsPublicQueryController {
     @Param() params: { id: string },
   ): Promise<BlogViewModel | null> {
     const blog = await this.blogsQueryRepository.getBlogById(params.id);
+    const { isBanned, ...rest } = blog;
     if (!blog) {
       throw new NotFoundException('blog not found');
     }
-    return blog;
+    if (isBanned) {
+      throw new NotFoundException('blog not found');
+    }
+    return rest;
   }
 
   @UseGuards(UserIdGuard)
@@ -50,6 +54,9 @@ export class BlogsPublicQueryController {
     const blog = await this.blogsQueryRepository.getBlogById(params.blogId);
     if (!blog) {
       throw new NotFoundException('posts by blogid not found');
+    }
+    if (blog.isBanned) {
+      throw new NotFoundException('blog not found');
     }
     return await this.postsQueryService.getPostsWithLikeByblogId(
       pageSize,

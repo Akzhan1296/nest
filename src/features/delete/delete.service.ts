@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { BlogItemType } from '../blogs/infrastructure/blogs.type';
+import { BlogItemType } from '../blogs/_infrastructure/blogs.type';
 import { Model } from 'mongoose';
 import { Post, PostDocument } from '../posts/schema/posts.schema';
 import {
@@ -12,6 +12,7 @@ import { JwtTokens, JwtTokensDocument } from '../jwt/domain/jwt.schema';
 import { BlockIps, BlockIpsDocument } from '../ips/domain/ips.schema';
 import { Like, LikeDocument } from '../likes/domain/likes.schema';
 import { PostLike, PostLikeDocument } from '../likes/domain/posts.likes.schema';
+import { BanBlog, BanBlogsDocument } from '../blogs/domain/ban-blogs.schema';
 
 @Injectable()
 export class DeleteService {
@@ -32,6 +33,8 @@ export class DeleteService {
     private readonly LikeModel: Model<LikeDocument>,
     @InjectModel(PostLike.name)
     private readonly PostLikeModel: Model<PostLikeDocument>,
+    @InjectModel(BanBlog.name)
+    private readonly BanBlogModel: Model<BanBlogsDocument>,
   ) {}
   async deleteData() {
     await this.blogModel.deleteMany({});
@@ -42,5 +45,6 @@ export class DeleteService {
     await this.BlockIpsModel.deleteMany({});
     await this.LikeModel.deleteMany({});
     await this.PostLikeModel.deleteMany({});
+    await this.BanBlogModel.deleteMany({});
   }
 }
